@@ -7,9 +7,9 @@ venv/
 .venv/
 
 # Data (jangan push data mentah ke GitHub)
-data/raw/
-data/cleaned/
-data/final/
+# data/raw/
+# data/cleaned/
+# data/final/
 
 # Model besar
 model/saved_model/
