@@ -1,20 +1,31 @@
 import React, { useState } from 'react';
-import { Briefcase, Clock, Send, AlertCircle } from 'lucide-react';
+import { Send, AlertCircle, ChevronDown, Check } from 'lucide-react';
+import * as Select from '@radix-ui/react-select';
+import * as Label from '@radix-ui/react-label';
 import SkillTagInput from './SkillTagInput';
-import { predictPrice } from '../../services/api';
+import { estimatePrice } from '../../services/api';
 
 const CATEGORIES = [
   'Web Development', 'Mobile Development', 'UI/UX Design',
   'Data Science', 'Content Writing', 'Digital Marketing',
-  'Video Editing', 'Graphic Design', 'SEO', 'Copywriting'
+  'Video Editing', 'Graphic Design', 'SEO', 'Copywriting',
 ];
+
+const FieldLabel = ({ htmlFor, children, hint }) => (
+  <div style={{ marginBottom: 7, display: 'flex', alignItems: 'center', gap: 6 }}>
+    <Label.Root htmlFor={htmlFor} className="label-mono" style={{ cursor: 'default' }}>
+      {children}
+    </Label.Root>
+    {hint && <span style={{ color: 'var(--fg-3)' }}>{hint}</span>}
+  </div>
+);
 
 const PriceEstimatorForm = ({ onResult }) => {
   const [category, setCategory] = useState('');
-  const [skills, setSkills]     = useState([]);
+  const [skills,   setSkills]   = useState([]);
   const [duration, setDuration] = useState('');
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState('');
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +36,7 @@ const PriceEstimatorForm = ({ onResult }) => {
     setError('');
     setLoading(true);
     try {
-      const { data } = await predictPrice({ category, skills, duration: Number(duration) });
+      const { data } = await estimatePrice({ category, skills, duration: Number(duration) });
       onResult(data);
     } catch {
       setError('Gagal mengambil estimasi. Coba lagi.');
@@ -35,53 +46,77 @@ const PriceEstimatorForm = ({ onResult }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="card space-y-5">
+    <form onSubmit={handleSubmit} className="form-card">
+
       {/* Kategori */}
       <div>
-        <label className="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-1.5">
-          <Briefcase size={14} className="text-gray-400" /> Kategori Jasa
-        </label>
-        <select value={category} onChange={(e) => setCategory(e.target.value)} className="input-field">
-          <option value="">-- Pilih kategori --</option>
-          {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
+        <FieldLabel>Kategori Jasa</FieldLabel>
+        <Select.Root value={category} onValueChange={setCategory}>
+          <Select.Trigger
+            className="select-trigger"
+            style={{ color: category ? 'var(--fg)' : 'var(--fg-3)' }}
+          >
+            <Select.Value placeholder="Pilih kategori..." />
+            <Select.Icon><ChevronDown size={12} color="var(--fg-3)" /></Select.Icon>
+          </Select.Trigger>
+
+          <Select.Portal>
+            <Select.Content position="popper" sideOffset={4} className="select-content">
+              <Select.Viewport>
+                {CATEGORIES.map(c => (
+                  <Select.Item key={c} value={c} className="select-item">
+                    <Select.ItemText>{c}</Select.ItemText>
+                    <Select.ItemIndicator>
+                      <Check size={11} color="var(--accent)" />
+                    </Select.ItemIndicator>
+                  </Select.Item>
+                ))}
+              </Select.Viewport>
+            </Select.Content>
+          </Select.Portal>
+        </Select.Root>
       </div>
 
       {/* Skills */}
       <div>
-        <label className="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-1.5">
-          <Send size={14} className="text-gray-400" /> Skills yang Dikuasai
-        </label>
+        <FieldLabel hint="ketik → Enter">Skills</FieldLabel>
         <SkillTagInput value={skills} onChange={setSkills} />
-        <p className="text-xs text-gray-400 mt-1">Ketik nama skill lalu tekan Enter untuk menambah</p>
       </div>
 
       {/* Durasi */}
       <div>
-        <label className="flex items-center gap-1.5 text-sm font-medium text-gray-700 mb-1.5">
-          <Clock size={14} className="text-gray-400" /> Durasi Pengerjaan (hari)
-        </label>
+        <FieldLabel htmlFor="duration-input">Durasi Pengerjaan</FieldLabel>
         <input
+          id="duration-input"
           type="number"
           min="1"
           value={duration}
-          onChange={(e) => setDuration(e.target.value)}
-          placeholder="Contoh: 14"
+          onChange={e => setDuration(e.target.value)}
+          placeholder="jumlah hari, contoh: 14"
           className="input-field"
         />
       </div>
 
       {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 text-red-600 text-sm bg-red-50 border border-red-100 rounded-lg px-3 py-2">
-          <AlertCircle size={14} /> {error}
+        <div className="alert alert--error" style={{ marginBottom: 0 }}>
+          <AlertCircle size={13} color="var(--red)" style={{ flexShrink: 0 }} />
+          <span className="alert__text">{error}</span>
         </div>
       )}
 
-      <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
+      <div className="form-divider" />
+
+      {/* Submit */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="btn-primary"
+        style={{ width: '100%', padding: '9px 16px', justifyContent: 'center' }}
+      >
         {loading
-          ? <><span className="animate-spin">⏳</span> Menghitung...</>
-          : <><Send size={16} /> Estimasi Harga</>
+          ? <span style={{ opacity: 0.7 }}>Menghitung estimasi...</span>
+          : <><Send size={13} /> Estimasi Harga</>
         }
       </button>
     </form>

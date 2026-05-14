@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calculator, Lightbulb } from 'lucide-react';
+import { Info } from 'lucide-react';
 import PriceEstimatorForm from '../components/features/PriceEstimatorForm';
 import PriceResult from '../components/features/PriceResult';
 
@@ -7,24 +7,31 @@ const Estimator = () => {
   const [result, setResult] = useState(null);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-10">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-2 mb-1">
-          <Calculator size={22} className="text-primary-600" />
-          <h1 className="text-2xl font-bold text-gray-900">Estimasi Harga Jasa</h1>
+    <div className="page-wrap--narrow" style={{ position: "relative" }}>
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <p data-aos="fade-down" className="label-mono" style={{ marginBottom: 10 }}>Price Estimator</p>
+        <h1 data-aos="fade-up" data-aos-delay="50" className="page-subtitle">Berapa nilai jasa kamu?</h1>
+        <p data-aos="fade-up" data-aos-delay="100" className="page-desc">
+          Isi kategori jasa, skill yang dikuasai, dan estimasi durasi pengerjaan.
+        </p>
+
+        <div data-aos="fade-up" data-aos-delay="150" className="alert alert--info">
+          <Info size={13} color="var(--indigo)" style={{ marginTop: 1, flexShrink: 0 }} />
+          <p className="alert__text">
+            Semakin spesifik skill yang kamu isi, semakin akurat estimasi harganya.
+          </p>
         </div>
-        <p className="text-gray-500 mt-1 ml-7">Isi detail proyek untuk mendapatkan rekomendasi harga yang adil.</p>
-      </div>
 
-      {/* Tips */}
-      <div className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 mb-6 text-sm text-blue-700">
-        <Lightbulb size={16} className="mt-0.5 shrink-0" />
-        <span>Semakin lengkap skill yang kamu isi, semakin akurat estimasi harganya.</span>
-      </div>
+        <div data-aos="fade-up" data-aos-delay="200">
+          <PriceEstimatorForm onResult={setResult} />
+        </div>
 
-      <PriceEstimatorForm onResult={setResult} />
-      {result && <div className="mt-8"><PriceResult result={result} /></div>}
+        {result && (
+          <div data-aos="zoom-in" data-aos-delay="100" style={{ marginTop: 20 }}>
+            <PriceResult result={result} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };

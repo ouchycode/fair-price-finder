@@ -5,7 +5,7 @@
 
 ## Endpoints
 
-### POST /predict
+### POST /estimates
 Estimasi harga jasa freelance.
 
 **Request Body:**

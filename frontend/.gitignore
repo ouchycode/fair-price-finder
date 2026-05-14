@@ -1,26 +1,6 @@
-# Dependencies
-node_modules/
-__pycache__/
-*.pyc
+node_modules
+dist
+.vite
 .env
 .env.local
-.env.production
-
-# Build outputs
-dist/
-build/
-.next/
-
-# ML / Data
-*.h5
-*.keras
-*.pkl
-/data/raw/*
-/data/processed/*
-!/data/raw/.gitkeep
-!/data/processed/.gitkeep
-
-# Misc
 .DS_Store
-*.log
-.vscode/

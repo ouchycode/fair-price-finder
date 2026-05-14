@@ -1,84 +1,165 @@
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { DollarSign, LayoutDashboard, Calculator, Menu, X, TrendingUp } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import * as NavigationMenu from "@radix-ui/react-navigation-menu";
+import { Menu, X } from "lucide-react";
+import { useTheme } from "../../hooks/useTheme";
+import logoSrc from "../../assets/logo/logo-white.png";
+import logoSrcLight from "../../assets/logo/logo-dark.png";
+
+const NAV_LINKS = [
+  { to: "/", label: "Home" },
+  { to: "/estimator", label: "Estimator" },
+  { to: "/dashboard", label: "Dashboard" },
+];
 
 const Navbar = () => {
   const { pathname } = useLocation();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { theme } = useTheme();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const links = [
-    { to: '/',           label: 'Home',       icon: <TrendingUp size={16} /> },
-    { to: '/estimator',  label: 'Estimator',  icon: <Calculator size={16} /> },
-    { to: '/dashboard',  label: 'Dashboard',  icon: <LayoutDashboard size={16} /> },
-  ];
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  const handleLinkClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setMobileOpen(false);
+  };
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <div className="bg-primary-600 text-white p-1.5 rounded-lg">
-              <DollarSign size={18} />
+    <>
+      <nav className="navbar">
+        <div className="navbar-inner">
+          {/* Logo + Brand */}
+          <Link
+            to="/"
+            onClick={handleLinkClick}
+            className="navbar-brand"
+          >
+            <img
+              src={theme === "dark" ? logoSrc : logoSrcLight}
+              alt="FairPrice Finder"
+              className="navbar-brand-logo"
+            />
+            <div className="navbar-brand-text">
+              <span className="navbar-brand-title">
+                FairPriceFinder
+              </span>
+              <span className="navbar-brand-subtitle">
+                Find. Compare. Price Fairly.
+              </span>
             </div>
-            <span className="font-bold text-gray-900 text-lg">
-              FairPrice<span className="text-primary-600">Finder</span>
-            </span>
           </Link>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-1">
-            {links.map(({ to, label, icon }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === to
-                    ? 'bg-primary-50 text-primary-600'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
-              >
-                {icon}
-                {label}
-              </Link>
-            ))}
+          {/* Desktop Nav */}
+          <NavigationMenu.Root
+            className="hide-mobile"
+            style={{
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+            }}
+          >
+            <NavigationMenu.List className="desktop-nav-list">
+              {NAV_LINKS.map(({ to, label }) => (
+                <NavigationMenu.Item key={to}>
+                  <NavigationMenu.Link asChild>
+                    <Link
+                      to={to}
+                      onClick={handleLinkClick}
+                      className={`nav-link${pathname === to ? " nav-link--active" : ""}`}
+                    >
+                      {label}
+                    </Link>
+                  </NavigationMenu.Link>
+                </NavigationMenu.Item>
+              ))}
+            </NavigationMenu.List>
+          </NavigationMenu.Root>
+
+          {/* Desktop CTA */}
+          <div className="hide-mobile" style={{ flexShrink: 0 }}>
+            <Link
+              to="/estimator"
+              onClick={handleLinkClick}
+              className="btn-primary"
+              style={{ fontSize: 12, padding: "6px 14px" }}
+            >
+              Cek Harga
+            </Link>
           </div>
 
-          {/* CTA */}
-          <Link to="/estimator" className="hidden md:flex items-center gap-2 btn-primary text-sm">
-            <Calculator size={16} />
-            Cek Harga
-          </Link>
-
-          {/* Mobile hamburger */}
+          {/* Mobile Hamburger */}
           <button
-            className="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100"
-            onClick={() => setMenuOpen(!menuOpen)}
+            className="hide-desktop mobile-menu-btn"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
           >
-            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+            <Menu size={16} />
           </button>
         </div>
+      </nav>
 
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="md:hidden py-3 border-t border-gray-100 flex flex-col gap-1">
-            {links.map(({ to, label, icon }) => (
-              <Link
-                key={to}
-                to={to}
-                onClick={() => setMenuOpen(false)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
-                  pathname === to ? 'bg-primary-50 text-primary-600' : 'text-gray-600'
-                }`}
-              >
-                {icon}
-                {label}
-              </Link>
-            ))}
-          </div>
-        )}
+      {/* Mobile Menu Backdrop */}
+      {mobileOpen && (
+        <div
+          className="hide-desktop mobile-backdrop"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Mobile Sidebar */}
+      <div
+        className="hide-desktop mobile-sidebar"
+        style={{ right: mobileOpen ? 0 : "-100%" }}
+      >
+        <div className="mobile-sidebar-header">
+          <span className="label-mono">Menu</span>
+          <button
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close menu"
+            className="mobile-sidebar-close"
+          >
+            <X size={15} />
+          </button>
+        </div>
+        <div className="mobile-sidebar-links">
+          {NAV_LINKS.map(({ to, label }) => (
+            <Link
+              key={to}
+              to={to}
+              onClick={handleLinkClick}
+              className="mobile-sidebar-link"
+              style={{
+                background: pathname === to ? "var(--bg-2)" : "transparent",
+                color: pathname === to ? "var(--fg)" : "var(--fg-2)",
+                fontWeight: pathname === to ? 600 : 500,
+              }}
+            >
+              {label}
+            </Link>
+          ))}
+        </div>
+        <div style={{ flex: 1 }} />
+        <div className="mobile-sidebar-footer">
+          <Link
+            to="/estimator"
+            onClick={handleLinkClick}
+            className="btn-primary"
+            style={{
+              width: "100%",
+              justifyContent: "center",
+              padding: "10px 16px",
+              fontSize: 14,
+            }}
+          >
+            Estimasi Harga
+          </Link>
+        </div>
       </div>
-    </nav>
+
+      <div style={{ height: 80 }} />
+    </>
   );
 };
 

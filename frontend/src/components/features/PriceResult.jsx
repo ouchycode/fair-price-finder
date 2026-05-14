@@ -1,45 +1,87 @@
 import React from 'react';
-import { TrendingDown, Minus, TrendingUp, CheckCircle, Info } from 'lucide-react';
+import { CheckCircle2, TrendingDown, Minus, TrendingUp, Info } from 'lucide-react';
+import * as Tooltip from '@radix-ui/react-tooltip';
 
-const fmt = (n) =>
-  new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+const fmt = n => new Intl.NumberFormat('id-ID', {
+  style: 'currency', currency: 'IDR', maximumFractionDigits: 0,
+}).format(n);
+
+const rangesMeta = [
+  {
+    key: 'min_price',
+    label: 'Minimum',
+    icon: TrendingDown,
+    color: 'var(--amber)',
+    bg: 'var(--amber-dim)',
+    border: 'var(--amber-border)',
+    tip: 'Harga terendah yang masih wajar untuk kategori & skill ini.',
+  },
+  {
+    key: 'median_price',
+    label: 'Median',
+    icon: Minus,
+    color: 'var(--indigo)',
+    bg: 'var(--indigo-dim)',
+    border: 'var(--indigo-border)',
+    tip: 'Harga tengah pasar — acuan paling umum saat negosiasi.',
+  },
+  {
+    key: 'max_price',
+    label: 'Maksimum',
+    icon: TrendingUp,
+    color: 'var(--green)',
+    bg: 'var(--green-dim)',
+    border: 'var(--green-border)',
+    tip: 'Harga tertinggi yang bisa kamu tawarkan jika skill sangat in-demand.',
+  },
+];
 
 const PriceResult = ({ result }) => {
   if (!result) return null;
 
-  const ranges = [
-    { label: 'Minimum',  value: result.min_price,    icon: <TrendingDown size={18} />, color: 'text-yellow-600',  bg: 'bg-yellow-50' },
-    { label: 'Median',   value: result.median_price,  icon: <Minus size={18} />,        color: 'text-primary-600', bg: 'bg-primary-50' },
-    { label: 'Maksimum', value: result.max_price,     icon: <TrendingUp size={18} />,   color: 'text-green-600',   bg: 'bg-green-50' },
-  ];
-
   return (
-    <div className="card border-l-4 border-primary-500 space-y-4">
-      {/* Header */}
-      <div className="flex items-center gap-2">
-        <CheckCircle size={18} className="text-green-500" />
-        <h3 className="font-semibold text-gray-900">Estimasi Harga Adil</h3>
-      </div>
-
-      {/* Price range */}
-      <div className="grid grid-cols-3 gap-3">
-        {ranges.map(({ label, value, icon, color, bg }) => (
-          <div key={label} className={`${bg} rounded-xl py-4 px-3 text-center`}>
-            <div className={`flex justify-center mb-1 ${color}`}>{icon}</div>
-            <p className="text-xs text-gray-500 mb-1">{label}</p>
-            <p className={`text-base font-bold ${color} leading-tight`}>{fmt(value)}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Note */}
-      {result.note && (
-        <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
-          <Info size={13} className="mt-0.5 shrink-0" />
-          {result.note}
+    <Tooltip.Provider delayDuration={200}>
+      <div className="result-card">
+        <div className="result-card__header">
+          <CheckCircle2 size={14} color="var(--green)" />
+          <span className="result-card__title">Estimasi Harga Adil</span>
         </div>
-      )}
-    </div>
+
+        <div className="result-price-grid">
+          {rangesMeta.map(({ key, label, icon: Icon, color, bg, border, tip }, index) => (
+            <Tooltip.Root key={key}>
+              <Tooltip.Trigger asChild>
+                <div
+                  className="result-price-cell"
+                  data-aos="zoom-in"
+                  data-aos-delay={index * 100}
+                  style={{ background: bg, border: `1px solid ${border}` }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = color}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = border}
+                >
+                  <Icon size={13} color={color} style={{ margin: '0 auto 7px', display: 'block' }} />
+                  <p className="label-mono result-price-cell__label">{label}</p>
+                  <p className="result-price-cell__value" style={{ color }}>{fmt(result[key])}</p>
+                </div>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content sideOffset={6} className="tooltip-content">
+                  {tip}
+                  <Tooltip.Arrow style={{ fill: 'var(--bg-3)' }} />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          ))}
+        </div>
+
+        {result.note && (
+          <div className="result-note">
+            <Info size={12} color="var(--fg-3)" style={{ marginTop: 1.5, flexShrink: 0 }} />
+            <p className="result-note__text">{result.note}</p>
+          </div>
+        )}
+      </div>
+    </Tooltip.Provider>
   );
 };
 

@@ -1,20 +1,13 @@
 import React from 'react';
 import { BarChart2 } from 'lucide-react';
 
-const MarketChart = ({ data }) => {
-  if (!data || data.length === 0) {
-    return (
-      <div className="h-48 flex flex-col items-center justify-center gap-2 text-gray-400 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
-        <BarChart2 size={32} className="text-gray-300" />
-        <p className="text-sm">Belum ada data untuk ditampilkan</p>
-      </div>
-    );
-  }
-  return (
-    <div>
-      {/* Chart implementation setelah data tersedia */}
+const MarketChart = ({ data }) => (
+  !data || data.length === 0 ? (
+    <div style={{ height: 160, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-5)', background: 'var(--bg-2)', borderRadius: 'var(--r)', border: '1px dashed var(--border-2)' }}>
+      <BarChart2 size={28} color="var(--fg-3)" />
+      <span style={{ fontSize: 'var(--text-xs)', color: 'var(--fg-3)' }}>Belum ada data</span>
     </div>
-  );
-};
+  ) : null
+);
 
 export default MarketChart;

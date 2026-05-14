@@ -26,7 +26,7 @@ Team ID: CC26-PSU164 | Tema: Future-Ready Work & Economy
 - [x] RESTful API URL konvensi → routes mengikuti `/api/resource`
 - [x] Module bundler (Vite) → `frontend/vite.config.js`
 - [x] Networking calls (Axios) → `frontend/src/services/api.js`
-- [x] Integrasi AI/ML → `backend/src/services/predict.service.js`
+- [x] Integrasi AI/ML → `backend/src/services/estimate.service.js`
 
 ### Side Quest - AI Engineer
 - [x] Standalone FastAPI → `ml/scripts/api.py`
@@ -51,7 +51,7 @@ fair-price-finder/
 │       └── services/api.js
 ├── backend/           → Express.js REST API
 │   └── src/
-│       ├── routes/    → /predict, /market, /skills
+│       ├── routes/    → /estimates, /market, /skills
 │       ├── controllers/
 │       └── services/
 ├── ml/                → Python / TensorFlow

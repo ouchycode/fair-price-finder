@@ -1,25 +1,31 @@
 {
-  "name": "fair-price-finder-frontend",
+  "name": "fairprice-finder",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
-  "description": "Frontend UI for Fair Price Finder - CC26-PSU164",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "buildCommand": "npm install && npx vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "lucide-react": "^0.383.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.0"
+    "@base-ui/react": "^1.4.1",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "aos": "^2.3.4",
+    "axios": "^1.7.2",
+    "lucide-react": "^0.395.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.0",
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.32",
-    "tailwindcss": "^3.4.0",
-    "vite": "^5.0.0"
+    "@tailwindcss/vite": "^4.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "tailwindcss": "^4.0.0",
+    "vite": "^5.3.1"
   }
 }

@@ -1,41 +1,53 @@
-import React, { useState } from 'react';
-import { X, Tag } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { X } from 'lucide-react';
 
 const SkillTagInput = ({ value, onChange }) => {
-  const [input, setInput] = useState('');
+  const [input,   setInput]   = useState('');
+  const [focused, setFocused] = useState(false);
+  const inputRef = useRef(null);
 
-  const addSkill = (e) => {
+  const add = (e) => {
     if ((e.key === 'Enter' || e.key === ',') && input.trim()) {
       e.preventDefault();
-      const skill = input.trim();
-      if (!value.includes(skill)) onChange([...value, skill]);
+      const s = input.trim();
+      if (!value.includes(s)) onChange([...value, s]);
       setInput('');
+    }
+    if (e.key === 'Backspace' && !input && value.length > 0) {
+      onChange(value.slice(0, -1));
     }
   };
 
-  const removeSkill = (skill) => onChange(value.filter(s => s !== skill));
-
   return (
-    <div className="border border-gray-300 rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-primary-500 focus-within:border-transparent transition min-h-[44px]">
-      <div className="flex flex-wrap gap-2 mb-1">
-        {value.map(skill => (
-          <span key={skill} className="skill-tag">
-            <Tag size={10} />
-            {skill}
-            <button type="button" onClick={() => removeSkill(skill)} className="hover:text-red-500 ml-0.5">
-              <X size={12} />
+    <div
+      onClick={() => inputRef.current?.focus()}
+      className={`skill-tag-wrap ${focused ? 'skill-tag-wrap--focused' : ''}`}
+      style={{ border: `1px solid ${focused ? 'var(--indigo)' : 'var(--border-1)'}` }}
+    >
+      <div className="skill-tag-list">
+        {value.map(s => (
+          <span key={s} className="skill-tag">
+            {s}
+            <button
+              type="button"
+              className="skill-tag__remove"
+              onClick={() => onChange(value.filter(x => x !== s))}
+            >
+              <X size={10} />
             </button>
           </span>
         ))}
+        <input
+          ref={inputRef}
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={add}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          placeholder={value.length === 0 ? 'React, Figma, Node.js...' : '+ tambah'}
+          className="skill-tag-input"
+        />
       </div>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={addSkill}
-        placeholder={value.length === 0 ? 'Contoh: React, Node.js, Figma...' : 'Tambah skill lagi...'}
-        className="w-full text-sm outline-none bg-transparent text-gray-700 placeholder-gray-400"
-      />
     </div>
   );
 };
