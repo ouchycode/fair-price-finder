@@ -1,4 +1,5 @@
 # Dependencies
+frontend/build/
 node_modules/
 __pycache__/
 *.pyc
@@ -24,3 +25,20 @@ build/
 .DS_Store
 *.log
 .vscode/
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+.venv/
+Thumbs.db
+
+# Model besar
+model/saved_model/
+
+# Jupyter
+.ipynb_checkpoints/
+
+
+

@@ -1,0 +1,26 @@
+{
+  "model_version": "v1.0",
+  "architecture": "Neural Network with ResidualDenseBlock (custom layer)",
+  "training_date": "2026-05-17T15:15:33.051480",
+  "test_metrics": {
+    "mae_log": 0.5995745430720618,
+    "mae_idr": 340605.19940748526,
+    "rmse_idr": 720220.9584839519,
+    "mape_pct": 56.12674216518525,
+    "r2_log": 0.444945639768052,
+    "r2_idr": 0.13758480902371217
+  },
+  "training_config": {
+    "optimizer": "Adam",
+    "learning_rate": 0.001,
+    "loss": "mse",
+    "gradient_clipping": "clipnorm=1.0",
+    "batch_size": 64,
+    "final_train_loss": 0.8429265022277832,
+    "final_val_loss": 4.073394775390625
+  },
+  "clipping_bounds": {
+    "idr_p01": 50000.000000000015,
+    "idr_p99": 4500000.000000002
+  }
+}

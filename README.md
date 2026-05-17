@@ -1,114 +1,194 @@
 # 💰 Fair Price Finder for Freelancers
-**Coding Camp 2026 powered by DBS Foundation**  
-Team ID: CC26-PSU164 | Tema: Future-Ready Work & Economy
+**Capstone Project - Coding Camp 2026 powered by DBS Foundation**  
+ID Tim: CC26-PSU164 | Tema: Future-Ready Work & Economy
+
+> Aplikasi untuk membantu freelancer pemula dan client untuk mendapatkan perkiraan harga wajar untuk layanan freelance di Indonesia berdasarkan jenis layanan, skill, dan durasi pengerjaan. Perkiraan data ini didapat dari data riil dari Fastwork, Sribu, dan Projects.co.id yang telah diolah.
 
 ---
-
-## ✅ Checklist Requirements
-
-### Main Quest - AI Engineer
-- [x] Functional API / Model Subclassing → `ml/src/models/deep_learning_model.py`
-- [x] Custom Layer (`PriceNormalizationLayer`)
-- [x] Custom Loss Function (`WeightedMAELoss`)
-- [x] Custom Callback (`PriceModelCallback`)
-- [x] Save model `.keras` format → `ml/saved_models/`
-- [x] Inference code → `ml/notebooks/04_Inference.ipynb`
-
-### Main Quest - Data Science
-- [x] Data Wrangling (Gathering, Assessing, Cleaning) → `ml/src/data/`
-- [x] EDA → `ml/notebooks/01_EDA.ipynb`
-- [x] Visualisasi & Explanatory Analysis → `ml/notebooks/01_EDA.ipynb`
-- [x] Streamlit Dashboard → `ml/dashboard/app.py`
-- [x] Data Dictionary → `data/data_dictionary.md`
-
-### Main Quest - Front End & Back End
-- [x] RESTful API (Express) → `backend/src/`
-- [x] RESTful API URL konvensi → routes mengikuti `/api/resource`
-- [x] Module bundler (Vite) → `frontend/vite.config.js`
-- [x] Networking calls (Axios) → `frontend/src/services/api.js`
-- [x] Integrasi AI/ML → `backend/src/services/estimate.service.js`
-
-### Side Quest - AI Engineer
-- [x] Standalone FastAPI → `ml/scripts/api.py`
-- [x] tf.GradientTape training loop → `ml/src/models/deep_learning_model.py`
-- [x] TensorBoard integration → callback di training
-- [ ] Target: Accuracy ≥ 85%, MAE ≤ 0.02 (dicapai saat training)
-
-### Side Quest - Data Science
-- [x] A/B Testing → `ml/scripts/ab_testing.py`
-- [ ] Deploy Streamlit Cloud (dilakukan setelah model jadi)
-- [ ] Technical Report PDF (akhir proyek)
-
----
-
-## 📁 Struktur Proyek
-```
-fair-price-finder/
-├── frontend/          → React + Vite (UI interaktif)
-│   └── src/
-│       ├── components/
-│       ├── pages/
-│       └── services/api.js
-├── backend/           → Express.js REST API
-│   └── src/
-│       ├── routes/    → /estimates, /market, /skills
-│       ├── controllers/
-│       └── services/
-├── ml/                → Python / TensorFlow
-│   ├── notebooks/     → 01_EDA → 02_Preprocessing → 03_Training → 04_Inference
-│   ├── src/
-│   │   ├── data/      → scraper.py, preprocessor.py
-│   │   ├── features/  → feature_engineering.py
-│   │   ├── models/    → deep_learning_model.py (Functional API)
-│   │   └── evaluation/→ metrics.py
-│   ├── dashboard/     → Streamlit app
-│   ├── scripts/       → api.py (FastAPI), ab_testing.py
-│   ├── saved_models/  → model.keras
-│   └── logs/          → TensorBoard logs
-├── data/
-│   ├── raw/           → data mentah hasil scraping
-│   ├── interim/       → data setengah bersih
-│   ├── processed/     → dataset final siap training
-│   └── data_dictionary.md
-└── docs/
-    ├── api/endpoints.md
-    └── architecture/overview.md
-```
-
-## 🚀 Cara Menjalankan
-
-### Frontend
-```bash
-cd frontend && npm install && npm run dev
-```
-
-### Backend (Express)
-```bash
-cd backend && npm install && npm run dev
-```
-
-### ML API (FastAPI)
-```bash
-cd ml && pip install -r requirements.txt
-python scripts/api.py
-```
-
-### Streamlit Dashboard
-```bash
-cd ml/dashboard && streamlit run app.py
-```
-
-### TensorBoard
-```bash
-tensorboard --logdir ml/logs
-```
 
 ## 👥 Tim
 | Nama | Role |
 |------|------|
 | Meyrica Dianiken Cintami | Data Scientist |
+| Gabrielle Angelina Ambasalu | Data Scientist |
 | Victor Thimothi Benyamin Loka | Full-Stack Web Developer |
 | Kevin Ardiansyah | Full-Stack Web Developer |
-| Gabrielle Angelina Ambasalu | Data Scientist |
 | Felicia Audrey | AI Engineer |
 | Evan Suryadinata S | AI Engineer |
+
+## 📁 Struktur Proyek
+
+```
+fair-price-finder/
+├── frontend/                 ← React + Vite app
+│   └── src/
+│       ├── components/
+│       ├── contexts/
+│       ├── hooks/
+│       ├── pages/
+│       ├── services/
+│       └── styles/
+│
+├── backend/                  ← Express REST API
+│   └── src/
+│       ├── config/
+│       ├── controllers/
+│       ├── middlewares/
+│       ├── routes/
+│       └── services/
+│
+├── ai/                       ← Notebook, dashboard, dan script AI/DS
+│   ├── notebooks/
+│   ├── dashboard/
+│   ├── scripts/
+│   ├── scraper/
+│   └── requirements.txt
+│
+├── data/                     ← Data mentah, bersih, dan output
+├── docs/                     ← Dokumentasi API dan arsitektur
+└── README.md
+```
+
+---
+
+## 📦 Prasyarat
+
+Sebelum menjalankan project ini, siapkan:
+
+- Node.js 18+ dan npm
+- Python 3.10 untuk folder `ai/`
+- Git
+
+Catatan: dependency Python di repo ini paling aman dipasang dengan Python 3.10 di Windows. Python 3.13 pernah memicu kegagalan build untuk beberapa paket seperti `numpy` dan `pandas`.
+
+File yang masih bersifat standalone / template dan perlu disesuaikan sebelum dipakai penuh:
+
+- `ai/scripts/api.py` → standalone FastAPI untuk testing inference
+- `ai/scripts/ab_testing.py` → script eksperimen, bukan alur utama produk
+- `ai/dashboard/app.py` → dashboard awal, masih ada placeholder yang perlu disesuaikan
+
+---
+
+## 🚀 Cara Menjalankan
+
+### 1) Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend berjalan di `http://localhost:5173`.
+
+Jika backend tidak memakai port default, buat file `.env` di `frontend/`:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+### 2) Backend Express
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+Backend berjalan di `http://localhost:5000`.
+
+Env opsional di `backend/.env`:
+
+```env
+PORT=5000
+FRONTEND_URL=http://localhost:5173
+```
+
+Endpoint utama:
+
+- `GET /health`
+- `POST /api/estimates`
+- `GET /api/market/trends`
+- `GET /api/market/categories`
+- `GET /api/skills`
+- `GET /api/skills/popular`
+
+### 3) Notebook dan pipeline AI/Data Science
+
+```bash
+cd ai
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Setelah itu buka VS Code Notebook lalu jalankan notebook utama di folder `ai/models/`:
+
+- `ai/models/01_data_preparation_capstone.ipynb`
+- `ai/models/02_model_training.ipynb`
+- `ai/models/03_inference_&_API.ipynb`
+
+Kalau yang ingin dijalankan hanya alur model, cukup notebook di atas. Notebook lain di `ai/notebooks/` dipakai untuk analisis dan dokumentasi pendukung.
+
+Kalau masih perlu alur data pendukung, jalankan juga:
+
+- `ai/notebooks/01_data_pipeline.ipynb`
+- `ai/notebooks/data_dictionary.ipynb`
+- `ai/notebooks/eda_merged.ipynb`
+- `ai/notebooks/explanatory_analysis.ipynb`
+
+Notebook `01_data_pipeline.ipynb` akan membaca data dari folder `data/` dan menulis output ke `data/output/`.
+
+### 4) Streamlit Dashboard
+
+```bash
+cd ai/dashboard
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Dashboard biasanya tersedia di `http://localhost:8501`.
+
+### 5) FastAPI model API
+
+```bash
+cd ai
+python scripts/api.py
+```
+
+Service ini berjalan di `http://localhost:8000`.
+Ini opsional dan tidak wajib kalau kamu sudah menjalankan inference langsung dari notebook `ai/models/03_inference_&_API.ipynb`.
+
+Kalau ingin menjalankan dengan `uvicorn`:
+
+```bash
+uvicorn scripts.api:app --reload --host 0.0.0.0 --port 8000
+```
+
+### 6) A/B Testing
+
+```bash
+cd ai
+python scripts/ab_testing.py
+```
+
+---
+
+## 🧭 Urutan Jalankan Semua Komponen
+
+Kalau ingin menyalakan seluruh aplikasi dari nol, ikuti urutan ini:
+
+1. Jalankan backend Express.
+2. Jalankan frontend Vite.
+3. Jalankan notebook pipeline AI/data untuk memastikan dataset output tersedia.
+4. Jalankan Streamlit dashboard jika ingin melihat insight data.
+5. Jalankan FastAPI hanya kalau butuh service model terpisah untuk testing.
+
+---
+
+## 📌 Catatan Penting
+
+- Folder `frontend/` dan `backend/` sudah terpisah, jadi `npm install` harus dijalankan di masing-masing folder.
+- Jika frontend tidak bisa memanggil API, cek nilai `VITE_API_BASE_URL` dan pastikan backend hidup di port yang sama.
+- Jika notebook gagal membaca file CSV, pastikan `data/raw/` dan `data/output/` sudah ada.
+- Untuk lingkungan Windows, aktifkan virtual environment sebelum menjalankan script Python di `ai/`.
