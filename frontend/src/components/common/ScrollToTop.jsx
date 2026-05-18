@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
 
+const SCROLL_VISIBILITY_THRESHOLD = 300;
+
 const ScrollToTop = () => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Show button when page is scrolled up to given distance
   const toggleVisibility = () => {
-    if (window.scrollY > 300) {
-      setIsVisible(true);
-    } else {
-      setIsVisible(false);
-    }
+    setIsVisible(window.scrollY > SCROLL_VISIBILITY_THRESHOLD);
   };
 
   const scrollToTop = () => {
@@ -33,25 +30,7 @@ const ScrollToTop = () => {
         <button
           onClick={scrollToTop}
           aria-label="Scroll to top"
-          style={{
-            position: 'fixed',
-            bottom: '24px',
-            right: '24px',
-            zIndex: 99,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            background: 'var(--bg-1)',
-            border: '1px solid var(--border-2)',
-            color: 'var(--fg)',
-            boxShadow: 'var(--shadow-3)',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            backdropFilter: 'blur(8px)',
-          }}
+          className="scroll-to-top"
           onMouseEnter={(e) => {
             e.currentTarget.style.background = 'var(--bg-2)';
             e.currentTarget.style.transform = 'translateY(-2px)';

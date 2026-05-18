@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import PriceEstimatorForm from '../components/features/PriceEstimatorForm';
 import PriceResult from '../components/features/PriceResult';
+import ResultSkeleton from '../components/features/ResultSkeleton';
 
 const Estimator = () => {
   const [result, setResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <div className="page-wrap--narrow" style={{ position: "relative" }}>
@@ -23,14 +25,18 @@ const Estimator = () => {
         </div>
 
         <div data-aos="fade-up" data-aos-delay="200">
-          <PriceEstimatorForm onResult={setResult} />
+          <PriceEstimatorForm onResult={setResult} onLoading={setIsLoading} />
         </div>
 
-        {result && (
+        {isLoading ? (
+          <div data-aos="zoom-in" data-aos-delay="100" style={{ marginTop: 20 }}>
+            <ResultSkeleton />
+          </div>
+        ) : result ? (
           <div data-aos="zoom-in" data-aos-delay="100" style={{ marginTop: 20 }}>
             <PriceResult result={result} />
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

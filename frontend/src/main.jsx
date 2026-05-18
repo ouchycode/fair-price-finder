@@ -6,12 +6,13 @@ import 'aos/dist/aos.css';
 import { ThemeProvider } from './contexts/ThemeContext';
 import App from './App';
 import './styles/index.css';
+import logoFpf from './assets/logo/logo-fpf.png';
 
-// Prevent flash: set data-theme before first React render
+// CEGAH KILATAN TETAPKAN TEMA DATA SEBELUM RENDER REACT PERTAMA
 try {
   const saved = localStorage.getItem('fpf-theme');
   if (saved) document.documentElement.setAttribute('data-theme', saved);
-} catch { /* ignore */ }
+} catch { /* ABAIKAN */ }
 
 function Root() {
   useEffect(() => {
@@ -21,6 +22,12 @@ function Root() {
       once: true,
       offset: 40,
     });
+
+    // TETAPKAN FAVICON KE LOGO FPF
+    try {
+      const link = document.querySelector("link[rel='icon']");
+      if (link) link.href = logoFpf;
+    } catch (e) { /* ABAIKAN */ }
   }, []);
 
   return (
