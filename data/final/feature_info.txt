@@ -1,0 +1,103 @@
+=== DATASET FINAL — FAIR PRICE FINDER ===
+
+Total baris  : 5461
+Total kolom  : 78
+Target       : log_harga (log1p dari harga asli Rupiah)
+
+=== FITUR ===
+
+[ NUMERIK ]
+  rating
+  log_order
+  log_durasi
+  is_new_seller
+
+[ ONE-HOT: platform ]
+  platform_fastwork
+  platform_projects.co.id
+  platform_sribu
+
+[ ONE-HOT: kategori_utama ]
+  kategori_utama_Grafis & Desain
+  kategori_utama_Lainnya
+  kategori_utama_Past Project
+  kategori_utama_Pemasaran & Periklanan
+  kategori_utama_Penulisan & Penerjemahan
+  kategori_utama_Visual & Audio
+  kategori_utama_Web dan Pemrograman
+
+[ ONE-HOT: sub_kategori ]
+  sub_kategori_AI Automation
+  sub_kategori_Accounting
+  sub_kategori_All
+  sub_kategori_Audio Video Photo
+  sub_kategori_Chatbot
+  sub_kategori_Content Creator
+  sub_kategori_Data Analysis
+  sub_kategori_Data Entry & Mining
+  sub_kategori_Data Science
+  sub_kategori_Digital Marketing
+  sub_kategori_Entri Data
+  sub_kategori_Game Programming
+  sub_kategori_Infografis
+  sub_kategori_Internet Marketing
+  sub_kategori_Layout Logo Graphic
+  sub_kategori_Logo Design
+  sub_kategori_Machine Learning
+  sub_kategori_Mobile Application
+  sub_kategori_Motion Graphics
+  sub_kategori_Others
+  sub_kategori_Penerjemahan
+  sub_kategori_Penulisan Konten
+  sub_kategori_Presentasi
+  sub_kategori_SEO
+  sub_kategori_Social Media Mgmt
+  sub_kategori_UI & UX Design
+  sub_kategori_Video Editing
+  sub_kategori_Web Design
+  sub_kategori_Web Development
+
+[ ONE-HOT: level ]
+  level_baru
+  level_junior
+  level_menengah
+  level_senior
+
+[ MULTI-LABEL: skills (top 30) ]
+  skill_python
+  skill_adobe_illustrator
+  skill_adobe_premiere
+  skill_copywriting
+  skill_seo
+  skill_terjemahan
+  skill_bahasa_inggris
+  skill_bahasa_indonesia
+  skill_video_editing
+  skill_canva
+  skill_coreldraw
+  skill_branding
+  skill_davinci_resolve
+  skill_figma
+  skill_machine_learning
+  skill_social_media
+  skill_google_ads
+  skill_meta_ads
+  skill_web_development
+  skill_digital_marketing
+  skill_data_entry
+  skill_microsoft_excel
+  skill_google_sheets
+  skill_data_science
+  skill_after_effects
+  skill_motion_graphics
+  skill_data_analysis
+  skill_infografis
+  skill_flutter
+  skill_content_strategy
+
+=== CATATAN UNTUK MODELING ===
+- Target log_harga: gunakan np.expm1(prediction) untuk konversi balik ke Rupiah
+- is_new_seller = 1 → seller baru, belum ada track record
+- level: baru / junior / menengah / senior (dari kombinasi rating + order)
+- Semua fitur sudah dalam format numerik, siap langsung masuk model
+- Tidak ada missing values
