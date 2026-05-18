@@ -27,6 +27,7 @@ streamlit==1.29.0
 # API serving (AI Engineer)
 fastapi==0.104.1
 uvicorn==0.24.0
+groq==0.9.0
 
 # Jupyter
 jupyter==1.0.0

@@ -13,9 +13,8 @@ build/
 .next/
 
 # ML / Data
-*.h5
-*.keras
-*.pkl
+# *.keras
+# *.pkl
 /data/raw/*
 /data/processed/*
 !/data/raw/.gitkeep
@@ -39,6 +38,8 @@ model/saved_model/
 
 # Jupyter
 .ipynb_checkpoints/
+
+data/logs
 
 
 

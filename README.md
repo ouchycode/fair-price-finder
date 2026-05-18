@@ -63,7 +63,6 @@ Catatan: dependency Python di repo ini paling aman dipasang dengan Python 3.10 d
 
 File yang masih bersifat standalone / template dan perlu disesuaikan sebelum dipakai penuh:
 
-- `ai/scripts/api.py` → standalone FastAPI untuk testing inference
 - `ai/scripts/ab_testing.py` → script eksperimen, bukan alur utama produk
 - `ai/dashboard/app.py` → dashboard awal, masih ada placeholder yang perlu disesuaikan
 
@@ -153,16 +152,16 @@ Dashboard biasanya tersedia di `http://localhost:8501`.
 
 ```bash
 cd ai
-python scripts/api.py
+python app.py
 ```
 
 Service ini berjalan di `http://localhost:8000`.
-Ini opsional dan tidak wajib kalau kamu sudah menjalankan inference langsung dari notebook `ai/models/03_inference_&_API.ipynb`.
+Ini adalah entrypoint API utama untuk inference dan konsultasi GenAI.
 
-Kalau ingin menjalankan dengan `uvicorn`:
+Kalau ingin menjalankan langsung dengan `uvicorn`:
 
 ```bash
-uvicorn scripts.api:app --reload --host 0.0.0.0 --port 8000
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### 6) A/B Testing
@@ -182,7 +181,7 @@ Kalau ingin menyalakan seluruh aplikasi dari nol, ikuti urutan ini:
 2. Jalankan frontend Vite.
 3. Jalankan notebook pipeline AI/data untuk memastikan dataset output tersedia.
 4. Jalankan Streamlit dashboard jika ingin melihat insight data.
-5. Jalankan FastAPI hanya kalau butuh service model terpisah untuk testing.
+5. Jalankan FastAPI utama lewat `ai/app.py` kalau ingin service model dan konsultasi GenAI.
 
 ---
 

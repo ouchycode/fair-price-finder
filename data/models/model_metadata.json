@@ -1,14 +1,14 @@
 {
   "model_version": "v1.0",
   "architecture": "Neural Network with ResidualDenseBlock (custom layer)",
-  "training_date": "2026-05-17T15:15:33.051480",
+  "training_date": "2026-05-18T23:39:07.989417",
   "test_metrics": {
-    "mae_log": 0.5995745430720618,
-    "mae_idr": 340605.19940748526,
-    "rmse_idr": 720220.9584839519,
-    "mape_pct": 56.12674216518525,
-    "r2_log": 0.444945639768052,
-    "r2_idr": 0.13758480902371217
+    "mae_log": 0.5821024775505066,
+    "mae_idr": 334445.6875,
+    "rmse_idr": 709589.375,
+    "mape_pct": 59.55893397331238,
+    "r2_log": 0.4652295908878523,
+    "r2_idr": 0.1628580675015392
   },
   "training_config": {
     "optimizer": "Adam",
@@ -16,11 +16,11 @@
     "loss": "mse",
     "gradient_clipping": "clipnorm=1.0",
     "batch_size": 64,
-    "final_train_loss": 0.8429265022277832,
-    "final_val_loss": 4.073394775390625
+    "final_train_loss": 0.8228735327720642,
+    "final_val_loss": 3.914200782775879
   },
   "clipping_bounds": {
-    "idr_p01": 50000.000000000015,
-    "idr_p99": 4500000.000000002
+    "idr_p01": 50000.0078125,
+    "idr_p99": 4499998.0
   }
 }
