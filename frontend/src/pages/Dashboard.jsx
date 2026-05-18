@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TrendingUp, TrendingDown, AlertTriangle, Minus } from "lucide-react";
+import { TrendingUp, TrendingDown, AlertTriangle, Minus, Activity, Users, BarChart2 } from "lucide-react";
 import * as Separator from "@radix-ui/react-separator";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import {
@@ -335,6 +335,46 @@ const Dashboard = () => {
             <option value="month">Bulan Ini</option>
             <option value="year">Tahun Ini</option>
           </select>
+        </div>
+
+        {/* KPI CARDS */}
+        <div className="kpi-grid" data-aos="fade-up" data-aos-delay="50">
+          <div className="kpi-card">
+            <div className="kpi-card__header">
+              <span className="kpi-card__title">Total Volume</span>
+              <Activity size={14} color="var(--fg-3)" />
+            </div>
+            <div className="kpi-card__value">
+              {rawData.reduce((acc, curr) => acc + curr.demand, 0).toLocaleString("id-ID")}
+            </div>
+            <div className="kpi-card__trend" style={{ color: "var(--green)" }}>
+              <TrendingUp size={12} /> +12.5% dari sebelumnya
+            </div>
+          </div>
+          <div className="kpi-card">
+            <div className="kpi-card__header">
+              <span className="kpi-card__title">Rata-rata Harga</span>
+              <BarChart2 size={14} color="var(--fg-3)" />
+            </div>
+            <div className="kpi-card__value">
+              {filterType === "job" ? "Rp 3,8jt" : "Rp 140rb"}
+            </div>
+            <div className="kpi-card__trend" style={{ color: "var(--fg-2)" }}>
+              Stabil
+            </div>
+          </div>
+          <div className="kpi-card">
+            <div className="kpi-card__header">
+              <span className="kpi-card__title">Top {filterType === "job" ? "Pekerjaan" : "Skill"}</span>
+              <Users size={14} color="var(--fg-3)" />
+            </div>
+            <div className="kpi-card__value" style={{ fontSize: "18px", marginTop: "6px" }}>
+              {leaderboardData[0]?.name}
+            </div>
+            <div className="kpi-card__trend" style={{ color: "var(--indigo)" }}>
+              Paling banyak dicari
+            </div>
+          </div>
         </div>
 
         {/* GRAFIK TREN */}

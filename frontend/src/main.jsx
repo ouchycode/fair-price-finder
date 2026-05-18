@@ -17,10 +17,10 @@ try {
 function Root() {
   useEffect(() => {
     AOS.init({
-      duration: 600,
-      easing: 'ease-out-quart',
-      once: true,
-      offset: 40,
+      duration: 750,
+      easing: 'ease-out-cubic',
+      once: false,
+      offset: 50,
     });
 
     // TETAPKAN FAVICON KE LOGO FPF

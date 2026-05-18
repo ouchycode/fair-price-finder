@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import {
   CheckCircle2,
-  TrendingDown,
-  Minus,
-  TrendingUp,
   Info,
   Copy,
   Check,
@@ -19,35 +16,7 @@ const fmt = (n) =>
     maximumFractionDigits: 0,
   }).format(n);
 
-const rangesMeta = [
-  {
-    key: "min_price",
-    label: "Minimum",
-    icon: TrendingDown,
-    color: "var(--amber)",
-    bg: "var(--amber-dim)",
-    border: "var(--amber-border)",
-    tip: "Harga terendah yang masih wajar untuk kategori & skill ini.",
-  },
-  {
-    key: "median_price",
-    label: "Median",
-    icon: Minus,
-    color: "var(--indigo)",
-    bg: "var(--indigo-dim)",
-    border: "var(--indigo-border)",
-    tip: "Harga tengah pasar - acuan paling umum saat negosiasi.",
-  },
-  {
-    key: "max_price",
-    label: "Maksimum",
-    icon: TrendingUp,
-    color: "var(--green)",
-    bg: "var(--green-dim)",
-    border: "var(--green-border)",
-    tip: "Harga tertinggi yang bisa kamu tawarkan jika skill sangat in-demand.",
-  },
-];
+
 
 const PriceResult = ({ result }) => {
   const [copied, setCopied] = useState(false);
@@ -97,45 +66,40 @@ const PriceResult = ({ result }) => {
           </button>
         </div>
 
-        <div className="result-price-grid">
-          {rangesMeta.map(
-            ({ key, label, icon: Icon, color, bg, border, tip }, index) => (
-              <Tooltip.Root key={key}>
+        <div className="result-price-display">
+          <div className="result-price-main" data-aos="zoom-in" data-aos-delay={100}>
+            <span className="result-price-main__label">Harga Tengah (Median)</span>
+            <span className="result-price-main__value">{fmt(result.median_price)}</span>
+          </div>
+          
+          <div className="result-price-range" data-aos="fade-up" data-aos-delay={200}>
+            <div className="result-price-range__item">
+              <span className="result-price-range__label">Min</span>
+              <span className="result-price-range__value">{fmt(result.min_price)}</span>
+            </div>
+            
+            <div className="result-price-range__bar-wrap">
+              <Tooltip.Root>
                 <Tooltip.Trigger asChild>
-                  <div
-                    className="result-price-cell"
-                    data-aos="zoom-in"
-                    data-aos-delay={index * 100}
-                    style={{ background: bg, border: `1px solid ${border}` }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.borderColor = color)
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.borderColor = border)
-                    }
-                  >
-                    <Icon
-                      size={13}
-                      color={color}
-                      style={{ margin: "0 auto 7px", display: "block" }}
-                    />
-                    <p className="label-mono result-price-cell__label">
-                      {label}
-                    </p>
-                    <p className="result-price-cell__value" style={{ color }}>
-                      {fmt(result[key])}
-                    </p>
+                  <div className="result-price-range__bar">
+                    <div className="result-price-range__fill"></div>
+                    <div className="result-price-range__marker"></div>
                   </div>
                 </Tooltip.Trigger>
                 <Tooltip.Portal>
                   <Tooltip.Content sideOffset={6} className="tooltip-content">
-                    {tip}
+                    Estimasi posisi pasar dari keahlianmu
                     <Tooltip.Arrow style={{ fill: "var(--bg-3)" }} />
                   </Tooltip.Content>
                 </Tooltip.Portal>
               </Tooltip.Root>
-            ),
-          )}
+            </div>
+            
+            <div className="result-price-range__item" style={{ textAlign: "right" }}>
+              <span className="result-price-range__label">Maks</span>
+              <span className="result-price-range__value">{fmt(result.max_price)}</span>
+            </div>
+          </div>
         </div>
 
         {result.note && (

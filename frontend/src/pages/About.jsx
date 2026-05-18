@@ -360,7 +360,9 @@ const About = () => (
           GitHub.
         </p>
         <a
-          href="#"
+          href="https://github.com/kevinardi/fair-price-finder"
+          target="_blank"
+          rel="noopener noreferrer"
           className="btn-primary"
           style={{ fontSize: 14, padding: "9px 22px" }}
         >

@@ -1,9 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
-import { ChevronDown } from "lucide-react";
+import { Plus, Minus } from "lucide-react";
 
 const FaqItem = ({ q, a, index }) => {
   const [open, setOpen] = useState(false);
+  const contentRef = useRef(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (contentRef.current) {
+      setHeight(open ? contentRef.current.scrollHeight : 0);
+    }
+  }, [open]);
 
   return (
     <div
@@ -13,17 +21,18 @@ const FaqItem = ({ q, a, index }) => {
     >
       <button className="faq-trigger" onClick={() => setOpen((o) => !o)}>
         <span className="faq-trigger__text">{q}</span>
-        <ChevronDown
-          size={14}
-          style={{
-            flexShrink: 0,
-            transition: "transform 0.2s ease",
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
-            color: "var(--fg-2)",
-          }}
-        />
+        <span className="faq-trigger__icon">
+          {open ? <Minus size={14} strokeWidth={2} /> : <Plus size={14} strokeWidth={2} />}
+        </span>
       </button>
-      {open && <p className="faq-answer">{a}</p>}
+      <div
+        className="faq-answer-wrap"
+        style={{ height, overflow: "hidden", transition: "height 0.28s cubic-bezier(0.16, 1, 0.3, 1)" }}
+      >
+        <div ref={contentRef}>
+          <p className="faq-answer">{a}</p>
+        </div>
+      </div>
     </div>
   );
 };

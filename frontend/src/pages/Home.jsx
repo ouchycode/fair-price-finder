@@ -5,6 +5,10 @@ import * as Separator from "@radix-ui/react-separator";
 import StatCounter from "../components/features/StatCounter";
 import FaqItem from "../components/features/FaqItem";
 
+import step1Img from "../assets/images/step-1.png";
+import step2Img from "../assets/images/step-2.png";
+import step3Img from "../assets/images/step-3.png";
+
 // DATA STATIS
 const features = [
   {
@@ -42,18 +46,21 @@ const steps = [
     title: "Pilih Kategori",
     desc: "Tentukan kategori jasa yang sesuai dengan pekerjaan kamu.",
     delay: 0,
+    img: step1Img,
   },
   {
     n: "2",
     title: "Tambah Skill",
     desc: "Input skill yang dikuasai agar estimasi lebih presisi.",
     delay: 100,
+    img: step2Img,
   },
   {
     n: "3",
     title: "Dapatkan Estimasi",
     desc: "Lihat range harga min, median, dan maksimum secara instan.",
     delay: 200,
+    img: step3Img,
   },
 ];
 
@@ -211,11 +218,19 @@ const Home = () => (
         Tiga langkah, estimasi instan
       </h2>
       <div className="steps-grid">
-        {steps.map(({ n, title, desc, delay }) => (
-          <div key={n} data-aos="fade-up" data-aos-delay={delay}>
+        {steps.map(({ n, title, desc, delay, img }) => (
+          <div
+            key={n}
+            data-aos="fade-up"
+            data-aos-delay={delay}
+            className="step-item"
+          >
             <div className="step-num">{n}</div>
             <h3 className="step-title">{title}</h3>
             <p className="step-desc">{desc}</p>
+            <div className="step-img-wrap">
+              <img src={img} alt={title} className="step-img" />
+            </div>
           </div>
         ))}
       </div>

@@ -8,18 +8,27 @@ const ResultSkeleton = () => {
         <div style={{ width: 120, height: 16, borderRadius: 4, background: 'var(--bg-3)' }} />
       </div>
 
-      <div className="result-price-grid">
-        {[1, 2, 3].map((i) => (
-          <div
-            key={i}
-            className="result-price-cell"
-            style={{ background: 'var(--bg-2)', border: '1px solid var(--border-1)' }}
-          >
-            <div style={{ width: 13, height: 13, margin: '0 auto 7px', background: 'var(--bg-3)', borderRadius: '50%' }} />
-            <div style={{ width: 60, height: 12, margin: '0 auto 8px', background: 'var(--bg-3)', borderRadius: 2 }} />
-            <div style={{ width: 90, height: 18, margin: '0 auto', background: 'var(--bg-3)', borderRadius: 2 }} />
+      <div className="result-price-display">
+        <div className="result-price-main">
+          <div style={{ width: 140, height: 12, margin: '0 auto 8px', background: 'var(--bg-3)', borderRadius: 2 }} />
+          <div style={{ width: 220, height: 36, margin: '0 auto', background: 'var(--bg-3)', borderRadius: 4 }} />
+        </div>
+        
+        <div className="result-price-range">
+          <div className="result-price-range__item">
+            <div style={{ width: 30, height: 10, marginBottom: 4, background: 'var(--bg-3)', borderRadius: 2 }} />
+            <div style={{ width: 80, height: 14, background: 'var(--bg-3)', borderRadius: 2 }} />
           </div>
-        ))}
+          
+          <div className="result-price-range__bar-wrap">
+            <div className="result-price-range__bar"></div>
+          </div>
+          
+          <div className="result-price-range__item" style={{ alignItems: 'flex-end' }}>
+            <div style={{ width: 40, height: 10, marginBottom: 4, background: 'var(--bg-3)', borderRadius: 2 }} />
+            <div style={{ width: 90, height: 14, background: 'var(--bg-3)', borderRadius: 2 }} />
+          </div>
+        </div>
       </div>
 
       <div className="result-note" style={{ background: 'var(--bg-2)' }}>

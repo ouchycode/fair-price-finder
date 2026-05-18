@@ -54,8 +54,22 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
     }
   };
 
+  const filledCount = [category, skills.length > 0, duration].filter(Boolean).length;
+  const progressPercent = (filledCount / 3) * 100;
+
   return (
-    <form onSubmit={handleSubmit} className="form-card">
+    <form onSubmit={handleSubmit} className="form-card" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* PROGRESS BAR */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--bg-3)' }}>
+        <div 
+          style={{ 
+            height: '100%', 
+            width: `${progressPercent}%`, 
+            background: 'var(--accent)', 
+            transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
+          }} 
+        />
+      </div>
 
       {/* KATEGORI */}
       <div>
