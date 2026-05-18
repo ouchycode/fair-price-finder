@@ -1,5 +1,11 @@
 import React, { useState, useRef } from 'react';
+import PropTypes from 'prop-types';
 import { X } from 'lucide-react';
+import toast from 'react-hot-toast';
+
+const MAX_SKILLS = 10;
+const MIN_SKILL_LENGTH = 2;
+const MAX_SKILL_LENGTH = 50;
 
 const SkillTagInput = ({ value, onChange }) => {
   const [input,   setInput]   = useState('');
@@ -10,7 +16,24 @@ const SkillTagInput = ({ value, onChange }) => {
     if ((e.key === 'Enter' || e.key === ',') && input.trim()) {
       e.preventDefault();
       const s = input.trim();
-      if (!value.includes(s)) onChange([...value, s]);
+
+      // VALIDASI
+      if (s.length < MIN_SKILL_LENGTH || s.length > MAX_SKILL_LENGTH) {
+        toast.error(`Skill harus ${MIN_SKILL_LENGTH}-${MAX_SKILL_LENGTH} karakter`);
+        return;
+      }
+
+      if (value.includes(s)) {
+        toast.error('Skill sudah ditambahkan');
+        return;
+      }
+
+      if (value.length >= MAX_SKILLS) {
+        toast.error(`Maksimal ${MAX_SKILLS} skill`);
+        return;
+      }
+
+      onChange([...value, s]);
       setInput('');
     }
     if (e.key === 'Backspace' && !input && value.length > 0) {
@@ -50,6 +73,11 @@ const SkillTagInput = ({ value, onChange }) => {
       </div>
     </div>
   );
+};
+
+SkillTagInput.propTypes = {
+  value: PropTypes.arrayOf(PropTypes.string).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default SkillTagInput;

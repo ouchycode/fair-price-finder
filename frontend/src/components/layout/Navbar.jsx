@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { Menu, X } from "lucide-react";
-import { useTheme } from "../../hooks/useTheme";
-import logoSrc from "../../assets/logo/logo-white.png";
-import logoSrcLight from "../../assets/logo/logo-dark.png";
+import { Menu } from "lucide-react";
+import logoFpf from "../../assets/logo/logo-fpf.png";
 
 const NAV_LINKS = [
   { to: "/", label: "Home" },
   { to: "/estimator", label: "Estimator" },
   { to: "/dashboard", label: "Dashboard" },
+  { to: "/about", label: "About" },
 ];
 
 const Navbar = () => {
   const { pathname } = useLocation();
-  const { theme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -30,14 +28,14 @@ const Navbar = () => {
     <>
       <nav className="navbar">
         <div className="navbar-inner">
-          {/* Logo + Brand */}
+          {/* LOGO MEREK */}
           <Link
             to="/"
             onClick={handleLinkClick}
             className="navbar-brand"
           >
             <img
-              src={theme === "dark" ? logoSrc : logoSrcLight}
+              src={logoFpf}
               alt="FairPrice Finder"
               className="navbar-brand-logo"
             />
@@ -46,12 +44,12 @@ const Navbar = () => {
                 FairPriceFinder
               </span>
               <span className="navbar-brand-subtitle">
-                Find. Compare. Price Fairly.
+                AI-POWERED PRICE ESTIMATION
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav */}
+          {/* NAV DESKTOP */}
           <NavigationMenu.Root
             className="hide-mobile"
             style={{
@@ -77,7 +75,7 @@ const Navbar = () => {
             </NavigationMenu.List>
           </NavigationMenu.Root>
 
-          {/* Desktop CTA */}
+          {/* CTA DESKTOP */}
           <div className="hide-mobile" style={{ flexShrink: 0 }}>
             <Link
               to="/estimator"
@@ -89,76 +87,59 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Mobile Hamburger */}
+          {/* HAMBURGER SELULER */}
           <button
             className="hide-desktop mobile-menu-btn"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Open menu"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
             <Menu size={16} />
           </button>
         </div>
       </nav>
 
-      {/* Mobile Menu Backdrop */}
+      {/* MENU DROPDOWN SELULER */}
       {mobileOpen && (
         <div
-          className="hide-desktop mobile-backdrop"
+          className="hide-desktop mobile-dropdown-backdrop"
           onClick={() => setMobileOpen(false)}
         />
       )}
 
-      {/* Mobile Sidebar */}
       <div
-        className="hide-desktop mobile-sidebar"
-        style={{ right: mobileOpen ? 0 : "-100%" }}
+        className="hide-desktop mobile-dropdown"
+        style={{ display: mobileOpen ? "flex" : "none" }}
       >
-        <div className="mobile-sidebar-header">
-          <span className="label-mono">Menu</span>
-          <button
-            onClick={() => setMobileOpen(false)}
-            aria-label="Close menu"
-            className="mobile-sidebar-close"
-          >
-            <X size={15} />
-          </button>
-        </div>
-        <div className="mobile-sidebar-links">
+        <div className="mobile-dropdown-links">
           {NAV_LINKS.map(({ to, label }) => (
             <Link
               key={to}
               to={to}
               onClick={handleLinkClick}
-              className="mobile-sidebar-link"
+              className="mobile-dropdown-link"
               style={{
                 background: pathname === to ? "var(--bg-2)" : "transparent",
                 color: pathname === to ? "var(--fg)" : "var(--fg-2)",
-                fontWeight: pathname === to ? 600 : 500,
+                fontWeight: pathname === to ? 600 : 400,
               }}
             >
               {label}
             </Link>
           ))}
         </div>
-        <div style={{ flex: 1 }} />
-        <div className="mobile-sidebar-footer">
+        <div className="mobile-dropdown-footer">
           <Link
             to="/estimator"
             onClick={handleLinkClick}
             className="btn-primary"
-            style={{
-              width: "100%",
-              justifyContent: "center",
-              padding: "10px 16px",
-              fontSize: 14,
-            }}
+            style={{ width: "100%", justifyContent: "center" }}
           >
-            Estimasi Harga
+            Cek Harga
           </Link>
         </div>
       </div>
 
-      <div style={{ height: 80 }} />
+      <div style={{ height: 60 }} />
     </>
   );
 };

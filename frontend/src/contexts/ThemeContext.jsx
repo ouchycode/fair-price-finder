@@ -21,7 +21,7 @@ export const ThemeProvider = ({ children }) => {
     try {
       localStorage.setItem(STORAGE_KEY, theme);
     } catch {
-      /* ignore */
+      /* ABAIKAN */
     }
   }, [theme]);
 

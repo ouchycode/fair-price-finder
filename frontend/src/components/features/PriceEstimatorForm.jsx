@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Send, AlertCircle, ChevronDown, Check } from 'lucide-react';
 import * as Select from '@radix-ui/react-select';
 import * as Label from '@radix-ui/react-label';
+import toast from 'react-hot-toast';
 import SkillTagInput from './SkillTagInput';
 import { estimatePrice } from '../../services/api';
 
@@ -20,35 +22,56 @@ const FieldLabel = ({ htmlFor, children, hint }) => (
   </div>
 );
 
-const PriceEstimatorForm = ({ onResult }) => {
+const PriceEstimatorForm = ({ onResult, onLoading }) => {
   const [category, setCategory] = useState('');
   const [skills,   setSkills]   = useState([]);
   const [duration, setDuration] = useState('');
   const [loading,  setLoading]  = useState(false);
-  const [error,    setError]    = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!category || skills.length === 0 || !duration) {
-      setError('Semua field wajib diisi.');
+      toast.error('Semua field wajib diisi.');
       return;
     }
-    setError('');
     setLoading(true);
+    if (onLoading) onLoading(true);
     try {
       const { data } = await estimatePrice({ category, skills, duration: Number(duration) });
       onResult(data);
-    } catch {
-      setError('Gagal mengambil estimasi. Coba lagi.');
+      // RESET FORMULIR
+      setCategory('');
+      setSkills([]);
+      setDuration('');
+      toast.success('Estimasi berhasil didapatkan!');
+    } catch (error) {
+      const message = error.response?.data?.message || error.message || 'Gagal mengambil estimasi. Coba lagi.';
+      toast.error(message);
+      console.error('Estimation error:', error);
     } finally {
       setLoading(false);
+      if (onLoading) onLoading(false);
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="form-card">
+  const filledCount = [category, skills.length > 0, duration].filter(Boolean).length;
+  const progressPercent = (filledCount / 3) * 100;
 
-      {/* Kategori */}
+  return (
+    <form onSubmit={handleSubmit} className="form-card" style={{ position: 'relative', overflow: 'hidden' }}>
+      {/* PROGRESS BAR */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--bg-3)' }}>
+        <div 
+          style={{ 
+            height: '100%', 
+            width: `${progressPercent}%`, 
+            background: 'var(--accent)', 
+            transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)' 
+          }} 
+        />
+      </div>
+
+      {/* KATEGORI */}
       <div>
         <FieldLabel>Kategori Jasa</FieldLabel>
         <Select.Root value={category} onValueChange={setCategory}>
@@ -77,13 +100,13 @@ const PriceEstimatorForm = ({ onResult }) => {
         </Select.Root>
       </div>
 
-      {/* Skills */}
+      {/* KEAHLIAN */}
       <div>
         <FieldLabel hint="ketik → Enter">Skills</FieldLabel>
         <SkillTagInput value={skills} onChange={setSkills} />
       </div>
 
-      {/* Durasi */}
+      {/* DURASI */}
       <div>
         <FieldLabel htmlFor="duration-input">Durasi Pengerjaan</FieldLabel>
         <input
@@ -97,17 +120,11 @@ const PriceEstimatorForm = ({ onResult }) => {
         />
       </div>
 
-      {/* Error */}
-      {error && (
-        <div className="alert alert--error" style={{ marginBottom: 0 }}>
-          <AlertCircle size={13} color="var(--red)" style={{ flexShrink: 0 }} />
-          <span className="alert__text">{error}</span>
-        </div>
-      )}
+
 
       <div className="form-divider" />
 
-      {/* Submit */}
+      {/* KIRIM */}
       <button
         type="submit"
         disabled={loading}
@@ -121,6 +138,11 @@ const PriceEstimatorForm = ({ onResult }) => {
       </button>
     </form>
   );
+};
+
+PriceEstimatorForm.propTypes = {
+  onResult: PropTypes.func.isRequired,
+  onLoading: PropTypes.func,
 };
 
 export default PriceEstimatorForm;
