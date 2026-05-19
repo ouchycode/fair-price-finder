@@ -185,8 +185,8 @@ def _load_merged_for_inference():
     if not _PANDAS_AVAILABLE:
         return None
     candidates = [
-        Path(__file__).parent.parent / 'data' / 'raw' / 'data' / 'cleaned' / 'merged_cleaned.csv',
-        Path(__file__).parent.parent / 'data' / 'raw' / 'data' / 'cleaned' / 'merged_raw_imputed.csv',
+        PROJECT_ROOT / 'data' / 'raw' / 'data' / 'cleaned' / 'merged_cleaned.csv',
+        PROJECT_ROOT / 'data' / 'raw' / 'data' / 'cleaned' / 'merged_raw_imputed.csv',
     ]
     for p in candidates:
         try:

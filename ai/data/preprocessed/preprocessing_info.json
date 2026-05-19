@@ -1,0 +1,9 @@
+{
+  "dataset_version": "v2.1",
+  "target_column": "log_price_single",
+  "n_features": 42,
+  "n_train": 3185,
+  "n_val": 683,
+  "n_test": 683,
+  "random_seed": 42
+}

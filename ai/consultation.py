@@ -31,9 +31,10 @@ def load_merged_data():
     if not PANDAS_AVAILABLE:
         return None
 
+    current_dir = Path(__file__).parent
     candidates = [
-        Path(__file__).parent.parent / 'data' / 'raw' / 'data' / 'cleaned' / 'merged_cleaned.csv',
-        Path(__file__).parent.parent / 'data' / 'raw' / 'data' / 'cleaned' / 'merged_raw_imputed.csv',
+        current_dir / 'data' / 'raw' / 'data' / 'cleaned' / 'merged_cleaned.csv',
+        current_dir.parent / 'data' / 'raw' / 'data' / 'cleaned' / 'merged_cleaned.csv',
     ]
     for p in candidates:
         try:

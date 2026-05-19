@@ -25,5 +25,5 @@ ENV PORT=8080
 # Ekspos port
 EXPOSE 8080
 
-# Jalankan aplikasi FastAPI
-CMD ["python", "app.py"]
+# Jalankan aplikasi FastAPI menggunakan uvicorn langsung (standar Cloud Run)
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8080}"]

@@ -90,7 +90,7 @@ class SimplePredictionResponse(APIBaseModel):
     min_price: int
     max_price: int
     median_price: int
-    detected_category: str
+    detected_category: Optional[str] = ""
     currency: str = 'IDR'
     confidence: str = 'medium'
 
@@ -134,7 +134,7 @@ class ConsultationResponse(BaseModel):
     min_price: int
     max_price: int
     median_price: int
-    detected_category: str
+    detected_category: Optional[str] = ""
     currency: str = 'IDR'
 
 
@@ -151,7 +151,7 @@ def format_prediction_response(result: Dict[str, Any], detected_category: Option
     predicted_price = int(result['predicted_price'])
     price_min = int(result.get('price_min', result.get('min_price', predicted_price)))
     price_max = int(result.get('price_max', result.get('max_price', predicted_price)))
-    detected_category = detected_category or result.get('detected_category', '')
+    detected_category = detected_category or result.get('detected_category') or ""
 
     return {
         'predicted_price': predicted_price,

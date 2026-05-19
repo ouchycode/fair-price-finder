@@ -1,0 +1,32 @@
+DATA STATISTICS
+==================================================
+
+Total Records: 4899
+
+HARGA (IDR):
+  Mean: 693,166
+  Median: 300,000
+  Min: 40,000
+  Max: 50,000,000
+
+DURASI (Hari):
+  Mean: 50.4
+  Median: 2.0
+
+RATING:
+  Mean: 4.93
+  Median: 5.00
+
+KATEGORI UTAMA:
+  Web dan Pemrograman: 1403
+  Pemasaran & Periklanan: 1140
+  Grafis & Desain: 966
+  Penulisan & Penerjemahan: 774
+  Visual & Audio: 591
+  Past Project: 23
+  Lainnya: 2
+
+PLATFORM:
+  fastwork: 3670
+  sribu: 1111
+  projects.co.id: 118
