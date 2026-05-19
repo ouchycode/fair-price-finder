@@ -16,7 +16,7 @@ import {
   SiReact,
   SiExpress,
   SiTensorflow,
-  SiPostgresql,
+  SiFastapi,
   SiVite,
 } from "react-icons/si";
 import * as Separator from "@radix-ui/react-separator";
@@ -27,35 +27,35 @@ const team = [
     name: "Evan Suryadinata S",
     role: "AI Engineer",
     color: "var(--accent)",
-    photo: "",
+    photo: "/assets/team/evan.png",
   },
   {
     initials: "FA",
     name: "Felicia Audrey",
     role: "AI Engineer",
     color: "var(--green)",
-    photo: "",
+    photo: "/assets/team/felicia.png",
   },
   {
     initials: "GA",
     name: "Gabrielle Angelina Ambasalu",
     role: "Data Scientist",
     color: "var(--amber)",
-    photo: "",
+    photo: "/assets/team/gabrielle.png",
   },
   {
     initials: "MD",
     name: "Meyrica Dianiken Cintami",
     role: "Data Scientist",
     color: "var(--indigo)",
-    photo: "",
+    photo: "/assets/team/meyrica.png",
   },
   {
     initials: "VT",
     name: "Victor Thimothi Benyamin Loka",
     role: "Fullstack Developer",
     color: "var(--fg-2)",
-    photo: "",
+    photo: "/assets/team/victor.png",
   },
   {
     initials: "KA",
@@ -86,10 +86,10 @@ const techStack = [
     color: "#FF6F00",
   },
   {
-    icon: SiPostgresql,
-    name: "PostgreSQL",
-    desc: "Database",
-    color: "#336791",
+    icon: SiFastapi,
+    name: "FastAPI",
+    desc: "AI Service",
+    color: "#009688",
   },
   { icon: SiVite, name: "Vite", desc: "Build Tool", color: "#646CFF" },
   { icon: BookOpen, name: "Dicoding", desc: "Platform", color: "var(--fg-2)" },
@@ -172,7 +172,7 @@ const About = () => (
             Coba Estimator <ArrowRight size={14} />
           </Link>
           <a
-            href="#"
+            href="https://github.com/ouchycode/fair-price-finder"
             className="btn-secondary"
             style={{ fontSize: 13.5, padding: "9px 18px" }}
           >
@@ -360,7 +360,7 @@ const About = () => (
           GitHub.
         </p>
         <a
-          href="https://github.com/kevinardi/fair-price-finder"
+          href="https://github.com/ouchycode/fair-price-finder"
           target="_blank"
           rel="noopener noreferrer"
           className="btn-primary"

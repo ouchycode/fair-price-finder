@@ -24,7 +24,11 @@ const footerLinks = [
   {
     title: "Project",
     links: [
-      { label: "GitHub", href: "#", icon: Github },
+      {
+        label: "GitHub",
+        href: "https://github.com/ouchycode/fair-price-finder",
+        icon: Github,
+      },
       { label: "Kontak", href: "#", icon: Mail },
     ],
   },
@@ -44,7 +48,11 @@ const Footer = () => {
         <div className="footer-grid">
           {/* MEREK */}
           <div className="footer-brand">
-            <Link to="/" onClick={handleLinkClick} className="footer-brand-link">
+            <Link
+              to="/"
+              onClick={handleLinkClick}
+              className="footer-brand-link"
+            >
               <div className="footer-brand-logo">
                 <img src={logoFpf} alt="FairPrice Finder" />
               </div>

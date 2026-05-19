@@ -104,16 +104,35 @@ MODELS_DIR = DATA_DIR / "models"
 PREPROCESSED_DIR = DATA_DIR / "preprocessed"
 
 MODEL_PATH = MODELS_DIR / 'freelance_pricer_final.keras'
+SAVEDMODEL_PATH = MODELS_DIR / 'freelance_pricer_savedmodel'
 SCALER_PATH = PREPROCESSED_DIR / 'scaler.pkl'
 FEATURE_NAMES_PATH = PREPROCESSED_DIR / 'feature_names.pkl'
 METADATA_PATH = MODELS_DIR / 'model_metadata.json'
 
 # Load model dan artifacts saat module di-import
 try:
-    model = tf.keras.models.load_model(
-        MODEL_PATH,
-        custom_objects={'ResidualDenseBlock': ResidualDenseBlock}
-    )
+    # COBA LOAD .KERAS DULU, FALLBACK KE SAVEDMODEL JIKA VERSI KERAS TIDAK KOMPATIBEL
+    try:
+        model = tf.keras.models.load_model(
+            MODEL_PATH,
+            custom_objects={'ResidualDenseBlock': ResidualDenseBlock}
+        )
+        print(f" Format: .keras")
+    except Exception as keras_err:
+        print(f" .keras gagal ({type(keras_err).__name__}), mencoba SavedModel format...")
+        model = tf.saved_model.load(str(SAVEDMODEL_PATH))
+        # WRAP SAVEDMODEL AGAR BISA DIPANGGIL SEPERTI KERAS MODEL
+        _infer = model.signatures['serving_default']
+        class _SavedModelWrapper:
+            name = 'freelance_pricer_savedmodel'
+            def predict(self, X, verbose=0):
+                import numpy as np
+                input_tensor = tf.constant(X, dtype=tf.float32)
+                output = _infer(features=input_tensor)
+                key = list(output.keys())[0]
+                return output[key].numpy()
+        model = _SavedModelWrapper()
+        print(f" Format: SavedModel")
     
     with open(SCALER_PATH, 'rb') as f:
         scaler = pickle.load(f)

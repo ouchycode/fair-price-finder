@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Send, AlertCircle, ChevronDown, Check } from 'lucide-react';
 import * as Select from '@radix-ui/react-select';
 import * as Label from '@radix-ui/react-label';
 import toast from 'react-hot-toast';
 import SkillTagInput from './SkillTagInput';
-import { estimatePrice } from '../../services/api';
+import { estimatePrice, getCategories } from '../../services/api';
 
-const CATEGORIES = [
+const DEFAULT_CATEGORIES = [
   'Web Development', 'Mobile Development', 'UI/UX Design',
   'Data Science', 'Content Writing', 'Digital Marketing',
   'Video Editing', 'Graphic Design', 'SEO', 'Copywriting',
@@ -23,10 +23,24 @@ const FieldLabel = ({ htmlFor, children, hint }) => (
 );
 
 const PriceEstimatorForm = ({ onResult, onLoading }) => {
+  const [categoriesList, setCategoriesList] = useState(DEFAULT_CATEGORIES);
   const [category, setCategory] = useState('');
   const [skills,   setSkills]   = useState([]);
   const [duration, setDuration] = useState('');
   const [loading,  setLoading]  = useState(false);
+
+  useEffect(() => {
+    getCategories()
+      .then(res => {
+        const list = res.data?.data?.categories || res.data?.categories;
+        if (list && list.length > 0) {
+          setCategoriesList(list);
+        }
+      })
+      .catch(err => {
+        console.error('Gagal memuat kategori dari API, menggunakan data lokal:', err);
+      });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -38,7 +52,11 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
     if (onLoading) onLoading(true);
     try {
       const { data } = await estimatePrice({ category, skills, duration: Number(duration) });
-      onResult(data);
+      const resData = data.data || data;
+      onResult({ 
+        ...resData, 
+        requestParams: { category, skills, duration: Number(duration) } 
+      });
       // RESET FORMULIR
       setCategory('');
       setSkills([]);
@@ -86,7 +104,7 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
           <Select.Portal>
             <Select.Content position="popper" sideOffset={4} className="select-content">
               <Select.Viewport>
-                {CATEGORIES.map(c => (
+                {categoriesList.map(c => (
                   <Select.Item key={c} value={c} className="select-item">
                     <Select.ItemText>{c}</Select.ItemText>
                     <Select.ItemIndicator>

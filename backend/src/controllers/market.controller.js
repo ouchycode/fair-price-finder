@@ -1,13 +1,22 @@
-exports.getTrends = async (req, res) => {
-  // TODO: ambil dari DB / ML output
-  res.json({ message: 'Market trends endpoint', data: [] });
+// CONTROLLER MARKET - MENANGANI REQUEST DATA PASAR DAN KATEGORI
+const marketService = require('../services/market.service');
+
+// GET /api/market/trends - TREN HARGA PASAR DARI ML API
+exports.getTrends = async (req, res, next) => {
+  try {
+    const data = await marketService.getTrends();
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.getCategories = async (req, res) => {
-  const categories = [
-    'Web Development', 'Mobile Development', 'UI/UX Design',
-    'Data Science', 'Content Writing', 'Digital Marketing',
-    'Video Editing', 'Graphic Design', 'SEO', 'Copywriting'
-  ];
-  res.json({ categories });
+// GET /api/market/categories - DAFTAR KATEGORI DARI ML MODEL
+exports.getCategories = async (req, res, next) => {
+  try {
+    const data = await marketService.getCategories();
+    res.json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
 };

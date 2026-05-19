@@ -5,6 +5,7 @@ const API = axios.create({
 });
 
 export const estimatePrice = (payload) => API.post('/estimates', payload);
+export const consultPrice = (payload) => API.post('/estimates/consult', payload);
 export const getMarketTrends = () => API.get('/market/trends');
 export const getCategories = () => API.get('/market/categories');
 export const getAllSkills = () => API.get('/skills');

@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { TrendingUp, TrendingDown, AlertTriangle, Minus, Activity, Users, BarChart2 } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import {
+  TrendingUp,
+  TrendingDown,
+  AlertTriangle,
+  Minus,
+  Activity,
+  Users,
+  BarChart2,
+} from "lucide-react";
 import * as Separator from "@radix-ui/react-separator";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import {
@@ -11,223 +19,7 @@ import {
   Tooltip as RechartsTooltip,
   ResponsiveContainer,
 } from "recharts";
-
-// DATA PALSU
-const jobsData = [
-  {
-    name: "Web Developer",
-    demand: 1850,
-    prevDemand: 1600,
-    rate: "Rp 5,5jt",
-    rateType: "per project",
-  },
-  {
-    name: "UI/UX Designer",
-    demand: 1650,
-    prevDemand: 1700,
-    rate: "Rp 4,2jt",
-    rateType: "per project",
-  },
-  {
-    name: "Mobile Developer",
-    demand: 1420,
-    prevDemand: 1200,
-    rate: "Rp 6,5jt",
-    rateType: "per project",
-  },
-  {
-    name: "Data Analyst",
-    demand: 1200,
-    prevDemand: 1050,
-    rate: "Rp 4,8jt",
-    rateType: "per project",
-  },
-  {
-    name: "Graphic Designer",
-    demand: 1050,
-    prevDemand: 1100,
-    rate: "Rp 2,5jt",
-    rateType: "per project",
-  },
-  {
-    name: "Copywriter",
-    demand: 890,
-    prevDemand: 800,
-    rate: "Rp 1,5jt",
-    rateType: "per project",
-  },
-  {
-    name: "Video Editor",
-    demand: 850,
-    prevDemand: 820,
-    rate: "Rp 3,5jt",
-    rateType: "per project",
-  },
-  {
-    name: "Social Media Manager",
-    demand: 810,
-    prevDemand: 750,
-    rate: "Rp 3,0jt",
-    rateType: "per month",
-  },
-  {
-    name: "SEO Specialist",
-    demand: 760,
-    prevDemand: 700,
-    rate: "Rp 4,0jt",
-    rateType: "per month",
-  },
-  {
-    name: "Digital Marketer",
-    demand: 710,
-    prevDemand: 680,
-    rate: "Rp 4,5jt",
-    rateType: "per project",
-  },
-  {
-    name: "Backend Engineer",
-    demand: 680,
-    prevDemand: 600,
-    rate: "Rp 7,0jt",
-    rateType: "per project",
-  },
-  {
-    name: "Illustrator",
-    demand: 550,
-    prevDemand: 580,
-    rate: "Rp 1,8jt",
-    rateType: "per project",
-  },
-  {
-    name: "Virtual Assistant",
-    demand: 520,
-    prevDemand: 450,
-    rate: "Rp 2,5jt",
-    rateType: "per month",
-  },
-  {
-    name: "Voice Over Talent",
-    demand: 480,
-    prevDemand: 470,
-    rate: "Rp 1,0jt",
-    rateType: "per project",
-  },
-  {
-    name: "Translator",
-    demand: 420,
-    prevDemand: 450,
-    rate: "Rp 1,2jt",
-    rateType: "per project",
-  },
-];
-
-const skillsData = [
-  {
-    name: "React.js",
-    demand: 2500,
-    prevDemand: 2200,
-    rate: "Rp 150rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Figma",
-    demand: 2100,
-    prevDemand: 1950,
-    rate: "Rp 120rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Node.js",
-    demand: 1850,
-    prevDemand: 1700,
-    rate: "Rp 180rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Python",
-    demand: 1750,
-    prevDemand: 1500,
-    rate: "Rp 200rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Tailwind CSS",
-    demand: 1600,
-    prevDemand: 1450,
-    rate: "Rp 100rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Flutter",
-    demand: 1450,
-    prevDemand: 1300,
-    rate: "Rp 170rb",
-    rateType: "per hour",
-  },
-  {
-    name: "TypeScript",
-    demand: 1400,
-    prevDemand: 1200,
-    rate: "Rp 160rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Adobe Premiere",
-    demand: 1250,
-    prevDemand: 1300,
-    rate: "Rp 110rb",
-    rateType: "per hour",
-  },
-  {
-    name: "SQL",
-    demand: 1100,
-    prevDemand: 1050,
-    rate: "Rp 150rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Next.js",
-    demand: 1050,
-    prevDemand: 800,
-    rate: "Rp 160rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Adobe Illustrator",
-    demand: 950,
-    prevDemand: 1000,
-    rate: "Rp 90rb",
-    rateType: "per hour",
-  },
-  {
-    name: "AWS",
-    demand: 850,
-    prevDemand: 800,
-    rate: "Rp 250rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Docker",
-    demand: 750,
-    prevDemand: 700,
-    rate: "Rp 220rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Copywriting",
-    demand: 720,
-    prevDemand: 650,
-    rate: "Rp 80rb",
-    rateType: "per hour",
-  },
-  {
-    name: "Canva",
-    demand: 680,
-    prevDemand: 700,
-    rate: "Rp 50rb",
-    rateType: "per hour",
-  },
-];
+import { getMarketTrends } from "../services/api";
 
 const trendData = [
   {
@@ -272,8 +64,86 @@ const Dashboard = () => {
   const [filterType, setFilterType] = useState("job");
   const [filterTime, setFilterTime] = useState("month");
 
+  // Data dari API
+  const [jobsData, setJobsData] = useState([]);
+  const [skillsData, setSkillsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Data tren dinamis untuk grafik
+  const [dynamicTrendData, setDynamicTrendData] = useState([]);
+  const [top3Keys, setTop3Keys] = useState([]);
+
+  useEffect(() => {
+    // Fungsi untuk generate data yang tidak disediakan oleh ML model
+    const generateStats = (name, index, isJob) => {
+      const baseDemand = Math.floor(2000 - index * 120 + Math.random() * 200);
+      const prevDemand = Math.floor(baseDemand * (0.8 + Math.random() * 0.4));
+      const rateNumber = isJob
+        ? Math.floor(20 + Math.random() * 50) / 10
+        : Math.floor(5 + Math.random() * 20) * 10;
+
+      return {
+        name: name,
+        demand: Math.max(100, baseDemand),
+        prevDemand: Math.max(80, prevDemand),
+        rate: isJob ? `Rp ${rateNumber}jt` : `Rp ${rateNumber}rb`,
+        rateType: isJob ? "per project" : "per hour",
+      };
+    };
+
+    getMarketTrends()
+      .then((res) => {
+        const data = res.data?.data || res.data;
+        const categories = data.categories || [];
+        const topSkills = data.top_skills || [];
+
+        // Map data dari backend ke format UI
+        const mappedJobs = categories.map((cat, i) =>
+          generateStats(cat, i, true),
+        );
+        const mappedSkills = topSkills.map((skill, i) =>
+          generateStats(skill, i, false),
+        );
+
+        setJobsData(mappedJobs.sort((a, b) => b.demand - a.demand));
+        setSkillsData(mappedSkills.sort((a, b) => b.demand - a.demand));
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Gagal memuat trend data", err);
+        setLoading(false);
+      });
+  }, []);
+
   // PILIH SUMBER DATA
   let rawData = filterType === "job" ? jobsData : skillsData;
+
+  useEffect(() => {
+    if (rawData.length === 0) return;
+    const top3 = rawData.slice(0, 3).map((item) => item.name);
+    setTop3Keys(top3);
+
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
+    const generated = months.map((m, mIdx) => {
+      const dataPoint = { month: m };
+      top3.forEach((name, i) => {
+        const base = 1000 - i * 200;
+        dataPoint[name] = base + mIdx * 100 + Math.floor(Math.random() * 150);
+      });
+      return dataPoint;
+    });
+    setDynamicTrendData(generated);
+  }, [rawData]);
+
+  if (loading || rawData.length === 0) {
+    return (
+      <div
+        style={{ padding: "40px", textAlign: "center", color: "var(--fg-3)" }}
+      >
+        Memuat data market dari server AI...
+      </div>
+    );
+  }
 
   if (filterTime === "year") {
     rawData = rawData.map((item) => ({
@@ -345,7 +215,9 @@ const Dashboard = () => {
               <Activity size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">
-              {rawData.reduce((acc, curr) => acc + curr.demand, 0).toLocaleString("id-ID")}
+              {rawData
+                .reduce((acc, curr) => acc + curr.demand, 0)
+                .toLocaleString("id-ID")}
             </div>
             <div className="kpi-card__trend" style={{ color: "var(--green)" }}>
               <TrendingUp size={12} /> +12.5% dari sebelumnya
@@ -365,10 +237,15 @@ const Dashboard = () => {
           </div>
           <div className="kpi-card">
             <div className="kpi-card__header">
-              <span className="kpi-card__title">Top {filterType === "job" ? "Pekerjaan" : "Skill"}</span>
+              <span className="kpi-card__title">
+                Top {filterType === "job" ? "Pekerjaan" : "Skill"}
+              </span>
               <Users size={14} color="var(--fg-3)" />
             </div>
-            <div className="kpi-card__value" style={{ fontSize: "18px", marginTop: "6px" }}>
+            <div
+              className="kpi-card__value"
+              style={{ fontSize: "18px", marginTop: "6px" }}
+            >
               {leaderboardData[0]?.name}
             </div>
             <div className="kpi-card__trend" style={{ color: "var(--indigo)" }}>
@@ -395,7 +272,7 @@ const Dashboard = () => {
           <div style={{ width: "100%", height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
-                data={trendData}
+                data={dynamicTrendData.length > 0 ? dynamicTrendData : trendData}
                 margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
               >
                 <defs>
@@ -462,30 +339,24 @@ const Dashboard = () => {
                   }}
                   itemStyle={{ padding: "2px 0" }}
                 />
-                <Area
-                  type="monotone"
-                  dataKey="Web Developer"
-                  stroke="var(--indigo)"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorWeb)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="UI/UX Designer"
-                  stroke="var(--green)"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorUi)"
-                />
-                <Area
-                  type="monotone"
-                  dataKey="Data Analyst"
-                  stroke="var(--amber)"
-                  strokeWidth={2}
-                  fillOpacity={1}
-                  fill="url(#colorData)"
-                />
+                {top3Keys.map((key, i) => {
+                  const colors = [
+                    { stroke: "var(--indigo)", fill: "url(#colorWeb)" },
+                    { stroke: "var(--green)", fill: "url(#colorUi)" },
+                    { stroke: "var(--amber)", fill: "url(#colorData)" },
+                  ];
+                  return (
+                    <Area
+                      key={key}
+                      type="monotone"
+                      dataKey={key}
+                      stroke={colors[i].stroke}
+                      strokeWidth={2}
+                      fillOpacity={1}
+                      fill={colors[i].fill}
+                    />
+                  );
+                })}
               </AreaChart>
             </ResponsiveContainer>
           </div>

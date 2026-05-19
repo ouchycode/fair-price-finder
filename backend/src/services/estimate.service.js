@@ -1,28 +1,23 @@
-const axios = require('axios');
+// SERVICE ESTIMATE - MENERUSKAN REQUEST KE ML API
+const mlClient = require('../utils/mlClient');
 
-/**
- * Kirim request ke ML API untuk mendapat estimasi harga
- */
+// PREDIKSI HARGA - FORWARD KE POST /predict DI ML API
 exports.estimatePrice = async ({ category, skills, duration }) => {
-  try {
-    const mlApiUrl = process.env.ML_API_URL || 'http://localhost:8000';
+  const response = await mlClient.post('/predict', {
+    category,
+    skills,
+    duration,
+  });
+  return response.data;
+};
 
-    const response = await axios.post(`${mlApiUrl}/predict`, {
-      category,
-      skills,
-      duration
-    });
-
-    return response.data;
-  } catch (err) {
-    // Fallback: mock response jika ML API belum ready
-    console.warn('ML API tidak tersedia, menggunakan mock response');
-    return {
-      min_price: 500000,
-      max_price: 2000000,
-      median_price: 1200000,
-      currency: 'IDR',
-      note: 'Mock response - ML API belum terhubung'
-    };
-  }
+// KONSULTASI HARGA - FORWARD KE POST /consult DI ML API
+exports.consultPrice = async ({ category, skills, duration, role }) => {
+  const response = await mlClient.post('/consult', {
+    category,
+    skills,
+    duration,
+    role: role || 'freelancer',
+  });
+  return response.data;
 };
