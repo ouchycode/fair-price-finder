@@ -24,7 +24,6 @@ from inference import (
     InferenceService,
     get_valid_skills,
     get_valid_categories,
-    get_valid_platforms,
     MODEL_LOADED,
 )
 from consultation import ConsultationService
@@ -97,14 +96,9 @@ class SimplePredictionResponse(APIBaseModel):
 
 class FullPredictionRequest(APIBaseModel):
     """Full input untuk advanced use case."""
-    kategori: str = Field(..., alias='category')
-    platform: str = 'fastwork'
-    durasi_hari: int = Field(..., alias='duration', ge=1, le=365)
-    skills: List[str] = Field(default_factory=list)
-    has_rating: bool = True
-    title_length: int = 50
-    desc_length: int = 0
-    has_urgency: bool = False
+    kategori: str = Field(..., alias='category', description='Kategori proyek')
+    durasi_hari: int = Field(..., alias='duration', ge=1, le=365, description='Durasi pengerjaan')
+    skills: List[str] = Field(default_factory=list, description='List skills')
 
 
 class ConsultationRequest(APIBaseModel):
@@ -303,8 +297,6 @@ def consult(request: ConsultationRequest):
             skills=request.skills,
             durasi_hari=request.durasi_hari,
             predicted_price=pred['predicted_price'],
-            price_min=pred['price_min'],
-            price_max=pred['price_max'],
             category=request.kategori or pred.get('detected_category'),
         )
         
@@ -334,24 +326,11 @@ def get_categories():
     """List valid categories untuk frontend dropdown."""
     if not MODEL_LOADED:
         raise HTTPException(status_code=503, detail="Model not loaded.")
-    
+
     categories = get_valid_categories()
     return {
         'categories': categories,
         'total': len(categories)
-    }
-
-
-@app.get('/platforms')
-def get_platforms():
-    """List valid platforms."""
-    if not MODEL_LOADED:
-        raise HTTPException(status_code=503, detail="Model not loaded.")
-    
-    platforms = get_valid_platforms()
-    return {
-        'platforms': platforms,
-        'total': len(platforms)
     }
 
 
@@ -376,7 +355,6 @@ def get_status():
             '/consult': 'Consultation endpoint',
             '/skills': 'List available skills',
             '/categories': 'List available categories',
-            '/platforms': 'List available platforms',
         }
     }
 
