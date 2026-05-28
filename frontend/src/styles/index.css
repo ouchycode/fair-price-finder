@@ -3085,6 +3085,7 @@ a:focus-visible {
 .pagination-btn { width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border-1); background: var(--bg-2); color: var(--fg); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
 .pagination-btn:hover:not(:disabled) { background: var(--bg-3); }
 .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.pagination-btn-placeholder { width: 36px; height: 36px; flex-shrink: 0; }
 .pagination-info { font-size: 13px; color: var(--fg-3); font-weight: 500; }
 
 

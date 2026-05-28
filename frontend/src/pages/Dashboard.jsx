@@ -7,6 +7,8 @@ import {
   Activity,
   Users,
   BarChart2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import * as Separator from "@radix-ui/react-separator";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -249,7 +251,7 @@ const Dashboard = () => {
                     title={`${item.demand.toLocaleString("id-ID")} proyek`}
                   >
                     <div
-                      className={`leaderboard-bar-fill ${i < 3 ? 'bg-indigo' : 'bg-border-2'}`}
+                      className={`leaderboard-bar-fill ${i < 3 ? "bg-indigo" : "bg-border-2"}`}
                       style={{ width: `${Math.max(item.fillPct, 5)}%` }}
                     />
                     <span
@@ -265,29 +267,35 @@ const Dashboard = () => {
             {/* PAGINATION CONTROLS */}
             {totalPages > 1 && (
               <div className="pagination-controls">
-                <button
-                  type="button"
-                  className="pagination-btn"
-                  disabled={currentPage === 1}
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.max(1, prev - 1))
-                  }
-                >
-                  Sebelumnya
-                </button>
+                {currentPage > 1 ? (
+                  <button
+                    type="button"
+                    className="pagination-btn"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(1, prev - 1))
+                    }
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+                ) : (
+                  <div className="pagination-btn-placeholder" />
+                )}
                 <span className="pagination-info">
                   Hal {currentPage} dari {totalPages}
                 </span>
-                <button
-                  type="button"
-                  className="pagination-btn"
-                  disabled={currentPage === totalPages}
-                  onClick={() =>
-                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-                  }
-                >
-                  Selanjutnya
-                </button>
+                {currentPage < totalPages ? (
+                  <button
+                    type="button"
+                    className="pagination-btn"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                    }
+                  >
+                    <ChevronRight size={16} />
+                  </button>
+                ) : (
+                  <div className="pagination-btn-placeholder" />
+                )}
               </div>
             )}
           </div>
