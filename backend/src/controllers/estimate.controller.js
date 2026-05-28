@@ -1,7 +1,7 @@
-// CONTROLLER ESTIMATE - MENANGANI REQUEST ESTIMASI DAN KONSULTASI HARGA
+
 const estimateService = require('../services/estimate.service');
 
-// POST /api/estimates - ESTIMASI HARGA FREELANCE
+// POST API ESTIMATES ESTIMASI HARGA FREELANCE
 exports.getPriceEstimate = async (req, res, next) => {
   try {
     const { category, skills, duration } = req.body;
@@ -27,7 +27,7 @@ exports.getPriceEstimate = async (req, res, next) => {
   }
 };
 
-// POST /api/estimates/consult - KONSULTASI HARGA BERBASIS AI
+// POST API ESTIMATES CONSULT KONSULTASI HARGA BERBASIS AI
 exports.getConsultation = async (req, res, next) => {
   try {
     const { category, skills, duration, role } = req.body;

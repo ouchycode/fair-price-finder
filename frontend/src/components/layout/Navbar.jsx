@@ -28,7 +28,7 @@ const Navbar = () => {
     <>
       <nav className="navbar">
         <div className="navbar-inner">
-          {/* LOGO MEREK */}
+          
           <Link
             to="/"
             onClick={handleLinkClick}
@@ -49,7 +49,6 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {/* NAV DESKTOP */}
           <NavigationMenu.Root
             className="hide-mobile"
             style={{
@@ -75,7 +74,7 @@ const Navbar = () => {
             </NavigationMenu.List>
           </NavigationMenu.Root>
 
-          {/* CTA DESKTOP */}
+          {/* CTA */}
           <div className="hide-mobile" style={{ flexShrink: 0 }}>
             <Link
               to="/estimator"
@@ -87,7 +86,6 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* HAMBURGER SELULER */}
           <button
             className="hide-desktop mobile-menu-btn"
             onClick={() => setMobileOpen((v) => !v)}
@@ -98,7 +96,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* MENU DROPDOWN SELULER */}
       {mobileOpen && (
         <div
           className="hide-desktop mobile-dropdown-backdrop"

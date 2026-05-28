@@ -33,28 +33,28 @@ const team = [
     initials: "FA",
     name: "Felicia Audrey",
     role: "AI Engineer",
-    color: "var(--green)",
+    color: "var(--accent)",
     photo: "/assets/team/felicia.png",
   },
   {
     initials: "GA",
     name: "Gabrielle Angelina Ambasalu",
     role: "Data Scientist",
-    color: "var(--amber)",
+    color: "var(--accent)",
     photo: "/assets/team/gabrielle.png",
   },
   {
     initials: "MD",
     name: "Meyrica Dianiken Cintami",
     role: "Data Scientist",
-    color: "var(--indigo)",
+    color: "var(--accent)",
     photo: "/assets/team/meyrica.png",
   },
   {
     initials: "VT",
     name: "Victor Thimothi Benyamin Loka",
     role: "Fullstack Developer",
-    color: "var(--fg-2)",
+    color: "var(--accent)",
     photo: "/assets/team/victor.png",
   },
   {
@@ -100,16 +100,19 @@ const missions = [
     icon: Target,
     title: "Harga yang Adil",
     desc: "Memastikan freelancer mendapat kompensasi yang setara dengan nilai dan kualitas kerja mereka.",
+    color: "var(--amber)",
   },
   {
     icon: Database,
     title: "Berbasis Data",
     desc: "Model AI dilatih dari data nyata pasar freelance Indonesia yang terus diperbarui secara berkala.",
+    color: "#3b82f6",
   },
   {
     icon: Users,
     title: "Untuk Semua",
     desc: "Platform gratis dan terbuka untuk seluruh freelancer Indonesia tanpa terkecuali.",
+    color: "var(--green)",
   },
 ];
 
@@ -135,46 +138,32 @@ const About = () => (
   <div>
     {/* HERO */}
     <section className="hero-section">
-      <div className="hero-dot-grid" />
       <div
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          position: "relative",
-          zIndex: 1,
-        }}
+        className="container-inner"
+        style={{ position: "relative", zIndex: 1 }}
       >
-        <div data-aos="fade-down" className="hero-badge">
-          <span className="hero-badge__tag">CC26-PSU164</span>
-          <span className="hero-badge__text">
-            Capstone · DBS Foundation × Dicoding
-          </span>
-        </div>
-
-        <h1 data-aos="fade-up" data-aos-delay="60" className="hero-title">
+        <h1 data-aos="fade-up" data-aos-delay="50" className="hero-title">
           Tentang{" "}
-          <span style={{ color: "var(--fg-2)", fontWeight: 400 }}>
+          <span className="text-[var(--fg-2)] font-normal">
             FairPrice Finder
           </span>
         </h1>
 
-        <p data-aos="fade-up" data-aos-delay="140" className="hero-subtitle">
+        <p data-aos="fade-up" data-aos-delay="150" className="hero-subtitle">
           Platform AI untuk membantu freelancer Indonesia menemukan harga jasa
           yang adil, transparan, dan berbasis data pasar nyata.
         </p>
 
-        <div data-aos="fade-up" data-aos-delay="220" className="hero-actions">
+        <div data-aos="fade-up" data-aos-delay="200" className="hero-actions">
           <Link
             to="/estimator"
-            className="btn-primary"
-            style={{ fontSize: 13.5, padding: "9px 18px" }}
+            className="btn-primary text-[13.5px] px-[18px] py-[9px]"
           >
             Coba Estimator <ArrowRight size={14} />
           </Link>
           <a
             href="https://github.com/ouchycode/fair-price-finder"
-            className="btn-secondary"
-            style={{ fontSize: 13.5, padding: "9px 18px" }}
+            className="btn-secondary text-[13.5px] px-[18px] py-[9px]"
           >
             <Github size={14} /> GitHub
           </a>
@@ -182,53 +171,40 @@ const About = () => (
       </div>
     </section>
 
-    {/* PERNYATAAN MASALAH */}
     <section className="section">
       <p data-aos="fade-right" className="label-mono section-label">
         Konteks Masalah
       </p>
       <h2
         data-aos="fade-up"
-        data-aos-delay="60"
-        className="section-title"
-        style={{ maxWidth: 480 }}
+        data-aos-delay="50"
+        className="section-title max-w-[480px]"
       >
         Mengapa platform ini penting?
       </h2>
 
-      <div className="feature-grid" style={{ marginBottom: 28 }}>
+      <div className="feature-grid mb-12">
         {sdgPoints.map(({ stat, label, src }, i) => (
           <div
             key={stat}
             data-aos="fade-up"
-            data-aos-delay={i * 80}
+            data-aos-delay={i * 100}
             className="feature-card"
           >
-            <p
-              className="stats-bar__val"
-              style={{
-                fontSize: "clamp(22px, 3vw, 30px)",
-                color: "var(--accent)",
-                marginBottom: 8,
-              }}
-            >
+            <p className="stats-bar__val text-[clamp(22px,3vw,30px)] text-[var(--accent)] mb-2">
               {stat}
             </p>
-            <p className="feature-card__desc" style={{ marginBottom: 6 }}>
-              {label}
-            </p>
-            <p className="label-mono" style={{ color: "var(--fg-3)" }}>
-              · {src}
-            </p>
+            <p className="feature-card__desc mb-1.5">{label}</p>
+            <p className="label-mono text-[var(--fg-3)]">· {src}</p>
           </div>
         ))}
       </div>
 
-      <p data-aos="fade-up" className="page-desc" style={{ maxWidth: 640 }}>
+      <p data-aos="fade-up" className="page-desc max-w-[800px]" style={{ paddingTop: '48px' }}>
         Freelancer Indonesia sering tidak tahu harga yang layak untuk jasa
         mereka - membuat mereka <em>undersell</em> atau kehilangan klien karena
         quote terlalu tinggi. FairPrice Finder hadir untuk menjawab:{" "}
-        <strong style={{ color: "var(--fg-1)" }}>
+        <strong className="text-[var(--fg-1)]">
           "Berapa sebenarnya nilai jasa saya?"
         </strong>
       </p>
@@ -238,20 +214,19 @@ const About = () => (
       <Separator.Root style={{ height: 1, background: "var(--border)" }} />
     </div>
 
-    {/* MISI */}
     <section className="section-sm">
       <p data-aos="fade-right" className="label-mono section-label">
         Misi
       </p>
-      <h2 data-aos="fade-up" data-aos-delay="60" className="section-title-sm">
+      <h2 data-aos="fade-up" data-aos-delay="50" className="section-title-sm">
         Berkontribusi pada SDG 8
       </h2>
       <div className="steps-grid">
-        {missions.map(({ icon: Icon, title, desc }, i) => (
+        {missions.map(({ icon: Icon, title, desc, color }, i) => (
           <div
             key={title}
             data-aos="fade-up"
-            data-aos-delay={i * 80}
+            data-aos-delay={i * 100}
             className="feature-card"
             style={{
               borderRadius: "var(--r-lg)",
@@ -259,7 +234,11 @@ const About = () => (
             }}
           >
             <div className="feature-card__icon-wrap">
-              <Icon size={14} color="var(--accent)" strokeWidth={1.8} />
+              <Icon
+                size={14}
+                color={color || "var(--accent)"}
+                strokeWidth={1.8}
+              />
             </div>
             <h3 className="feature-card__title">{title}</h3>
             <p className="feature-card__desc">{desc}</p>
@@ -272,29 +251,32 @@ const About = () => (
       <Separator.Root style={{ height: 1, background: "var(--border)" }} />
     </div>
 
-    {/* TUMPUKAN TEKNOLOGI */}
+    {/* TECH STACK */}
     <section className="section-sm">
       <p data-aos="fade-right" className="label-mono section-label">
         Teknologi
       </p>
-      <h2 data-aos="fade-up" data-aos-delay="60" className="section-title-sm">
+      <h2 data-aos="fade-up" data-aos-delay="50" className="section-title-sm">
         Dibangun dengan stack modern
       </h2>
-      <div className="tech-grid">
-        {techStack.map(({ icon: Icon, name, desc, color }, i) => (
-          <div
-            key={name}
-            data-aos="fade-up"
-            data-aos-delay={i * 60}
-            className="tech-badge"
-          >
-            <Icon size={14} color={color} />
-            <div>
-              <p className="tech-badge__name">{name}</p>
-              <p className="tech-badge__desc">{desc}</p>
-            </div>
-          </div>
-        ))}
+      <div className="tech-marquee-wrap">
+        <div className="tech-marquee">
+          {[...techStack, ...techStack, ...techStack].map(
+            ({ icon: Icon, name, desc, color }, i) => (
+              <div
+                key={`${name}-${i}`}
+                className="tech-badge"
+                style={{ minWidth: 160, flexShrink: 0 }}
+              >
+                <Icon size={14} color={color} />
+                <div>
+                  <p className="tech-badge__name">{name}</p>
+                  <p className="tech-badge__desc">{desc}</p>
+                </div>
+              </div>
+            ),
+          )}
+        </div>
       </div>
     </section>
 
@@ -302,21 +284,20 @@ const About = () => (
       <Separator.Root style={{ height: 1, background: "var(--border)" }} />
     </div>
 
-    {/* TIM */}
+    {/* TEAM */}
     <section className="section-sm">
       <p data-aos="fade-right" className="label-mono section-label">
         Tim
       </p>
-      <h2 data-aos="fade-up" data-aos-delay="60" className="section-title-sm">
+      <h2 data-aos="fade-up" data-aos-delay="50" className="section-title-sm">
         Dibangun oleh tim CC26-PSU164
       </h2>
       <p
         data-aos="fade-up"
         data-aos-delay="100"
-        className="page-desc"
-        style={{ marginBottom: 32, maxWidth: 480 }}
+        className="page-desc mb-8 max-w-[480px]"
       >
-        Mahasiswa Coding Camp 2026 powered by DBS Foundation, track Future-Ready
+        Cohort Coding Camp 2026 powered by DBS Foundation, track Future-Ready
         Work &amp; Economy.
       </p>
       <div className="team-grid">
@@ -324,7 +305,7 @@ const About = () => (
           <div
             key={name}
             data-aos="fade-up"
-            data-aos-delay={i * 60}
+            data-aos-delay={i * 50}
             className="team-card"
           >
             <div
@@ -351,9 +332,7 @@ const About = () => (
     {/* CTA */}
     <section className="cta-section">
       <div data-aos="fade-up" data-aos-duration="600" className="cta-inner">
-        <p className="label-mono" style={{ marginBottom: 14 }}>
-          Open Source
-        </p>
+        <p className="label-mono mb-3.5">Open Source</p>
         <h2 className="cta-title">Tertarik berkontribusi?</h2>
         <p className="cta-desc">
           Proyek ini open source. Lihat kode sumber, buka issue, atau fork di
@@ -363,8 +342,7 @@ const About = () => (
           href="https://github.com/ouchycode/fair-price-finder"
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-primary"
-          style={{ fontSize: 14, padding: "9px 22px" }}
+          className="btn-primary text-[14px] px-[22px] py-[9px]"
         >
           <Github size={14} /> Lihat di GitHub
         </a>

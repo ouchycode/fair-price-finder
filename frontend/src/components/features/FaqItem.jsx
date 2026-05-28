@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Plus, Minus } from "lucide-react";
+import AOS from "aos";
 
 const FaqItem = ({ q, a, index }) => {
   const [open, setOpen] = useState(false);
@@ -10,6 +11,12 @@ const FaqItem = ({ q, a, index }) => {
   useEffect(() => {
     if (contentRef.current) {
       setHeight(open ? contentRef.current.scrollHeight : 0);
+      
+      // Mencegah bug elemen di bawahnya dengan memperbarui AOS setelah transisi tinggi selesai
+      const timer = setTimeout(() => {
+        AOS.refresh();
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [open]);
 
@@ -17,6 +24,7 @@ const FaqItem = ({ q, a, index }) => {
     <div
       data-aos="fade-up"
       data-aos-delay={index * 60}
+      data-aos-once="true"
       className={`faq-item${open ? " faq-item--open" : ""}`}
     >
       <button className="faq-trigger" onClick={() => setOpen((o) => !o)}>

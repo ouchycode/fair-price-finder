@@ -1,193 +1,127 @@
 # 💰 Fair Price Finder for Freelancers
-**Capstone Project - Coding Camp 2026 powered by DBS Foundation**  
-ID Tim: CC26-PSU164 | Tema: Future-Ready Work & Economy
 
-> Aplikasi untuk membantu freelancer pemula dan client untuk mendapatkan perkiraan harga wajar untuk layanan freelance di Indonesia berdasarkan jenis layanan, skill, dan durasi pengerjaan. Perkiraan data ini didapat dari data riil dari Fastwork, Sribu, dan Projects.co.id yang telah diolah.
+**Capstone Project - Coding Camp 2026 powered by DBS Foundation**  
+**ID Tim:** CC26-PSU164 | **Tema:** Future-Ready Work & Economy
+
+> Aplikasi cerdas berbasis AI untuk membantu *freelancer* pemula dan klien di Indonesia dalam mendapatkan **perkiraan harga wajar (Fair Price)** untuk layanan freelance. Prediksi didasarkan pada model Machine Learning yang dilatih menggunakan data riil dari platform terkemuka (Fastwork, Sribu, dan Projects.co.id).
 
 ---
 
-## 👥 Tim
+## ✨ Fitur Utama
+
+- 🤖 **AI Price Estimator:** Prediksi harga cerdas berdasarkan kategori, skill spesifik, dan durasi pengerjaan.
+- 📊 **Market Intelligence Dashboard:** Analitik *real-time* tren pasar, *leaderboard* keahlian yang paling dicari, dan rentang harga kompetitif.
+- 🎨 **Premium UI/UX:** Antarmuka modern yang dinamis dengan efek *glassmorphism*, *micro-animations*, dan desain responsif penuh.
+- ⚡ **Performa Tinggi:** Arsitektur terpisah (*microservices*) antara Frontend (React/Vite), Backend (Node/Express), dan AI Engine (FastAPI).
+
+---
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+- React (Vite)
+- Vanilla CSS (BEM Architecture & CSS Variables)
+- AOS (Animate on Scroll)
+- Radix UI (Unstyled Accessible Components)
+
+**Backend:**
+- Node.js & Express.js
+- RESTful API Architecture
+
+**AI & Data Science:**
+- Python & FastAPI (Inference Server)
+- TensorFlow / Keras (Deep Learning Models)
+- Scikit-Learn, Pandas, NumPy (Data Processing)
+- Streamlit (Data Dashboard)
+
+---
+
+## 👥 Tim Pengembang
+
 | Nama | Role |
 |------|------|
-| Meyrica Dianiken Cintami | Data Scientist |
-| Gabrielle Angelina Ambasalu | Data Scientist |
-| Victor Thimothi Benyamin Loka | Full-Stack Web Developer |
-| Kevin Ardiansyah | Full-Stack Web Developer |
-| Felicia Audrey | AI Engineer |
-| Evan Suryadinata S | AI Engineer |
+| **Meyrica Dianiken Cintami** | Data Scientist |
+| **Gabrielle Angelina Ambasalu** | Data Scientist |
+| **Victor Thimothi Benyamin Loka** | Full-Stack Web Developer |
+| **Kevin Ardiansyah** | Full-Stack Web Developer |
+| **Felicia Audrey** | AI Engineer |
+| **Evan Suryadinata S** | AI Engineer |
+
+---
 
 ## 📁 Struktur Proyek
 
-```
+```text
 fair-price-finder/
-├── frontend/                 ← React + Vite app
-│   └── src/
-│       ├── components/
-│       ├── contexts/
-│       ├── hooks/
-│       ├── pages/
-│       ├── services/
-│       └── styles/
-│
-├── backend/                  ← Express REST API
-│   └── src/
-│       ├── config/
-│       ├── controllers/
-│       ├── middlewares/
-│       ├── routes/
-│       └── services/
-│
-├── ai/                       ← Notebook, dashboard, dan script AI/DS
-│   ├── notebooks/
-│   ├── dashboard/
-│   ├── scripts/
-│   ├── scraper/
-│   └── requirements.txt
-│
-├── data/                     ← Data mentah, bersih, dan output
-├── docs/                     ← Dokumentasi API dan arsitektur
-└── README.md
+├── frontend/                 ← Antarmuka Web (React + Vite)
+├── backend/                  ← REST API Server (Express.js)
+├── ai/                       ← AI Inference (FastAPI) & Data Pipeline
+├── data/                     ← Dataset mentah, bersih, & output
+└── docs/                     ← Dokumentasi API & arsitektur
 ```
 
 ---
 
-## 📦 Prasyarat
+## 🚀 Cara Menjalankan Aplikasi (Local Development)
 
-Sebelum menjalankan project ini, siapkan:
+### Prasyarat
+- **Node.js** (v18+) & **npm**
+- **Python** (v3.10 sangat disarankan untuk stabilitas dependensi ML/AI)
+- **Git**
 
-- Node.js 18+ dan npm
-- Python 3.10 untuk folder `ai/`
-- Git
-
-Catatan: dependency Python di repo ini paling aman dipasang dengan Python 3.10 di Windows. Python 3.13 pernah memicu kegagalan build untuk beberapa paket seperti `numpy` dan `pandas`.
-
-File yang masih bersifat standalone / template dan perlu disesuaikan sebelum dipakai penuh:
-
-- `ai/scripts/ab_testing.py` → script eksperimen, bukan alur utama produk
-- `ai/dashboard/app.py` → dashboard awal, masih ada placeholder yang perlu disesuaikan
-
----
-
-## 🚀 Cara Menjalankan
-
-### 1) Frontend
-
+### 1. Menjalankan AI Engine (FastAPI)
+AI Engine bertugas untuk melayani prediksi harga (*inference*).
 ```bash
-cd frontend
-npm install
-npm run dev
+cd ai
+python -m venv .venv
+# Aktifkan virtual environment (Windows):
+.venv\Scripts\activate
+# Install dependensi:
+pip install -r requirements.txt
+# Jalankan server:
+uvicorn app:app --reload --host 0.0.0.0 --port 8000
 ```
+*Server AI akan berjalan di: `http://localhost:8000`*
 
-Frontend berjalan di `http://localhost:5173`.
-
-Jika backend tidak memakai port default, buat file `.env` di `frontend/`:
-
-```env
-VITE_API_BASE_URL=http://localhost:5000/api
-```
-
-### 2) Backend Express
-
+### 2. Menjalankan Backend (Express.js)
 ```bash
 cd backend
 npm install
 npm run dev
 ```
+*Server Backend akan berjalan di: `http://localhost:5000`*
 
-Backend berjalan di `http://localhost:5000`.
+### 3. Menjalankan Frontend (React + Vite)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*Aplikasi Web akan berjalan di: `http://localhost:5173`*
 
-Env opsional di `backend/.env`:
-
+*(Opsional)* Jika backend berjalan di port berbeda, buat file `.env` di folder `frontend/`:
 ```env
-PORT=5000
-FRONTEND_URL=http://localhost:5173
-```
-
-Endpoint utama:
-
-- `GET /health`
-- `POST /api/estimates`
-- `GET /api/market/trends`
-- `GET /api/market/categories`
-- `GET /api/skills`
-- `GET /api/skills/popular`
-
-### 3) Notebook dan pipeline AI/Data Science
-
-```bash
-cd ai
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-Setelah itu buka VS Code Notebook lalu jalankan notebook utama di folder `ai/models/`:
-
-- `ai/models/01_data_preparation_capstone.ipynb`
-- `ai/models/02_model_training.ipynb`
-- `ai/models/03_inference_&_API.ipynb`
-
-Kalau yang ingin dijalankan hanya alur model, cukup notebook di atas. Notebook lain di `ai/notebooks/` dipakai untuk analisis dan dokumentasi pendukung.
-
-Kalau masih perlu alur data pendukung, jalankan juga:
-
-- `ai/notebooks/01_data_pipeline.ipynb`
-- `ai/notebooks/data_dictionary.ipynb`
-- `ai/notebooks/eda_merged.ipynb`
-- `ai/notebooks/explanatory_analysis.ipynb`
-
-Notebook `01_data_pipeline.ipynb` akan membaca data dari folder `data/` dan menulis output ke `data/output/`.
-
-### 4) Streamlit Dashboard
-
-```bash
-cd ai/dashboard
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-Dashboard biasanya tersedia di `http://localhost:8501`.
-
-### 5) FastAPI model API
-
-```bash
-cd ai
-python app.py
-```
-
-Service ini berjalan di `http://localhost:8000`.
-Ini adalah entrypoint API utama untuk inference dan konsultasi GenAI.
-
-Kalau ingin menjalankan langsung dengan `uvicorn`:
-
-```bash
-uvicorn app:app --reload --host 0.0.0.0 --port 8000
-```
-
-### 6) A/B Testing
-
-```bash
-cd ai
-python scripts/ab_testing.py
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
 ---
 
-## 🧭 Urutan Jalankan Semua Komponen
+## 📈 Menjalankan Data Pipeline & Dashboard AI
 
-Kalau ingin menyalakan seluruh aplikasi dari nol, ikuti urutan ini:
+Jika Anda ingin melihat proses pengolahan data atau menjalankan visualisasi analitik berbasis Streamlit:
 
-1. Jalankan backend Express.
-2. Jalankan frontend Vite.
-3. Jalankan notebook pipeline AI/data untuk memastikan dataset output tersedia.
-4. Jalankan Streamlit dashboard jika ingin melihat insight data.
-5. Jalankan FastAPI utama lewat `ai/app.py` kalau ingin service model dan konsultasi GenAI.
+1. **Jalankan Notebook ML:**  
+   Buka VS Code / Jupyter, lalu jalankan notebook di folder `ai/models/` (01, 02, 03) secara berurutan.
+2. **Dashboard Streamlit:**
+   ```bash
+   cd ai/dashboard
+   pip install -r requirements.txt
+   streamlit run app.py
+   ```
+   *Dashboard analitik akan terbuka di: `http://localhost:8501`*
 
 ---
 
 ## 📌 Catatan Penting
-
-- Folder `frontend/` dan `backend/` sudah terpisah, jadi `npm install` harus dijalankan di masing-masing folder.
-- Jika frontend tidak bisa memanggil API, cek nilai `VITE_API_BASE_URL` dan pastikan backend hidup di port yang sama.
-- Jika notebook gagal membaca file CSV, pastikan `data/raw/` dan `data/output/` sudah ada.
-- Untuk lingkungan Windows, aktifkan virtual environment sebelum menjalankan script Python di `ai/`.
+- Ketiga *service* (**Frontend**, **Backend**, dan **AI Engine**) harus berjalan secara bersamaan agar seluruh fitur aplikasi (khususnya Estimator) dapat berfungsi penuh.
+- Lingkungan Windows memerlukan virtual environment (`venv`) khusus saat menginstal dependensi Python (`requirements.txt`) untuk mencegah konflik versi pada `numpy` dan `pandas`.

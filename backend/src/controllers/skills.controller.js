@@ -1,7 +1,7 @@
-// CONTROLLER SKILLS - MENANGANI REQUEST DATA SKILL DARI ML API
+// CONTROLLER SKILLS MENANGANI REQUEST DATA SKILL DARI ML API
 const skillsService = require('../services/skills.service');
 
-// GET /api/skills - SEMUA SKILL VALID DARI MODEL
+// GET API SKILLS SEMUA SKILL VALID DARI MODEL
 exports.getAllSkills = async (req, res, next) => {
   try {
     const data = await skillsService.getAllSkills();
@@ -11,7 +11,7 @@ exports.getAllSkills = async (req, res, next) => {
   }
 };
 
-// GET /api/skills/popular - SKILL POPULER (TOP 20 DARI MODEL)
+// GET API SKILLS POPULAR SKILL POPULER (TOP 20 DARI MODEL)
 exports.getPopularSkills = async (req, res, next) => {
   try {
     const data = await skillsService.getAllSkills();
@@ -22,7 +22,7 @@ exports.getPopularSkills = async (req, res, next) => {
   }
 };
 
-// GET /api/skills/platforms - PLATFORM YANG DIDUKUNG MODEL
+// GET API SKILLS PLATFORMS PLATFORM YANG DIDUKUNG MODEL
 exports.getPlatforms = async (req, res, next) => {
   try {
     const data = await skillsService.getPlatforms();

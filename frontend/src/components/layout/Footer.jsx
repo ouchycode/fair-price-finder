@@ -44,9 +44,9 @@ const Footer = () => {
   return (
     <footer className="footer-wrap">
       <div className="container footer-inner">
-        {/* BAGIAN ATAS */}
+        
         <div className="footer-grid">
-          {/* MEREK */}
+          
           <div className="footer-brand">
             <Link
               to="/"
@@ -64,7 +64,6 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* KOLOM TAUTAN */}
           {footerLinks.map(({ title, links }) => (
             <div key={title}>
               <p className="label-mono footer-col-title">{title}</p>
@@ -99,10 +98,8 @@ const Footer = () => {
           ))}
         </div>
 
-        {/* PEMBAGI */}
         <Separator.Root style={{ height: 1, background: "var(--border)" }} />
 
-        {/* BILAH BAWAH HAK CIPTA ALIH TEMA */}
         <div className="footer-bottom">
           <p className="footer-copyright">
             © 2026 FairPrice Finder · CC26-PSU164
@@ -113,7 +110,6 @@ const Footer = () => {
               Capstone Project · Dicoding × Dbs Foundation
             </p>
 
-            {/* ALIH TEMA GAYA LINEAR */}
             <button
               className="theme-toggle"
               onClick={toggle}

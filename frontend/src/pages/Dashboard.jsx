@@ -21,92 +21,31 @@ import {
 } from "recharts";
 import { getMarketTrends } from "../services/api";
 
-const trendData = [
-  {
-    month: "Jan",
-    "Web Developer": 1100,
-    "UI/UX Designer": 1200,
-    "Data Analyst": 800,
-  },
-  {
-    month: "Feb",
-    "Web Developer": 1250,
-    "UI/UX Designer": 1150,
-    "Data Analyst": 850,
-  },
-  {
-    month: "Mar",
-    "Web Developer": 1300,
-    "UI/UX Designer": 1250,
-    "Data Analyst": 950,
-  },
-  {
-    month: "Apr",
-    "Web Developer": 1500,
-    "UI/UX Designer": 1400,
-    "Data Analyst": 1000,
-  },
-  {
-    month: "May",
-    "Web Developer": 1700,
-    "UI/UX Designer": 1500,
-    "Data Analyst": 1100,
-  },
-  {
-    month: "Jun",
-    "Web Developer": 1850,
-    "UI/UX Designer": 1650,
-    "Data Analyst": 1200,
-  },
-];
-
 const Dashboard = () => {
   const [filterType, setFilterType] = useState("job");
   const [filterTime, setFilterTime] = useState("month");
 
-  // Data dari API
+  // API
   const [jobsData, setJobsData] = useState([]);
   const [skillsData, setSkillsData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Data tren dinamis untuk grafik
   const [dynamicTrendData, setDynamicTrendData] = useState([]);
   const [top3Keys, setTop3Keys] = useState([]);
 
+  const [backendJobTrends, setBackendJobTrends] = useState(null);
+  const [backendSkillTrends, setBackendSkillTrends] = useState(null);
+
   useEffect(() => {
-    // Fungsi untuk generate data yang tidak disediakan oleh ML model
-    const generateStats = (name, index, isJob) => {
-      const baseDemand = Math.floor(2000 - index * 120 + Math.random() * 200);
-      const prevDemand = Math.floor(baseDemand * (0.8 + Math.random() * 0.4));
-      const rateNumber = isJob
-        ? Math.floor(20 + Math.random() * 50) / 10
-        : Math.floor(5 + Math.random() * 20) * 10;
-
-      return {
-        name: name,
-        demand: Math.max(100, baseDemand),
-        prevDemand: Math.max(80, prevDemand),
-        rate: isJob ? `Rp ${rateNumber}jt` : `Rp ${rateNumber}rb`,
-        rateType: isJob ? "per project" : "per hour",
-      };
-    };
-
     getMarketTrends()
       .then((res) => {
         const data = res.data?.data || res.data;
-        const categories = data.categories || [];
-        const topSkills = data.top_skills || [];
 
-        // Map data dari backend ke format UI
-        const mappedJobs = categories.map((cat, i) =>
-          generateStats(cat, i, true),
-        );
-        const mappedSkills = topSkills.map((skill, i) =>
-          generateStats(skill, i, false),
-        );
+        if (data.jobsData) setJobsData(data.jobsData);
+        if (data.skillsData) setSkillsData(data.skillsData);
+        if (data.jobTrends) setBackendJobTrends(data.jobTrends);
+        if (data.skillTrends) setBackendSkillTrends(data.skillTrends);
 
-        setJobsData(mappedJobs.sort((a, b) => b.demand - a.demand));
-        setSkillsData(mappedSkills.sort((a, b) => b.demand - a.demand));
         setLoading(false);
       })
       .catch((err) => {
@@ -115,32 +54,44 @@ const Dashboard = () => {
       });
   }, []);
 
-  // PILIH SUMBER DATA
   let rawData = filterType === "job" ? jobsData : skillsData;
 
   useEffect(() => {
     if (rawData.length === 0) return;
-    const top3 = rawData.slice(0, 3).map((item) => item.name);
-    setTop3Keys(top3);
 
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-    const generated = months.map((m, mIdx) => {
-      const dataPoint = { month: m };
-      top3.forEach((name, i) => {
-        const base = 1000 - i * 200;
-        dataPoint[name] = base + mIdx * 100 + Math.floor(Math.random() * 150);
-      });
-      return dataPoint;
-    });
-    setDynamicTrendData(generated);
-  }, [rawData]);
+    // STATE
+    const currentTrend =
+      filterType === "job" ? backendJobTrends : backendSkillTrends;
+
+    if (currentTrend) {
+      setTop3Keys(currentTrend.top3);
+      setDynamicTrendData(currentTrend.history);
+    }
+  }, [rawData, filterType, backendJobTrends, backendSkillTrends]);
+
+const DashboardSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="kpi-grid" style={{ marginTop: 32, marginBottom: 24 }}>
+      {[1, 2, 3].map(i => (
+        <div key={i} className="kpi-card" style={{ height: 110, background: "var(--bg-2)", borderColor: "var(--border-1)" }} />
+      ))}
+    </div>
+    <div className="panel" style={{ height: 350, marginBottom: 24, background: "var(--bg-2)", borderColor: "var(--border-1)" }} />
+    <div className="panel" style={{ height: 400, background: "var(--bg-2)", borderColor: "var(--border-1)" }} />
+  </div>
+);
 
   if (loading || rawData.length === 0) {
     return (
-      <div
-        style={{ padding: "40px", textAlign: "center", color: "var(--fg-3)" }}
-      >
-        Memuat data market dari server AI...
+      <div className="page-wrap">
+        {/* HEADER */}
+        <div data-aos="fade-down" className="page-header">
+          <div>
+            <p className="label-mono" style={{ marginBottom: 10 }}>Market Intelligence</p>
+            <h1 className="page-title">Top 15 Freelance <span className="page-title__muted">Leaderboard</span></h1>
+          </div>
+        </div>
+        <DashboardSkeleton />
       </div>
     );
   }
@@ -153,7 +104,7 @@ const Dashboard = () => {
     }));
   }
 
-  // HITUNG
+  // CALCULATE
   const maxDemand = Math.max(...rawData.map((d) => d.demand));
 
   const leaderboardData = rawData
@@ -189,7 +140,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* FILTER */}
         <div className="chart-filters" data-aos="fade-up" data-aos-delay="40">
           <select
             value={filterType}
@@ -207,7 +157,6 @@ const Dashboard = () => {
           </select>
         </div>
 
-        {/* KPI CARDS */}
         <div className="kpi-grid" data-aos="fade-up" data-aos-delay="50">
           <div className="kpi-card">
             <div className="kpi-card__header">
@@ -254,7 +203,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* GRAFIK TREN */}
         <div
           className="panel"
           data-aos="fade-up"
@@ -272,7 +220,7 @@ const Dashboard = () => {
           <div style={{ width: "100%", height: 280 }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart
-                data={dynamicTrendData.length > 0 ? dynamicTrendData : trendData}
+                data={dynamicTrendData}
                 margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
               >
                 <defs>
@@ -362,10 +310,9 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* PAPAN PERINGKAT */}
         <div className="panel" data-aos="fade-up" data-aos-delay="80">
           <div className="leaderboard">
-            {/* BARIS HEADER */}
+            {/* HEADER */}
             <div className="leaderboard-header">
               <div style={{ textAlign: "center" }}>#</div>
               <div>{filterType === "job" ? "Pekerjaan" : "Skill"}</div>
@@ -374,7 +321,6 @@ const Dashboard = () => {
               <div style={{ textAlign: "right" }}>Trend</div>
             </div>
 
-            {/* BARIS DATA */}
             {leaderboardData.map((item, i) => {
               const isUp = item.trend > 0;
               const isDown = item.trend < 0;
@@ -404,7 +350,7 @@ const Dashboard = () => {
                     <div
                       className="leaderboard-bar-fill"
                       style={{
-                        width: `${Math.max(item.fillPct, 5)}%`, // LEBAR MINIMAL 5 UNTUK VISIBILITAS
+                        width: `${Math.max(item.fillPct, 5)}%`, 
                         background: i < 3 ? "var(--indigo)" : "var(--border-2)",
                       }}
                     />
@@ -437,7 +383,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* PEMISAH */}
         <Separator.Root
           style={{
             height: 1,
@@ -446,7 +391,6 @@ const Dashboard = () => {
           }}
         />
 
-        {/* PEMBERITAHUAN */}
         <div data-aos="fade-up" className="alert alert--warning">
           <AlertTriangle
             size={13}

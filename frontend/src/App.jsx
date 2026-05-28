@@ -16,16 +16,14 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 
 NProgress.configure({ showSpinner: false, speed: 400, minimum: 0.2 });
 
-// TINGGI ANNOUNCEMENT BAR BETA
 const BAR_H = 34;
 const NAV_H = 60;
 
 function App() {
   const { pathname } = useLocation();
-  // BANNER SELALU MUNCUL SAAT RELOAD, HILANG SAAT DI-CLOSE
+  
   const [betaVisible, setBetaVisible] = useState(true);
 
-  // SINKRONISASI CLASS BODY AGAR NAVBAR BERGESER
   useEffect(() => {
     if (betaVisible) {
       document.body.classList.add('has-announce-bar');
@@ -55,7 +53,7 @@ function App() {
     <ErrorBoundary>
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
         <Toaster
-          position="top-center"
+          position="bottom-right"
           toastOptions={{
             style: {
               background: 'var(--bg-1)',
@@ -70,7 +68,7 @@ function App() {
         />
         <BetaBanner visible={betaVisible} onDismiss={handleBetaDismiss} />
         <Navbar />
-        {/* SPACER DINAMIS: ANNOUNCEMENT BAR + NAVBAR */}
+        {/* NAVBAR */}
         <div style={{ height: spacerH, flexShrink: 0 }} />
         <main style={{ flex: 1 }}>
           <Routes>

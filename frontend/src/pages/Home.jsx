@@ -12,7 +12,6 @@ import step2Dark from "../assets/images/step2-white.png";
 import step3Light from "../assets/images/step3-black.png";
 import step3Dark from "../assets/images/step3-white.png";
 
-// DATA STATIS
 const features = [
   {
     icon: Target,
@@ -54,8 +53,8 @@ const steps = [
   },
   {
     n: "2",
-    title: "Tambah Skill",
-    desc: "Input skill yang dikuasai agar estimasi lebih presisi.",
+    title: "Skill & Durasi",
+    desc: "Input skill yang dikuasai, serta jumlah hari dan jam kerja per hari agar estimasi lebih presisi.",
     delay: 100,
     imgLight: step2Light,
     imgDark: step2Dark,
@@ -89,56 +88,39 @@ const faqs = [
   },
 ];
 
-// HALAMAN HERO
 const Home = () => (
   <div>
     {/* HERO */}
     <section className="hero-section">
-      <div className="hero-dot-grid" />
       <div
-        style={{
-          maxWidth: 1100,
-          margin: "0 auto",
-          position: "relative",
-          zIndex: 1,
-        }}
+        className="container-inner"
+        style={{ position: "relative", zIndex: 1 }}
       >
-        <div
-          data-aos="fade-down"
-          data-aos-duration="500"
-          className="hero-badge"
-        >
-          <span className="hero-badge__tag">New</span>
-          <span className="hero-badge__text">
-            CC26-PSU164 · Future-Ready Work &amp; Economy
-          </span>
-        </div>
 
-        <h1 data-aos="fade-up" data-aos-delay="60" className="hero-title">
+
+        <h1 data-aos="fade-up" data-aos-delay="50" className="hero-title">
           Harga jasa yang adil
           <br />
-          <span style={{ color: "var(--fg-2)", fontWeight: 400 }}>
+          <span className="text-[var(--fg-2)] font-normal">
             berbasis data nyata
           </span>
         </h1>
 
-        <p data-aos="fade-up" data-aos-delay="140" className="hero-subtitle">
+        <p data-aos="fade-up" data-aos-delay="150" className="hero-subtitle">
           Platform AI untuk freelancer dan klien Indonesia menemukan standar
           harga yang objektif - bukan spekulasi.
         </p>
 
-        <div data-aos="fade-up" data-aos-delay="220" className="hero-actions">
+        <div data-aos="fade-up" data-aos-delay="200" className="hero-actions">
           <Link
             to="/estimator"
-            className="btn-primary"
-            style={{ fontSize: 13.5, padding: "9px 18px" }}
+            className="btn-primary text-[13.5px] px-[18px] py-[9px]"
           >
             Mulai Estimasi <ArrowRight size={14} />
           </Link>
           <Link
             to="/dashboard"
-            className="btn-secondary"
-            style={{ fontSize: 13.5, padding: "9px 18px" }}
+            className="btn-secondary text-[13.5px] px-[18px] py-[9px]"
           >
             <BarChart2 size={14} /> Lihat Tren Pasar
           </Link>
@@ -161,7 +143,6 @@ const Home = () => (
       </div>
     </section>
 
-    {/* BILAH STATISTIK */}
     <section className="stats-bar">
       <div className="container">
         <div className="stats-bar__inner">
@@ -178,16 +159,15 @@ const Home = () => (
       </div>
     </section>
 
-    {/* FITUR */}
+    {/* FEATURES */}
     <section className="section">
       <p data-aos="fade-right" className="label-mono section-label">
         Platform
       </p>
       <h2
         data-aos="fade-up"
-        data-aos-delay="60"
-        className="section-title"
-        style={{ maxWidth: 420 }}
+        data-aos-delay="50"
+        className="section-title max-w-[700px]"
       >
         Dirancang untuk ekosistem freelance yang lebih sehat
       </h2>
@@ -210,17 +190,15 @@ const Home = () => (
       </div>
     </section>
 
-    {/* PEMISAH */}
     <div className="divider-wrap">
       <Separator.Root style={{ height: 1, background: "var(--border)" }} />
     </div>
 
-    {/* CARA KERJA */}
     <section className="section-sm">
       <p data-aos="fade-right" className="label-mono section-label">
         Cara Kerja
       </p>
-      <h2 data-aos="fade-up" data-aos-delay="60" className="section-title-sm">
+      <h2 data-aos="fade-up" data-aos-delay="50" className="section-title-sm">
         Tiga langkah, estimasi instan
       </h2>
       <div className="steps-grid">
@@ -251,7 +229,6 @@ const Home = () => (
       </div>
     </section>
 
-    {/* PEMISAH */}
     <div className="divider-wrap">
       <Separator.Root style={{ height: 1, background: "var(--border)" }} />
     </div>
@@ -263,9 +240,8 @@ const Home = () => (
       </p>
       <h2
         data-aos="fade-up"
-        data-aos-delay="60"
-        className="section-title-sm"
-        style={{ maxWidth: 360 }}
+        data-aos-delay="50"
+        className="section-title-sm max-w-[600px]"
       >
         Pertanyaan yang sering ditanyakan
       </h2>
@@ -279,9 +255,7 @@ const Home = () => (
     {/* CTA */}
     <section className="cta-section">
       <div data-aos="fade-up" data-aos-duration="600" className="cta-inner">
-        <p className="label-mono" style={{ marginBottom: 14 }}>
-          Mulai sekarang - gratis
-        </p>
+        <p className="label-mono mb-3.5">Mulai sekarang - gratis</p>
         <h2 className="cta-title">
           Sudah tahu skill-mu,
           <br />
@@ -292,8 +266,7 @@ const Home = () => (
         </p>
         <Link
           to="/estimator"
-          className="btn-primary"
-          style={{ fontSize: 14, padding: "9px 22px" }}
+          className="btn-primary text-[14px] px-[22px] py-[9px]"
         >
           Coba Estimator <ArrowRight size={14} />
         </Link>

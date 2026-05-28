@@ -3,6 +3,7 @@ Inference Module
 Prediksi harga freelance menggunakan TensorFlow model
 """
 
+
 import numpy as np
 import pickle
 import json
@@ -67,25 +68,16 @@ class InferenceService:
         return get_model_status()
 
 
-def find_project_root():
-    """Cari root project dari lokasi file ini."""
-    current_dir = Path(__file__).parent.resolve()
-    for candidate in [current_dir, *current_dir.parents]:
-        if (candidate / "data").exists():
-            return candidate
-    return current_dir
-
-
-PROJECT_ROOT = find_project_root()
-DATA_DIR = PROJECT_ROOT / "data"
-MODELS_DIR = DATA_DIR / "models"
+# DATA_DIR mengarah ke ai/data/ — lokasi model dan scaler baru
+DATA_DIR    = Path(__file__).parent / "data"
+MODELS_DIR  = DATA_DIR / "models"
 PREPARED_DIR = DATA_DIR / "prepared"
 
-MODEL_PATH = MODELS_DIR / 'freelance_pricer_final.keras'
-SAVEDMODEL_PATH = MODELS_DIR / 'freelance_pricer_savedmodel'
-SCALER_PATH = PREPARED_DIR / 'scaler.pkl'
-FEATURE_NAMES_PATH = PREPARED_DIR / 'feature_names.pkl'
-METADATA_PATH = MODELS_DIR / 'model_metadata.json'
+MODEL_PATH          = MODELS_DIR / 'freelance_pricer_final.keras'
+SAVEDMODEL_PATH     = MODELS_DIR / 'freelance_pricer_savedmodel'
+SCALER_PATH         = PREPARED_DIR / 'scaler.pkl'
+FEATURE_NAMES_PATH  = PREPARED_DIR / 'feature_names.pkl'
+METADATA_PATH       = MODELS_DIR / 'model_metadata.json'
 
 try:
     try:

@@ -1,4 +1,4 @@
-// MIDDLEWARE ERROR HANDLER - TERPUSAT UNTUK SEMUA ROUTE
+// MIDDLEWARE ERROR HANDLER TERPUSAT UNTUK SEMUA ROUTE
 const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
 

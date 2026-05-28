@@ -1,17 +1,16 @@
-// Konfigurasi database
-// Saat ini API berjalan tanpa database (in-memory / mock data).
-// Aktifkan sesuai kebutuhan tim:
 
-// MongoDB
-//   uri: process.env.MONGO_URI || 'mongodb://localhost:27017/fairprice',
+// SAAT INI API BERJALAN TANPA DATABASE (IN MEMORY MOCK DATA)
 
-// PostgreSQL
-//   host:     process.env.DB_HOST || 'localhost',
-//   port:     process.env.DB_PORT || 5432,
-//   user:     process.env.DB_USER,
-//   password: process.env.DB_PASS,
-//   database: process.env.DB_NAME || 'fairprice',
+// MONGODB
+// URI: PROCESS ENV MONGO_URI || 'MONGODB: LOCALHOST:27017 FAIRPRICE',
+
+// POSTGRESQL
+// HOST: PROCESS ENV DB_HOST || 'LOCALHOST',
+// PORT: PROCESS ENV DB_PORT || 5432,
+// USER: PROCESS ENV DB_USER,
+// PASSWORD: PROCESS ENV DB_PASS,
+// DATABASE: PROCESS ENV DB_NAME || 'FAIRPRICE',
 
 module.exports = {
-  // Uncomment dan isi sesuai pilihan DB tim
+  // UNCOMMENT DAN ISI SESUAI PILIHAN DB TIM
 };

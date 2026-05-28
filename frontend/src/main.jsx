@@ -19,11 +19,10 @@ function Root() {
     AOS.init({
       duration: 750,
       easing: 'ease-out-cubic',
-      once: false,
+      once: true,
       offset: 50,
     });
 
-    // TETAPKAN FAVICON KE LOGO FPF
     try {
       const link = document.querySelector("link[rel='icon']");
       if (link) link.href = logoFpf;

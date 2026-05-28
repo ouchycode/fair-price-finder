@@ -1,4 +1,4 @@
-// ENTRY POINT - FAIR PRICE FINDER BACKEND API
+// ENTRY POINT FAIR PRICE FINDER BACKEND API
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
@@ -9,7 +9,6 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const ML_API_URL = process.env.ML_API_URL || 'http://localhost:8000';
 
-// MIDDLEWARE
 app.use(cors({
   origin: process.env.FRONTEND_URL || '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -18,12 +17,11 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ROUTES
 app.use('/api/estimates', require('./routes/estimate.routes'));
 app.use('/api/market',    require('./routes/market.routes'));
 app.use('/api/skills',    require('./routes/skills.routes'));
 
-// HEALTH CHECK - STATUS BACKEND DAN KONFIGURASI ML API
+// HEALTH CHECK STATUS BACKEND DAN KONFIGURASI ML API
 app.get('/health', (req, res) => {
   res.json({
     status: 'OK',

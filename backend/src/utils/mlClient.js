@@ -1,17 +1,17 @@
-// AXIOS CLIENT - TERPUSAT UNTUK KOMUNIKASI KE ML API (FASTAPI)
+// AXIOS CLIENT TERPUSAT UNTUK KOMUNIKASI KE ML API (FASTAPI)
 const axios = require('axios');
 
 const ML_API_URL = process.env.ML_API_URL || 'http://localhost:8000';
 
 const mlClient = axios.create({
   baseURL: ML_API_URL,
-  timeout: 30000, // 30 DETIK - MODEL ML BUTUH WAKTU LOAD
+  timeout: 30000, 
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// REQUEST INTERCEPTOR - LOG SETIAP REQUEST KE ML API
+// REQUEST INTERCEPTOR LOG SETIAP REQUEST KE ML API
 mlClient.interceptors.request.use(
   (config) => {
     console.log(`[ML API] ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
@@ -20,7 +20,7 @@ mlClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// RESPONSE INTERCEPTOR - TANGKAP ERROR DARI ML API
+// RESPONSE INTERCEPTOR TANGKAP ERROR DARI ML API
 mlClient.interceptors.response.use(
   (response) => response,
   (error) => {
