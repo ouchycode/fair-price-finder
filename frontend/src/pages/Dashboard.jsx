@@ -10,20 +10,13 @@ import {
 } from "lucide-react";
 import * as Separator from "@radix-ui/react-separator";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip as RechartsTooltip,
-  ResponsiveContainer,
-} from "recharts";
+import DumbbellChart from "../components/features/DumbbellChart";
 import { getMarketTrends } from "../services/api";
 
 const Dashboard = () => {
   const [filterType, setFilterType] = useState("job");
-  const [filterTime, setFilterTime] = useState("month");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 15;
 
   // API
   const [jobsData, setJobsData] = useState([]);
@@ -58,16 +51,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (rawData.length === 0) return;
+    setTop3Keys(rawData.slice(0, 5).map(i => i.name));
+    setDynamicTrendData(rawData.slice(0, 5));
+  }, [rawData]);
 
-    // STATE
-    const currentTrend =
-      filterType === "job" ? backendJobTrends : backendSkillTrends;
-
-    if (currentTrend) {
-      setTop3Keys(currentTrend.top3);
-      setDynamicTrendData(currentTrend.history);
-    }
-  }, [rawData, filterType, backendJobTrends, backendSkillTrends]);
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterType]);
 
 const DashboardSkeleton = () => (
   <div className="animate-pulse">
@@ -88,7 +78,7 @@ const DashboardSkeleton = () => (
         <div data-aos="fade-down" className="page-header">
           <div>
             <p className="label-mono" style={{ marginBottom: 10 }}>Market Intelligence</p>
-            <h1 className="page-title">Top 15 Freelance <span className="page-title__muted">Leaderboard</span></h1>
+            <h1 className="page-title">Analisis Data <span className="page-title__muted">Freelancer di Indonesia</span></h1>
           </div>
         </div>
         <DashboardSkeleton />
@@ -96,18 +86,11 @@ const DashboardSkeleton = () => (
     );
   }
 
-  if (filterTime === "year") {
-    rawData = rawData.map((item) => ({
-      ...item,
-      demand: item.demand * 8,
-      prevDemand: item.prevDemand * 7.5,
-    }));
-  }
 
   // CALCULATE
-  const maxDemand = Math.max(...rawData.map((d) => d.demand));
+  const maxDemand = Math.max(...(rawData.length > 0 ? rawData : [{demand: 1}]).map((d) => d.demand));
 
-  const leaderboardData = rawData
+  const sortedData = rawData
     .map((item) => {
       const pctChange =
         ((item.demand - item.prevDemand) / item.prevDemand) * 100;
@@ -117,8 +100,29 @@ const DashboardSkeleton = () => (
         fillPct: (item.demand / maxDemand) * 100,
       };
     })
-    .sort((a, b) => b.demand - a.demand)
-    .slice(0, 15);
+    .sort((a, b) => b.demand - a.demand);
+
+  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+  const leaderboardData = sortedData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Hitung Global Average Price
+  const globalAvgPrice = rawData.length > 0 
+    ? rawData.reduce((acc, curr) => acc + (curr.avgPrice || 0), 0) / rawData.length 
+    : 0;
+
+  const formatKpiCurrency = (value) => {
+    if (!value) return "Rp 0";
+    if (value >= 1_000_000) {
+      return `Rp ${(value / 1_000_000).toFixed(1).replace(".0", "")}jt`;
+    }
+    if (value >= 1_000) {
+      return `Rp ${(value / 1_000).toFixed(0)}rb`;
+    }
+    return `Rp ${value}`;
+  };
 
   return (
     <Tooltip.Provider delayDuration={200}>
@@ -130,13 +134,12 @@ const DashboardSkeleton = () => (
               Market Intelligence
             </p>
             <h1 className="page-title">
-              Top 15 Freelance{" "}
-              <span className="page-title__muted">Leaderboard</span>
+              Analisis Data{" "}
+              <span className="page-title__muted">Freelancer di Indonesia</span>
             </h1>
           </div>
-          <div className="live-badge">
-            <span className="live-badge__dot" />
-            <span className="live-badge__text">Real-time Data</span>
+          <div className="live-badge" style={{ padding: '6px 12px', background: 'var(--bg-2)', border: '1px solid var(--border-1)', color: 'var(--fg-2)' }}>
+            <span className="live-badge__text">Sumber: Upwork, Sribu, Fastwork, dll.</span>
           </div>
         </div>
 
@@ -148,19 +151,12 @@ const DashboardSkeleton = () => (
             <option value="job">Kategori Pekerjaan</option>
             <option value="skill">Spesifik Skill</option>
           </select>
-          <select
-            value={filterTime}
-            onChange={(e) => setFilterTime(e.target.value)}
-          >
-            <option value="month">Bulan Ini</option>
-            <option value="year">Tahun Ini</option>
-          </select>
         </div>
 
         <div className="kpi-grid" data-aos="fade-up" data-aos-delay="50">
           <div className="kpi-card">
             <div className="kpi-card__header">
-              <span className="kpi-card__title">Total Volume</span>
+              <span className="kpi-card__title">Total Proyek</span>
               <Activity size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">
@@ -168,20 +164,20 @@ const DashboardSkeleton = () => (
                 .reduce((acc, curr) => acc + curr.demand, 0)
                 .toLocaleString("id-ID")}
             </div>
-            <div className="kpi-card__trend" style={{ color: "var(--green)" }}>
-              <TrendingUp size={12} /> +12.5% dari sebelumnya
+            <div className="kpi-card__trend" style={{ color: "var(--fg-3)" }}>
+              Data Keseluruhan
             </div>
           </div>
           <div className="kpi-card">
             <div className="kpi-card__header">
-              <span className="kpi-card__title">Rata-rata Harga</span>
+              <span className="kpi-card__title">Rata-Rata Nilai Proyek</span>
               <BarChart2 size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">
-              {filterType === "job" ? "Rp 3,8jt" : "Rp 140rb"}
+              {formatKpiCurrency(globalAvgPrice)}
             </div>
             <div className="kpi-card__trend" style={{ color: "var(--fg-2)" }}>
-              Stabil
+              Rata-rata dari semua {filterType === "job" ? "pekerjaan" : "skill"}
             </div>
           </div>
           <div className="kpi-card">
@@ -211,102 +207,14 @@ const DashboardSkeleton = () => (
         >
           <div style={{ marginBottom: 16 }}>
             <h3 className="section-title-sm" style={{ marginBottom: 4 }}>
-              Tren Pencarian (6 Bulan Terakhir)
+              Distribusi Harga
             </h3>
             <p className="page-desc" style={{ fontSize: "13px" }}>
-              Volume pencarian 3 kategori teratas
+              Rentang Harga (Terendah vs Tertinggi) Top 5
             </p>
           </div>
-          <div style={{ width: "100%", height: 280 }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                data={dynamicTrendData}
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-              >
-                <defs>
-                  <linearGradient id="colorWeb" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--indigo)"
-                      stopOpacity={0.3}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--indigo)"
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                  <linearGradient id="colorUi" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--green)"
-                      stopOpacity={0.3}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--green)"
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                  <linearGradient id="colorData" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--amber)"
-                      stopOpacity={0.3}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--amber)"
-                      stopOpacity={0}
-                    />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="var(--border)"
-                />
-                <XAxis
-                  dataKey="month"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "var(--fg-3)" }}
-                  dy={10}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fontSize: 12, fill: "var(--fg-3)" }}
-                />
-                <RechartsTooltip
-                  contentStyle={{
-                    backgroundColor: "var(--bg-1)",
-                    borderRadius: "8px",
-                    border: "1px solid var(--border)",
-                    fontSize: "12px",
-                  }}
-                  itemStyle={{ padding: "2px 0" }}
-                />
-                {top3Keys.map((key, i) => {
-                  const colors = [
-                    { stroke: "var(--indigo)", fill: "url(#colorWeb)" },
-                    { stroke: "var(--green)", fill: "url(#colorUi)" },
-                    { stroke: "var(--amber)", fill: "url(#colorData)" },
-                  ];
-                  return (
-                    <Area
-                      key={key}
-                      type="monotone"
-                      dataKey={key}
-                      stroke={colors[i].stroke}
-                      strokeWidth={2}
-                      fillOpacity={1}
-                      fill={colors[i].fill}
-                    />
-                  );
-                })}
-              </AreaChart>
-            </ResponsiveContainer>
+          <div style={{ width: "100%", height: "auto" }}>
+            <DumbbellChart data={dynamicTrendData} />
           </div>
         </div>
 
@@ -316,9 +224,8 @@ const DashboardSkeleton = () => (
             <div className="leaderboard-header">
               <div style={{ textAlign: "center" }}>#</div>
               <div>{filterType === "job" ? "Pekerjaan" : "Skill"}</div>
-              <div>Rata-rata Pendapatan</div>
-              <div>Volume Pencarian</div>
-              <div style={{ textAlign: "right" }}>Trend</div>
+              <div>Pendapatan (per Proyek)</div>
+              <div>Jumlah Proyek</div>
             </div>
 
             {leaderboardData.map((item, i) => {
@@ -335,17 +242,15 @@ const DashboardSkeleton = () => (
                 <div
                   key={item.name}
                   className="leaderboard-row"
-                  data-aos="fade-up"
-                  data-aos-delay={i * 30}
                 >
-                  <div className="leaderboard-rank">{i + 1}</div>
+                  <div className="leaderboard-rank">{(currentPage - 1) * itemsPerPage + i + 1}</div>
                   <div className="leaderboard-name">{item.name}</div>
                   <div className="leaderboard-rate">
-                    {item.rate} <span>{item.rateType}</span>
+                    {item.rate}
                   </div>
                   <div
                     className="leaderboard-bar-wrap"
-                    title={`${item.demand.toLocaleString("id-ID")} pencarian`}
+                    title={`${item.demand.toLocaleString("id-ID")} proyek`}
                   >
                     <div
                       className="leaderboard-bar-fill"
@@ -369,17 +274,52 @@ const DashboardSkeleton = () => (
                       {item.demand.toLocaleString("id-ID")}
                     </span>
                   </div>
-                  <div
-                    className="leaderboard-trend"
-                    style={{ color: trendColor }}
-                  >
-                    {item.trend > 0 && "+"}
-                    {item.trend.toFixed(1)}%{" "}
-                    <Icon size={12} strokeWidth={2.5} />
-                  </div>
                 </div>
               );
             })}
+
+            {/* PAGINATION CONTROLS */}
+            {totalPages > 1 && (
+              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16, marginTop: 32 }}>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  style={{ 
+                    padding: "6px 14px", 
+                    borderRadius: 6, 
+                    border: "1px solid var(--border)", 
+                    background: "var(--bg-1)", 
+                    color: "var(--fg)",
+                    cursor: currentPage === 1 ? "not-allowed" : "pointer", 
+                    opacity: currentPage === 1 ? 0.5 : 1,
+                    fontWeight: 500,
+                    fontSize: 13
+                  }}
+                >
+                  Sebelumnya
+                </button>
+                <span style={{ fontSize: 13, color: "var(--fg-3)", fontWeight: 500 }}>
+                  Halaman {currentPage} dari {totalPages}
+                </span>
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  style={{ 
+                    padding: "6px 14px", 
+                    borderRadius: 6, 
+                    border: "1px solid var(--border)", 
+                    background: "var(--bg-1)", 
+                    color: "var(--fg)",
+                    cursor: currentPage === totalPages ? "not-allowed" : "pointer", 
+                    opacity: currentPage === totalPages ? 0.5 : 1,
+                    fontWeight: 500,
+                    fontSize: 13
+                  }}
+                >
+                  Selanjutnya
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -390,21 +330,6 @@ const DashboardSkeleton = () => (
             margin: "32px 0 16px 0",
           }}
         />
-
-        <div data-aos="fade-up" className="alert alert--warning">
-          <AlertTriangle
-            size={13}
-            color="var(--amber)"
-            style={{ marginTop: 1.5, flexShrink: 0 }}
-          />
-          <p className="alert__text">
-            Persentase trend membandingkan data pencarian{" "}
-            {filterTime === "month"
-              ? "bulan ini dengan bulan sebelumnya"
-              : "tahun ini dengan tahun sebelumnya"}
-            .
-          </p>
-        </div>
       </div>
     </Tooltip.Provider>
   );

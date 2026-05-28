@@ -16,6 +16,47 @@ const DEFAULT_CATEGORIES = [
   'Lainnya',
 ];
 
+const PROJECT_TYPES_BY_CAT = {
+  'Web dan Pemrograman': [
+    "Website E-Commerce",
+    "Website Company Profile",
+    "Landing Page",
+    "Aplikasi Mobile",
+    "Sistem Kasir (POS)",
+    "Bot / Automasi Script"
+  ],
+  'Grafis & Desain': [
+    "Desain Logo & Branding",
+    "Desain UI/UX App",
+    "Desain Feed / Banner Sosmed",
+    "Brosur / Company Profile PDF",
+    "Ilustrasi Kreatif"
+  ],
+  'Pemasaran & Periklanan': [
+    "Manajemen Media Sosial",
+    "Setup Google Ads / FB Ads",
+    "Optimasi SEO Web",
+    "Email Marketing"
+  ],
+  'Visual & Audio': [
+    "Video Iklan / Promosi",
+    "Video Editing YouTube / TikTok",
+    "Voice Over (Pengisi Suara)",
+    "Animasi 2D / 3D"
+  ],
+  'Penulisan & Penerjemahan': [
+    "Artikel Blog SEO",
+    "Copywriting Landing Page",
+    "Penerjemahan Dokumen",
+    "Penulisan Buku / E-Book"
+  ],
+  'Lainnya': [
+    "Entri Data / Virtual Assistant",
+    "Konsultasi Bisnis",
+    "Riset Pasar"
+  ]
+};
+
 const FieldLabel = ({ htmlFor, children, hint }) => (
   <div style={{ marginBottom: 7, display: 'flex', alignItems: 'center', gap: 6 }}>
     <Label.Root htmlFor={htmlFor} className="label-mono" style={{ cursor: 'default' }}>
@@ -68,13 +109,21 @@ const Stepper = ({ id, value, min, max, onChange, label, unit }) => (
 const PriceEstimatorForm = ({ onResult, onLoading }) => {
   const [categoriesList, setCategoriesList] = useState(DEFAULT_CATEGORIES);
   const [category,  setCategory]  = useState('');
+  const [projectType, setProjectType] = useState('');
   const [skills,    setSkills]    = useState([]);
   const [days,      setDays]      = useState(7);
-  const [hoursPerDay, setHoursPerDay] = useState(8);
+  const [role,      setRole]      = useState('freelancer');
   const [loading,   setLoading]   = useState(false);
 
-  // API
-  const totalHours = days * hoursPerDay;
+  // Clear projectType when category changes
+  useEffect(() => {
+    setProjectType('');
+  }, [category]);
+
+  // Generate available project types based on category
+  const availableProjectTypes = category && PROJECT_TYPES_BY_CAT[category] 
+    ? ["Tidak Spesifik", ...PROJECT_TYPES_BY_CAT[category]] 
+    : ["Tidak Spesifik"];
 
   useEffect(() => {
     getCategories()
@@ -108,19 +157,20 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
     try {
       const { data } = await estimatePrice({
         category,
+        project_type: projectType !== "Tidak Spesifik" ? projectType : "",
         skills,
         duration: days,   // API
       });
       const resData = data.data || data;
       onResult({
         ...resData,
-        requestParams: { category, skills, duration: days, hoursPerDay, totalHours },
+        requestParams: { category, project_type: projectType, skills, duration: days, role },
       });
       
       setCategory('');
+      setProjectType('');
       setSkills([]);
       setDays(7);
-      setHoursPerDay(8);
       toast.success('Estimasi berhasil didapatkan!');
     } catch (error) {
       const message = error.response?.data?.message || error.message || 'Gagal mengambil estimasi. Coba lagi.';
@@ -177,8 +227,35 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
         </Select.Root>
       </div>
 
-      <div>
-        <FieldLabel hint="pilih dari daftar skill">Skills</FieldLabel>
+      <div style={{ marginTop: 20 }}>
+        <FieldLabel hint="(Opsional)">Tipe Proyek</FieldLabel>
+        <Select.Root value={projectType} onValueChange={setProjectType}>
+          <Select.Trigger
+            className="select-trigger"
+            style={{ color: projectType ? 'var(--fg)' : 'var(--fg-3)' }}
+          >
+            <Select.Value placeholder="Pilih contoh proyek..." />
+            <Select.Icon><ChevronDown size={12} color="var(--fg-3)" /></Select.Icon>
+          </Select.Trigger>
+
+          <Select.Portal>
+            <Select.Content className="select-content" position="popper" sideOffset={4}>
+              <Select.Viewport>
+                {availableProjectTypes.map(p => (
+                  <Select.Item key={p} value={p} className="select-item">
+                    <Select.ItemText>{p}</Select.ItemText>
+                    <Select.ItemIndicator className="select-indicator">
+                      <Check size={12} />
+                    </Select.ItemIndicator>
+                  </Select.Item>
+                ))}
+              </Select.Viewport>
+            </Select.Content>
+          </Select.Portal>
+        </Select.Root>
+      </div>
+
+      <div style={{ marginTop: 20 }}>     <FieldLabel hint="pilih dari daftar skill">Skills</FieldLabel>
         <SkillDropdown
           category={category}
           value={skills}
@@ -187,8 +264,37 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
       </div>
 
       <div>
-        <FieldLabel>Durasi Pengerjaan</FieldLabel>
+        <FieldLabel>Posisi Anda</FieldLabel>
+        <div style={{ display: 'flex', background: 'var(--bg-3)', padding: 4, borderRadius: 8, marginBottom: 20 }}>
+          <button
+            type="button"
+            onClick={() => setRole('freelancer')}
+            style={{
+              flex: 1, padding: '8px 0', fontSize: 13, fontWeight: 600, border: 'none', borderRadius: 6,
+              background: role === 'freelancer' ? 'var(--bg-1)' : 'transparent',
+              color: role === 'freelancer' ? 'var(--fg)' : 'var(--fg-3)',
+              boxShadow: role === 'freelancer' ? 'var(--shadow-1)' : 'none',
+              cursor: 'pointer', transition: 'all 0.2s'
+            }}
+          >
+            Freelancer
+          </button>
+          <button
+            type="button"
+            onClick={() => setRole('client')}
+            style={{
+              flex: 1, padding: '8px 0', fontSize: 13, fontWeight: 600, border: 'none', borderRadius: 6,
+              background: role === 'client' ? 'var(--bg-1)' : 'transparent',
+              color: role === 'client' ? 'var(--fg)' : 'var(--fg-3)',
+              boxShadow: role === 'client' ? 'var(--shadow-1)' : 'none',
+              cursor: 'pointer', transition: 'all 0.2s'
+            }}
+          >
+            Klien
+          </button>
+        </div>
 
+        <FieldLabel hint="(Asumsi: 1 hari = 8 jam kerja)">Durasi Pengerjaan</FieldLabel>
         <div style={{ display: 'flex', gap: 10 }}>
           <Stepper
             id="days-input"
@@ -199,38 +305,6 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
             label="Jumlah Hari"
             unit="hari"
           />
-          <Stepper
-            id="hours-input"
-            value={hoursPerDay}
-            min={1}
-            max={12}
-            onChange={setHoursPerDay}
-            label="Jam per Hari"
-            unit="jam"
-          />
-        </div>
-
-        <div
-          style={{
-            marginTop: 10,
-            padding: '8px 12px',
-            background: 'var(--bg-3)',
-            borderRadius: 8,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            fontSize: 12,
-            color: 'var(--fg-2)',
-          }}
-        >
-          <span>
-            <b style={{ color: 'var(--fg)' }}>{days}</b> hari
-            {' '}×{' '}
-            <b style={{ color: 'var(--fg)' }}>{hoursPerDay}</b> jam/hari
-          </span>
-          <span style={{ fontWeight: 600, color: 'var(--accent)' }}>
-            = {totalHours} jam total
-          </span>
         </div>
       </div>
 

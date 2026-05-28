@@ -4,7 +4,7 @@ const estimateService = require('../services/estimate.service');
 // POST API ESTIMATES ESTIMASI HARGA FREELANCE
 exports.getPriceEstimate = async (req, res, next) => {
   try {
-    const { category, skills, duration } = req.body;
+    const { category, project_type, skills, duration } = req.body;
 
     // VALIDASI INPUT WAJIB
     if (!skills || !Array.isArray(skills) || skills.length === 0) {
@@ -20,7 +20,7 @@ exports.getPriceEstimate = async (req, res, next) => {
       });
     }
 
-    const result = await estimateService.estimatePrice({ category, skills, duration });
+    const result = await estimateService.estimatePrice({ category, project_type, skills, duration });
     res.json({ success: true, data: result });
   } catch (err) {
     next(err);
@@ -30,7 +30,7 @@ exports.getPriceEstimate = async (req, res, next) => {
 // POST API ESTIMATES CONSULT KONSULTASI HARGA BERBASIS AI
 exports.getConsultation = async (req, res, next) => {
   try {
-    const { category, skills, duration, role } = req.body;
+    const { category, project_type, skills, duration, role } = req.body;
 
     // VALIDASI INPUT WAJIB
     if (!skills || !Array.isArray(skills) || skills.length === 0) {
@@ -52,7 +52,7 @@ exports.getConsultation = async (req, res, next) => {
       });
     }
 
-    const result = await estimateService.consultPrice({ category, skills, duration, role });
+    const result = await estimateService.consultPrice({ category, project_type, skills, duration, role });
     res.json({ success: true, data: result });
   } catch (err) {
     next(err);

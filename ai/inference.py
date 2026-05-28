@@ -146,6 +146,10 @@ def normalize_skills(skills: Optional[list]) -> list:
     return normalized
 
 
+def round_to_nearest_100k(price: float) -> int:
+    import math
+    return int(math.floor(price / 100000.0 + 0.5) * 100000)
+
 def predict_price(user_input: dict, range_margin: float = 0.20) -> dict:
     """Predict harga freelance project."""
     if not MODEL_LOADED:
@@ -175,16 +179,25 @@ def predict_price(user_input: dict, range_margin: float = 0.20) -> dict:
 
     pred_idr_clipped = np.clip(pred_idr, IDR_MIN, IDR_MAX)
 
-    price_min = int(pred_idr_clipped * (1 - range_margin))
-    price_max = int(pred_idr_clipped * (1 + range_margin))
+    # Terapkan Fair Price Multiplier agar konsisten dengan Dashboard
+    FAIR_PRICE_MULTIPLIER = 4.0
+    adjusted_price = pred_idr_clipped * FAIR_PRICE_MULTIPLIER
+
+    price_min = adjusted_price * (1 - range_margin)
+    price_max = adjusted_price * (1 + range_margin)
+    
+    # Pembulatan ke 100.000 terdekat (0.5 ke atas, < 0.5 ke bawah)
+    adjusted_price_rounded = round_to_nearest_100k(adjusted_price)
+    price_min_rounded = round_to_nearest_100k(price_min)
+    price_max_rounded = round_to_nearest_100k(price_max)
 
     return {
-        'predicted_price': int(pred_idr_clipped),
-        'price_min': price_min,
-        'price_max': price_max,
-        'min_price': price_min,
-        'max_price': price_max,
-        'median_price': int(pred_idr_clipped),
+        'predicted_price': adjusted_price_rounded,
+        'price_min': price_min_rounded,
+        'price_max': price_max_rounded,
+        'min_price': price_min_rounded,
+        'max_price': price_max_rounded,
+        'median_price': adjusted_price_rounded,
         'detected_category': kategori,
         'currency': 'IDR',
     }

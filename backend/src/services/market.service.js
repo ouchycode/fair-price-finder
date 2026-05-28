@@ -138,31 +138,23 @@ const generateTrendData = (dataArray) => {
   };
 };
 
-// AMBIL DATA SKILL POPULER DARI ML API (DIGUNAKAN UNTUK TREN)
+// AMBIL DATA REAL DARI ML API (DIGUNAKAN UNTUK DASHBOARD)
 exports.getTrends = async () => {
-  const [categoriesRes, skillsRes] = await Promise.all([
-    mlClient.get('/categories'),
-    mlClient.get('/skills'),
-  ]);
-
-  const categories = categoriesRes.data.categories || [];
-  const skills = skillsRes.data.skills || [];
-
-  const jobsData = categories.map((cat, i) => generateStats(cat, i, true)).sort((a, b) => b.demand - a.demand);
-  const skillsData = skills.map((skill, i) => generateStats(skill, i, false)).sort((a, b) => b.demand - a.demand);
-
-  const jobTrends = generateTrendData(jobsData);
-  const skillTrends = generateTrendData(skillsData);
-
-  return {
-    categories,
-    top_skills: skills,
-    jobsData,
-    skillsData,
-    jobTrends,
-    skillTrends,
-    total_categories: categories.length,
-    total_skills: skills.length,
-    source: 'ml_model',
-  };
+  try {
+    const statsRes = await mlClient.get('/stats');
+    const { jobsData, skillsData } = statsRes.data;
+    
+    return {
+      jobsData: jobsData || [],
+      skillsData: skillsData || [],
+      source: 'ml_model_real_data',
+    };
+  } catch (error) {
+    console.error('[Market Service] Gagal mengambil stats:', error.message);
+    return {
+      jobsData: [],
+      skillsData: [],
+      source: 'error',
+    };
+  }
 };

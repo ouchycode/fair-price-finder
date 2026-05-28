@@ -14,7 +14,7 @@ const PriceResult = ({ result }) => {
     if (result && result.requestParams) {
       setConsultLoading(true);
       setConsultation("");
-      consultPrice({ ...result.requestParams, role: "freelancer" })
+      consultPrice({ ...result.requestParams, role: result.requestParams.role || "freelancer" })
         .then((res) => {
           const data = res.data?.data || res.data;
           setConsultation(

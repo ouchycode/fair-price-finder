@@ -31,6 +31,7 @@ class ConsultationService:
         durasi_hari: int,
         predicted_price: int,
         category: Optional[str] = None,
+        project_type: Optional[str] = None,
     ) -> str:
         return generate_groq_consultation(
             role=role,
@@ -38,6 +39,7 @@ class ConsultationService:
             durasi_hari=durasi_hari,
             predicted_price=predicted_price,
             category=category,
+            project_type=project_type,
         )
 
     def is_groq_available(self) -> bool:
@@ -56,11 +58,13 @@ def build_consultation_prompt(
     durasi_hari: int,
     predicted_price: int,
     category: Optional[str] = None,
+    project_type: Optional[str] = None,
 ) -> list:
     """Buat prompt untuk konsultasi."""
     role = (role or 'freelancer').lower()
     skills_text = ', '.join(skills) if skills else 'tidak disebutkan'
     category_text = category if category else 'tidak disebutkan'
+    project_text = project_type if project_type else 'General / Tidak spesifik'
 
     system_prompt = dedent("""
     Kamu konsultan freelance berpengalaman.
@@ -79,8 +83,9 @@ def build_consultation_prompt(
     User: Client mau hire freelancer.
 
     Detail project:
-    - Skills: {skills_text}
     - Kategori: {category_text}
+    - Tipe Proyek: {project_text}
+    - Skills: {skills_text}
     - Estimasi harga: Rp {predicted_price:,}
 
     Beri 3-4 tips praktis:
@@ -94,8 +99,9 @@ def build_consultation_prompt(
     User: Freelancer mau offer jasa.
 
     Detail project:
-    - Skills: {skills_text}
     - Kategori: {category_text}
+    - Tipe Proyek: {project_text}
+    - Skills: {skills_text}
     - Estimasi harga: Rp {predicted_price:,}
 
     Beri 3-4 tips praktis:
@@ -117,6 +123,7 @@ def generate_groq_consultation(
     durasi_hari: int,
     predicted_price: int,
     category: Optional[str] = None,
+    project_type: Optional[str] = None,
 ) -> str:
     """Generate konsultasi dengan Groq."""
     GROQ_API_KEY = os.getenv('GROQ_API_KEY')
@@ -132,13 +139,14 @@ def generate_groq_consultation(
             durasi_hari=durasi_hari,
             predicted_price=predicted_price,
             category=category,
+            project_type=project_type,
         )
 
         completion = client.chat.completions.create(
             model=GROQ_MODEL,
             messages=messages,
             temperature=0.5,
-            max_tokens=300,
+            max_tokens=1024,
         )
 
         return completion.choices[0].message.content.strip()

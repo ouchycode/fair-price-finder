@@ -2,9 +2,10 @@
 const mlClient = require('../utils/mlClient');
 
 // PREDIKSI HARGA FORWARD KE POST PREDICT DI ML API
-exports.estimatePrice = async ({ category, skills, duration }) => {
+exports.estimatePrice = async ({ category, project_type, skills, duration }) => {
   const response = await mlClient.post('/predict', {
     category,
+    project_type,
     skills,
     duration,
   });
@@ -12,9 +13,10 @@ exports.estimatePrice = async ({ category, skills, duration }) => {
 };
 
 // KONSULTASI HARGA FORWARD KE POST CONSULT DI ML API
-exports.consultPrice = async ({ category, skills, duration, role }) => {
+exports.consultPrice = async ({ category, project_type, skills, duration, role }) => {
   const response = await mlClient.post('/consult', {
     category,
+    project_type,
     skills,
     duration,
     role: role || 'freelancer',
