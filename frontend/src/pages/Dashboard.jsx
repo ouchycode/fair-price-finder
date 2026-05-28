@@ -92,8 +92,9 @@ const DashboardSkeleton = () => (
 
   const sortedData = rawData
     .map((item) => {
-      const pctChange =
-        ((item.demand - item.prevDemand) / item.prevDemand) * 100;
+      const pctChange = item.prevDemand > 0 
+        ? ((item.demand - item.prevDemand) / item.prevDemand) * 100 
+        : 0;
       return {
         ...item,
         trend: pctChange,
