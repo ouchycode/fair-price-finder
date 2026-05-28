@@ -93,8 +93,7 @@ const Home = () => (
     {/* HERO */}
     <section className="hero-section">
       <div
-        className="container-inner"
-        style={{ position: "relative", zIndex: 1 }}
+        className="container-inner relative-z1"
       >
 
 
@@ -131,8 +130,8 @@ const Home = () => (
             {["#cc0000", "#ffdc13", "#ffffff"].map((color, i) => (
               <div
                 key={i}
-                className="social-proof__avatar"
-                style={{ background: color, marginLeft: i > 0 ? -7 : 0 }}
+                className="social-proof__avatar avatar-circle"
+                style={{ background: color }}
               />
             ))}
           </div>
@@ -191,7 +190,7 @@ const Home = () => (
     </section>
 
     <div className="divider-wrap">
-      <Separator.Root style={{ height: 1, background: "var(--border)" }} />
+      <Separator.Root className="divider-line" />
     </div>
 
     <section className="section-sm">
@@ -230,7 +229,7 @@ const Home = () => (
     </section>
 
     <div className="divider-wrap">
-      <Separator.Root style={{ height: 1, background: "var(--border)" }} />
+      <Separator.Root className="divider-line" />
     </div>
 
     {/* FAQ */}

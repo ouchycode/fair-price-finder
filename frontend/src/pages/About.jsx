@@ -139,8 +139,7 @@ const About = () => (
     {/* HERO */}
     <section className="hero-section">
       <div
-        className="container-inner"
-        style={{ position: "relative", zIndex: 1 }}
+        className="container-inner relative-z1"
       >
         <h1 data-aos="fade-up" data-aos-delay="50" className="hero-title">
           Tentang{" "}
@@ -200,7 +199,7 @@ const About = () => (
         ))}
       </div>
 
-      <p data-aos="fade-up" className="page-desc max-w-[800px]" style={{ paddingTop: '48px' }}>
+      <p data-aos="fade-up" className="page-desc max-w-[800px] pt-48">
         Freelancer Indonesia sering tidak tahu harga yang layak untuk jasa
         mereka - membuat mereka <em>undersell</em> atau kehilangan klien karena
         quote terlalu tinggi. FairPrice Finder hadir untuk menjawab:{" "}
@@ -211,7 +210,7 @@ const About = () => (
     </section>
 
     <div className="divider-wrap">
-      <Separator.Root style={{ height: 1, background: "var(--border)" }} />
+      <Separator.Root className="divider-line" />
     </div>
 
     <section className="section-sm">
@@ -227,11 +226,7 @@ const About = () => (
             key={title}
             data-aos="fade-up"
             data-aos-delay={i * 100}
-            className="feature-card"
-            style={{
-              borderRadius: "var(--r-lg)",
-              border: "1px solid var(--border)",
-            }}
+            className="feature-card about-mission-card"
           >
             <div className="feature-card__icon-wrap">
               <Icon
@@ -248,7 +243,7 @@ const About = () => (
     </section>
 
     <div className="divider-wrap">
-      <Separator.Root style={{ height: 1, background: "var(--border)" }} />
+      <Separator.Root className="divider-line" />
     </div>
 
     {/* TECH STACK */}
@@ -265,8 +260,7 @@ const About = () => (
             ({ icon: Icon, name, desc, color }, i) => (
               <div
                 key={`${name}-${i}`}
-                className="tech-badge"
-                style={{ minWidth: 160, flexShrink: 0 }}
+                className="tech-badge tech-badge-item"
               >
                 <Icon size={14} color={color} />
                 <div>
@@ -281,7 +275,7 @@ const About = () => (
     </section>
 
     <div className="divider-wrap">
-      <Separator.Root style={{ height: 1, background: "var(--border)" }} />
+      <Separator.Root className="divider-line" />
     </div>
 
     {/* TEAM */}
@@ -309,14 +303,14 @@ const About = () => (
             className="team-card"
           >
             <div
-              className="team-card__avatar"
-              style={{ background: color, overflow: "hidden" }}
+              className="team-avatar team-avatar-border"
+              style={{ background: color }}
             >
               {photo ? (
                 <img
                   src={photo}
                   alt={name}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  className="team-avatar-img"
                 />
               ) : (
                 initials

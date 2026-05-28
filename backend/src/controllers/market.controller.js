@@ -26,7 +26,7 @@ exports.getSkillsByCategory = async (req, res, next) => {
   try {
     const { category } = req.query;
     if (!category) {
-      // TANPA QUERY → KEMBALIKAN SEMUA KATEGORI + SKILL NYA
+      // TANPA QUERY PARAM KEMBALIKAN SEMUA KATEGORI DAN SKILL
       const data = await marketService.getAllSkillsByCategory();
       return res.json({ success: true, data });
     }

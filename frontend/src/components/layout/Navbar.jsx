@@ -49,14 +49,7 @@ const Navbar = () => {
             </div>
           </Link>
 
-          <NavigationMenu.Root
-            className="hide-mobile"
-            style={{
-              position: "absolute",
-              left: "50%",
-              transform: "translateX(-50%)",
-            }}
-          >
+          <NavigationMenu.Root className="hide-mobile nav-menu-root">
             <NavigationMenu.List className="desktop-nav-list">
               {NAV_LINKS.map(({ to, label }) => (
                 <NavigationMenu.Item key={to}>
@@ -75,12 +68,11 @@ const Navbar = () => {
           </NavigationMenu.Root>
 
           {/* CTA */}
-          <div className="hide-mobile" style={{ flexShrink: 0 }}>
+          <div className="hide-mobile flex-shrink-0">
             <Link
               to="/estimator"
               onClick={handleLinkClick}
-              className="btn-primary"
-              style={{ fontSize: 12, padding: "6px 14px" }}
+              className="btn-primary btn-sm"
             >
               Cek Harga
             </Link>
@@ -103,22 +95,14 @@ const Navbar = () => {
         />
       )}
 
-      <div
-        className="hide-desktop mobile-dropdown"
-        style={{ display: mobileOpen ? "flex" : "none" }}
-      >
+      <div className={`hide-desktop mobile-dropdown ${mobileOpen ? 'mobile-dropdown-open' : 'mobile-dropdown-closed'}`}>
         <div className="mobile-dropdown-links">
           {NAV_LINKS.map(({ to, label }) => (
             <Link
               key={to}
               to={to}
               onClick={handleLinkClick}
-              className="mobile-dropdown-link"
-              style={{
-                background: pathname === to ? "var(--bg-2)" : "transparent",
-                color: pathname === to ? "var(--fg)" : "var(--fg-2)",
-                fontWeight: pathname === to ? 600 : 400,
-              }}
+              className={`mobile-dropdown-link ${pathname === to ? 'mobile-link-active' : 'mobile-link-inactive'}`}
             >
               {label}
             </Link>
@@ -128,8 +112,7 @@ const Navbar = () => {
           <Link
             to="/estimator"
             onClick={handleLinkClick}
-            className="btn-primary"
-            style={{ width: "100%", justifyContent: "center" }}
+            className="btn-primary w-full justify-center"
           >
             Cek Harga
           </Link>

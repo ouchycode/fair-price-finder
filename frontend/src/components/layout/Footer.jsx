@@ -44,9 +44,7 @@ const Footer = () => {
   return (
     <footer className="footer-wrap">
       <div className="container footer-inner">
-        
         <div className="footer-grid">
-          
           <div className="footer-brand">
             <Link
               to="/"
@@ -54,9 +52,9 @@ const Footer = () => {
               className="footer-brand-link"
             >
               <div className="footer-brand-logo">
-                <img src={logoFpf} alt="FairPrice Finder" />
+                <img src={logoFpf} alt="Fair Price Finder" />
               </div>
-              <span className="footer-brand-title">FairPrice Finder</span>
+              <span className="footer-brand-title">Fair Price Finder</span>
             </Link>
             <p className="footer-brand-desc">
               Estimasi harga jasa freelance Indonesia yang adil dan berbasis
@@ -88,7 +86,7 @@ const Footer = () => {
                     >
                       {Icon && <Icon size={12} />} {label}
                       {!Icon && (
-                        <ExternalLink size={10} style={{ opacity: 0.4 }} />
+                        <ExternalLink size={10} className="opacity-40" />
                       )}
                     </a>
                   ),
@@ -98,11 +96,11 @@ const Footer = () => {
           ))}
         </div>
 
-        <Separator.Root style={{ height: 1, background: "var(--border)" }} />
+        <Separator.Root className="divider-line" />
 
         <div className="footer-bottom">
           <p className="footer-copyright">
-            © 2026 FairPrice Finder · CC26-PSU164
+            © 2026 Fair Price Finder · CC26-PSU164
           </p>
 
           <div className="footer-bottom-right">

@@ -12,7 +12,7 @@ const FaqItem = ({ q, a, index }) => {
     if (contentRef.current) {
       setHeight(open ? contentRef.current.scrollHeight : 0);
       
-      // Mencegah bug elemen di bawahnya dengan memperbarui AOS setelah transisi tinggi selesai
+      // REFRESH AOS SETELAH TRANSISI SELESAI
       const timer = setTimeout(() => {
         AOS.refresh();
       }, 300);
@@ -34,8 +34,8 @@ const FaqItem = ({ q, a, index }) => {
         </span>
       </button>
       <div
-        className="faq-answer-wrap"
-        style={{ height, overflow: "hidden", transition: "height 0.28s cubic-bezier(0.16, 1, 0.3, 1)" }}
+        className="faq-answer-wrap faq-content-wrap"
+        style={{ height }}
       >
         <div ref={contentRef}>
           <p className="faq-answer">{a}</p>

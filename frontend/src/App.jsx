@@ -51,7 +51,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg)' }}>
+      <div className="app-layout">
         <Toaster
           position="bottom-right"
           toastOptions={{
@@ -68,9 +68,8 @@ function App() {
         />
         <BetaBanner visible={betaVisible} onDismiss={handleBetaDismiss} />
         <Navbar />
-        {/* NAVBAR */}
-        <div style={{ height: spacerH, flexShrink: 0 }} />
-        <main style={{ flex: 1 }}>
+        <div className="flex-shrink-0" style={{ height: spacerH }} />
+        <main className="main-content">
           <Routes>
             <Route path="/"          element={<Home />} />
             <Route path="/estimator" element={<Estimator />} />

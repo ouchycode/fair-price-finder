@@ -32,13 +32,12 @@ class ErrorBoundary extends React.Component {
 
           <div className="status-actions">
             <button
-              className="btn-primary"
-              style={{ fontSize: 13.5, padding: "9px 18px" }}
+              className="btn-primary btn-sm-wide"
               onClick={() => window.location.reload()}
             >
               <RefreshCw size={14} /> Refresh
             </button>
-            <Link to="/" className="btn-secondary" style={{ fontSize: 13.5, padding: "9px 18px" }}>
+            <Link to="/" className="btn-secondary btn-sm-wide">
               Kembali ke Home
             </Link>
           </div>

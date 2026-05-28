@@ -51,7 +51,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (rawData.length === 0) return;
-    setTop3Keys(rawData.slice(0, 5).map(i => i.name));
+    setTop3Keys(rawData.slice(0, 5).map((i) => i.name));
     setDynamicTrendData(rawData.slice(0, 5));
   }, [rawData]);
 
@@ -59,17 +59,17 @@ const Dashboard = () => {
     setCurrentPage(1);
   }, [filterType]);
 
-const DashboardSkeleton = () => (
-  <div className="animate-pulse">
-    <div className="kpi-grid" style={{ marginTop: 32, marginBottom: 24 }}>
-      {[1, 2, 3].map(i => (
-        <div key={i} className="kpi-card" style={{ height: 110, background: "var(--bg-2)", borderColor: "var(--border-1)" }} />
-      ))}
+  const DashboardSkeleton = () => (
+    <div className="animate-pulse">
+      <div className="kpi-grid mt-32-mb-24">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="kpi-card kpi-card-skeleton" />
+        ))}
+      </div>
+      <div className="panel panel-skeleton-sm" />
+      <div className="panel panel-skeleton-lg" />
     </div>
-    <div className="panel" style={{ height: 350, marginBottom: 24, background: "var(--bg-2)", borderColor: "var(--border-1)" }} />
-    <div className="panel" style={{ height: 400, background: "var(--bg-2)", borderColor: "var(--border-1)" }} />
-  </div>
-);
+  );
 
   if (loading || rawData.length === 0) {
     return (
@@ -77,8 +77,11 @@ const DashboardSkeleton = () => (
         {/* HEADER */}
         <div data-aos="fade-down" className="page-header">
           <div>
-            <p className="label-mono" style={{ marginBottom: 10 }}>Market Intelligence</p>
-            <h1 className="page-title">Analisis Data <span className="page-title__muted">Freelancer di Indonesia</span></h1>
+            <p className="label-mono mb-10">Market Intelligence</p>
+            <h1 className="page-title">
+              Analisis Data{" "}
+              <span className="page-title__muted">Freelancer di Indonesia</span>
+            </h1>
           </div>
         </div>
         <DashboardSkeleton />
@@ -86,15 +89,17 @@ const DashboardSkeleton = () => (
     );
   }
 
-
   // CALCULATE
-  const maxDemand = Math.max(...(rawData.length > 0 ? rawData : [{demand: 1}]).map((d) => d.demand));
+  const maxDemand = Math.max(
+    ...(rawData.length > 0 ? rawData : [{ demand: 1 }]).map((d) => d.demand),
+  );
 
   const sortedData = rawData
     .map((item) => {
-      const pctChange = item.prevDemand > 0 
-        ? ((item.demand - item.prevDemand) / item.prevDemand) * 100 
-        : 0;
+      const pctChange =
+        item.prevDemand > 0
+          ? ((item.demand - item.prevDemand) / item.prevDemand) * 100
+          : 0;
       return {
         ...item,
         trend: pctChange,
@@ -106,13 +111,15 @@ const DashboardSkeleton = () => (
   const totalPages = Math.ceil(sortedData.length / itemsPerPage);
   const leaderboardData = sortedData.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
-  // Hitung Global Average Price
-  const globalAvgPrice = rawData.length > 0 
-    ? rawData.reduce((acc, curr) => acc + (curr.avgPrice || 0), 0) / rawData.length 
-    : 0;
+  // HITUNG RATA-RATA HARGA GLOBAL
+  const globalAvgPrice =
+    rawData.length > 0
+      ? rawData.reduce((acc, curr) => acc + (curr.avgPrice || 0), 0) /
+        rawData.length
+      : 0;
 
   const formatKpiCurrency = (value) => {
     if (!value) return "Rp 0";
@@ -127,20 +134,20 @@ const DashboardSkeleton = () => (
 
   return (
     <Tooltip.Provider delayDuration={200}>
-      <div className="page-wrap" style={{ position: "relative" }}>
-        {/* HEADER */}
+      <div className="page-wrap relative-wrap">
+        {/* STAT CARDS */}
         <div data-aos="fade-down" className="page-header">
           <div>
-            <p className="label-mono" style={{ marginBottom: 10 }}>
-              Market Intelligence
-            </p>
+            <p className="label-mono mb-10">Market Intelligence</p>
             <h1 className="page-title">
               Analisis Data{" "}
               <span className="page-title__muted">Freelancer di Indonesia</span>
             </h1>
           </div>
-          <div className="live-badge" style={{ padding: '6px 12px', background: 'var(--bg-2)', border: '1px solid var(--border-1)', color: 'var(--fg-2)' }}>
-            <span className="live-badge__text">Sumber: Upwork, Sribu, Fastwork, dll.</span>
+          <div className="live-badge live-badge-custom">
+            <span className="live-badge__text">
+              Sumber: Upwork, Sribu, Fastwork, dll.
+            </span>
           </div>
         </div>
 
@@ -165,9 +172,7 @@ const DashboardSkeleton = () => (
                 .reduce((acc, curr) => acc + curr.demand, 0)
                 .toLocaleString("id-ID")}
             </div>
-            <div className="kpi-card__trend" style={{ color: "var(--fg-3)" }}>
-              Data Keseluruhan
-            </div>
+            <div className="kpi-card__trend trend-fg3">Data Keseluruhan</div>
           </div>
           <div className="kpi-card">
             <div className="kpi-card__header">
@@ -177,8 +182,9 @@ const DashboardSkeleton = () => (
             <div className="kpi-card__value">
               {formatKpiCurrency(globalAvgPrice)}
             </div>
-            <div className="kpi-card__trend" style={{ color: "var(--fg-2)" }}>
-              Rata-rata dari semua {filterType === "job" ? "pekerjaan" : "skill"}
+            <div className="kpi-card__trend trend-fg2">
+              Rata-rata dari semua{" "}
+              {filterType === "job" ? "pekerjaan" : "skill"}
             </div>
           </div>
           <div className="kpi-card">
@@ -188,33 +194,25 @@ const DashboardSkeleton = () => (
               </span>
               <Users size={14} color="var(--fg-3)" />
             </div>
-            <div
-              className="kpi-card__value"
-              style={{ fontSize: "18px", marginTop: "6px" }}
-            >
-              {leaderboardData[0]?.name}
-            </div>
-            <div className="kpi-card__trend" style={{ color: "var(--indigo)" }}>
+            <div className="kpi-card__value">{leaderboardData[0]?.name}</div>
+            <div className="kpi-card__trend trend-indigo">
               Paling banyak dicari
             </div>
           </div>
         </div>
 
         <div
-          className="panel"
+          className="dashboard-panel-leaderboard panel"
           data-aos="fade-up"
           data-aos-delay="60"
-          style={{ padding: "24px", marginBottom: "24px" }}
         >
-          <div style={{ marginBottom: 16 }}>
-            <h3 className="section-title-sm" style={{ marginBottom: 4 }}>
-              Distribusi Harga
-            </h3>
-            <p className="page-desc" style={{ fontSize: "13px" }}>
+          <div className="dashboard-panel-header">
+            <h3 className="section-title-sm mb-4">Distribusi Harga</h3>
+            <p className="page-desc text-13">
               Rentang Harga (Terendah vs Tertinggi) Top 5
             </p>
           </div>
-          <div style={{ width: "100%", height: "auto" }}>
+          <div className="dashboard-table-wrapper">
             <DumbbellChart data={dynamicTrendData} />
           </div>
         </div>
@@ -223,7 +221,7 @@ const DashboardSkeleton = () => (
           <div className="leaderboard">
             {/* HEADER */}
             <div className="leaderboard-header">
-              <div style={{ textAlign: "center" }}>#</div>
+              <div className="table-col-center">#</div>
               <div>{filterType === "job" ? "Pekerjaan" : "Skill"}</div>
               <div>Pendapatan (per Proyek)</div>
               <div>Jumlah Proyek</div>
@@ -240,37 +238,22 @@ const DashboardSkeleton = () => (
               const Icon = isUp ? TrendingUp : isDown ? TrendingDown : Minus;
 
               return (
-                <div
-                  key={item.name}
-                  className="leaderboard-row"
-                >
-                  <div className="leaderboard-rank">{(currentPage - 1) * itemsPerPage + i + 1}</div>
-                  <div className="leaderboard-name">{item.name}</div>
-                  <div className="leaderboard-rate">
-                    {item.rate}
+                <div key={item.name} className="leaderboard-row">
+                  <div className="leaderboard-rank">
+                    {(currentPage - 1) * itemsPerPage + i + 1}
                   </div>
+                  <div className="leaderboard-name">{item.name}</div>
+                  <div className="leaderboard-rate">{item.rate}</div>
                   <div
                     className="leaderboard-bar-wrap"
                     title={`${item.demand.toLocaleString("id-ID")} proyek`}
                   >
                     <div
-                      className="leaderboard-bar-fill"
-                      style={{
-                        width: `${Math.max(item.fillPct, 5)}%`, 
-                        background: i < 3 ? "var(--indigo)" : "var(--border-2)",
-                      }}
+                      className={`leaderboard-bar-fill ${i < 3 ? 'bg-indigo' : 'bg-border-2'}`}
+                      style={{ width: `${Math.max(item.fillPct, 5)}%` }}
                     />
                     <span
-                      style={{
-                        position: "absolute",
-                        left: 10,
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        fontSize: 11.5,
-                        fontWeight: 600,
-                        color: i < 3 ? "#ffffff" : "var(--fg)",
-                        pointerEvents: "none",
-                      }}
+                      className={`leaderboard-demand-text ${i < 3 ? "text-white" : ""} ${i >= 3 ? "text-fg" : ""}`}
                     >
                       {item.demand.toLocaleString("id-ID")}
                     </span>
@@ -281,41 +264,27 @@ const DashboardSkeleton = () => (
 
             {/* PAGINATION CONTROLS */}
             {totalPages > 1 && (
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 16, marginTop: 32 }}>
-                <button 
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              <div className="pagination-controls">
+                <button
+                  type="button"
+                  className="pagination-btn"
                   disabled={currentPage === 1}
-                  style={{ 
-                    padding: "6px 14px", 
-                    borderRadius: 6, 
-                    border: "1px solid var(--border)", 
-                    background: "var(--bg-1)", 
-                    color: "var(--fg)",
-                    cursor: currentPage === 1 ? "not-allowed" : "pointer", 
-                    opacity: currentPage === 1 ? 0.5 : 1,
-                    fontWeight: 500,
-                    fontSize: 13
-                  }}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(1, prev - 1))
+                  }
                 >
                   Sebelumnya
                 </button>
-                <span style={{ fontSize: 13, color: "var(--fg-3)", fontWeight: 500 }}>
-                  Halaman {currentPage} dari {totalPages}
+                <span className="pagination-info">
+                  Hal {currentPage} dari {totalPages}
                 </span>
-                <button 
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                <button
+                  type="button"
+                  className="pagination-btn"
                   disabled={currentPage === totalPages}
-                  style={{ 
-                    padding: "6px 14px", 
-                    borderRadius: 6, 
-                    border: "1px solid var(--border)", 
-                    background: "var(--bg-1)", 
-                    color: "var(--fg)",
-                    cursor: currentPage === totalPages ? "not-allowed" : "pointer", 
-                    opacity: currentPage === totalPages ? 0.5 : 1,
-                    fontWeight: 500,
-                    fontSize: 13
-                  }}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+                  }
                 >
                   Selanjutnya
                 </button>
@@ -324,13 +293,7 @@ const DashboardSkeleton = () => (
           </div>
         </div>
 
-        <Separator.Root
-          style={{
-            height: 1,
-            background: "var(--border)",
-            margin: "32px 0 16px 0",
-          }}
-        />
+        <Separator.Root className="dashboard-separator" />
       </div>
     </Tooltip.Provider>
   );

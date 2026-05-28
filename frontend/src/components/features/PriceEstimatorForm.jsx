@@ -58,47 +58,35 @@ const PROJECT_TYPES_BY_CAT = {
 };
 
 const FieldLabel = ({ htmlFor, children, hint }) => (
-  <div style={{ marginBottom: 7, display: 'flex', alignItems: 'center', gap: 6 }}>
-    <Label.Root htmlFor={htmlFor} className="label-mono" style={{ cursor: 'default' }}>
+  <div className="form-label-wrap">
+    <Label.Root htmlFor={htmlFor} className="label-mono form-label-text">
       {children}
     </Label.Root>
-    {hint && <span style={{ color: 'var(--fg-3)', fontSize: 11 }}>{hint}</span>}
+    {hint && <span className="form-hint-text">{hint}</span>}
   </div>
 );
 
 const Stepper = ({ id, value, min, max, onChange, label, unit }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
-    <span className="label-mono" style={{ fontSize: 11, color: 'var(--fg-2)' }}>{label}</span>
-    <div style={{ display: 'flex', alignItems: 'center', gap: 0, border: '1px solid var(--border-1)', borderRadius: 8, overflow: 'hidden', background: 'var(--bg-2)' }}>
+  <div className="form-col-wrap">
+    <span className="label-mono form-radio-label">{label}</span>
+    <div className="form-radio-group">
       <button
         type="button"
         onClick={() => onChange(Math.max(min, value - 1))}
         disabled={value <= min}
-        style={{
-          width: 34, height: 38, background: 'none', border: 'none',
-          color: value <= min ? 'var(--fg-3)' : 'var(--fg)',
-          cursor: value <= min ? 'not-allowed' : 'pointer',
-          fontSize: 18, fontWeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          borderRight: '1px solid var(--border-1)',
-        }}
+        className={`stepper-btn stepper-btn-left ${value <= min ? 'disabled' : ''}`}
       >
         −
       </button>
-      <div style={{ flex: 1, textAlign: 'center', fontSize: 14, fontWeight: 600, color: 'var(--fg)', userSelect: 'none' }}>
+      <div className="form-stepper-val">
         {value}
-        <span style={{ fontSize: 11, fontWeight: 400, color: 'var(--fg-3)', marginLeft: 3 }}>{unit}</span>
+        <span className="form-stepper-unit">{unit}</span>
       </div>
       <button
         type="button"
         onClick={() => onChange(Math.min(max, value + 1))}
         disabled={value >= max}
-        style={{
-          width: 34, height: 38, background: 'none', border: 'none',
-          color: value >= max ? 'var(--fg-3)' : 'var(--fg)',
-          cursor: value >= max ? 'not-allowed' : 'pointer',
-          fontSize: 18, fontWeight: 300, display: 'flex', alignItems: 'center', justifyContent: 'center',
-          borderLeft: '1px solid var(--border-1)',
-        }}
+        className={`stepper-btn stepper-btn-right ${value >= max ? 'disabled' : ''}`}
       >
         +
       </button>
@@ -115,12 +103,12 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
   const [role,      setRole]      = useState('freelancer');
   const [loading,   setLoading]   = useState(false);
 
-  // Clear projectType when category changes
+  // RESET PROJECT TYPE SAAT KATEGORI BERUBAH
   useEffect(() => {
     setProjectType('');
   }, [category]);
 
-  // Generate available project types based on category
+  // GENERATE TIPE PROYEK BERDASARKAN KATEGORI
   const availableProjectTypes = category && PROJECT_TYPES_BY_CAT[category] 
     ? ["Tidak Spesifik", ...PROJECT_TYPES_BY_CAT[category]] 
     : ["Tidak Spesifik"];
@@ -159,7 +147,7 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
         category,
         project_type: projectType !== "Tidak Spesifik" ? projectType : "",
         skills,
-        duration: days,   // API
+        duration: days,
       });
       const resData = data.data || data;
       onResult({
@@ -186,26 +174,19 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
   const progressPercent = (filledCount / 3) * 100;
 
   return (
-    <form onSubmit={handleSubmit} className="form-card" style={{ position: 'relative', overflow: 'hidden' }}>
+    <form onSubmit={handleSubmit} className="form-card form-relative-overflow">
       
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'var(--bg-3)' }}>
+      <div className="form-progress-bar-bg">
         <div
-          style={{
-            height: '100%',
-            width: `${progressPercent}%`,
-            background: 'var(--accent)',
-            transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
+          className="form-progress-bar-fill"
+          style={{ width: `${progressPercent}%` }}
         />
       </div>
 
       <div>
         <FieldLabel>Kategori Jasa</FieldLabel>
         <Select.Root value={category} onValueChange={setCategory}>
-          <Select.Trigger
-            className="select-trigger"
-            style={{ color: category ? 'var(--fg)' : 'var(--fg-3)' }}
-          >
+          <Select.Trigger className={`select-trigger ${category ? 'text-fg' : 'text-fg-3'}`}>
             <Select.Value placeholder="Pilih kategori..." />
             <Select.Icon><ChevronDown size={12} color="var(--fg-3)" /></Select.Icon>
           </Select.Trigger>
@@ -227,13 +208,10 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
         </Select.Root>
       </div>
 
-      <div style={{ marginTop: 20 }}>
+      <div className="mt-20">
         <FieldLabel hint="(Opsional)">Tipe Proyek</FieldLabel>
         <Select.Root value={projectType} onValueChange={setProjectType}>
-          <Select.Trigger
-            className="select-trigger"
-            style={{ color: projectType ? 'var(--fg)' : 'var(--fg-3)' }}
-          >
+          <Select.Trigger className={`select-trigger ${projectType ? 'text-fg' : 'text-fg-3'}`}>
             <Select.Value placeholder="Pilih contoh proyek..." />
             <Select.Icon><ChevronDown size={12} color="var(--fg-3)" /></Select.Icon>
           </Select.Trigger>
@@ -255,7 +233,7 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
         </Select.Root>
       </div>
 
-      <div style={{ marginTop: 20 }}>     <FieldLabel hint="pilih dari daftar skill">Skills</FieldLabel>
+      <div className="mt-20">     <FieldLabel hint="pilih dari daftar skill">Skills</FieldLabel>
         <SkillDropdown
           category={category}
           value={skills}
@@ -265,37 +243,25 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
 
       <div>
         <FieldLabel>Posisi Anda</FieldLabel>
-        <div style={{ display: 'flex', background: 'var(--bg-3)', padding: 4, borderRadius: 8, marginBottom: 20 }}>
+        <div className="form-role-group">
           <button
             type="button"
             onClick={() => setRole('freelancer')}
-            style={{
-              flex: 1, padding: '8px 0', fontSize: 13, fontWeight: 600, border: 'none', borderRadius: 6,
-              background: role === 'freelancer' ? 'var(--bg-1)' : 'transparent',
-              color: role === 'freelancer' ? 'var(--fg)' : 'var(--fg-3)',
-              boxShadow: role === 'freelancer' ? 'var(--shadow-1)' : 'none',
-              cursor: 'pointer', transition: 'all 0.2s'
-            }}
+            className={`form-role-btn ${role === 'freelancer' ? 'active' : ''}`}
           >
             Freelancer
           </button>
           <button
             type="button"
             onClick={() => setRole('client')}
-            style={{
-              flex: 1, padding: '8px 0', fontSize: 13, fontWeight: 600, border: 'none', borderRadius: 6,
-              background: role === 'client' ? 'var(--bg-1)' : 'transparent',
-              color: role === 'client' ? 'var(--fg)' : 'var(--fg-3)',
-              boxShadow: role === 'client' ? 'var(--shadow-1)' : 'none',
-              cursor: 'pointer', transition: 'all 0.2s'
-            }}
+            className={`form-role-btn ${role === 'client' ? 'active' : ''}`}
           >
             Klien
           </button>
         </div>
 
         <FieldLabel hint="(Asumsi: 1 hari = 8 jam kerja)">Durasi Pengerjaan</FieldLabel>
-        <div style={{ display: 'flex', gap: 10 }}>
+        <div className="flex-gap-10">
           <Stepper
             id="days-input"
             value={days}
@@ -313,11 +279,10 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
       <button
         type="submit"
         disabled={loading}
-        className="btn-primary"
-        style={{ width: '100%', padding: '9px 16px', justifyContent: 'center' }}
+        className="btn-primary btn-w-full-center"
       >
         {loading
-          ? <span style={{ opacity: 0.7 }}>Menghitung estimasi...</span>
+          ? <span className="opacity-70">Menghitung estimasi...</span>
           : <><Send size={13} /> Estimasi Harga</>
         }
       </button>

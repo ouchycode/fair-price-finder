@@ -43,15 +43,10 @@ const PriceResult = ({ result }) => {
   } = result;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+    <div className="price-result-wrapper">
       <div
         data-aos="fade-left"
-        style={{
-          background: "var(--bg-1)",
-          border: "1px solid var(--border)",
-          borderRadius: 16,
-          overflow: "hidden",
-        }}
+        className="price-result-card"
       >
         <PriceHeader
           min_price={min_price}

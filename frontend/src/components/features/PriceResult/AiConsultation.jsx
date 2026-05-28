@@ -9,71 +9,31 @@ const AiConsultation = ({ loading, consultation }) => {
     <div
       data-aos="fade-up"
       data-aos-delay="150"
-      style={{
-        background: "var(--bg-1)",
-        border: "1px solid var(--border)",
-        borderRadius: 16,
-        overflow: "hidden",
-      }}
+      className="ai-consult-card"
     >
-      <div
-        style={{
-          padding: "12px 18px",
-          borderBottom: "1px solid var(--border)",
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          background: "var(--bg-2)",
-        }}
-      >
-        <div
-          style={{
-            width: 26,
-            height: 26,
-            borderRadius: 8,
-            background: "rgba(99,102,241,0.12)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <div className="ai-consult-header">
+        <div className="ai-consult-icon-bg">
           <Sparkles size={13} color="var(--indigo)" />
         </div>
         <div>
-          <p
-            style={{
-              fontSize: 12.5,
-              fontWeight: 600,
-              color: "var(--fg)",
-              margin: 0,
-              letterSpacing: "-0.02em",
-            }}
-          >
+          <p className="ai-consult-title">
             Analisis & Saran Negosiasi
           </p>
-          <p style={{ fontSize: 10.5, color: "var(--fg-3)", margin: 0 }}>
+          <p className="ai-consult-subtitle">
             Powered by AI
           </p>
         </div>
       </div>
 
-      <div style={{ padding: "16px 18px" }}>
+      <div className="ai-consult-body-wrapper">
         {loading ? (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              color: "var(--fg-3)",
-              fontSize: 13,
-            }}
-          >
+          <div className="ai-consult-loading">
             <Bot size={16} className="spin-slow" />
             <span>AI sedang menyusun saran untukmu…</span>
           </div>
         ) : (
           <div
-            style={{ fontSize: 13, lineHeight: 1.75, color: "var(--fg-2)" }}
+            className="ai-consult-content"
             dangerouslySetInnerHTML={{
               __html: consultation
                 .replace(/\n\n/g, "</p><p style='margin:8px 0'>")

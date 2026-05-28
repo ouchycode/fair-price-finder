@@ -74,32 +74,21 @@ const SkillDropdown = ({ category, value, onChange }) => {
   const isDisabled = !category || skills.length === 0;
 
   return (
-    <div ref={dropdownRef} style={{ position: 'relative' }}>
+    <div ref={dropdownRef} className="dropdown-relative">
       
       <div
         onClick={() => !isDisabled && setOpen(o => !o)}
-        className="select-trigger"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: 5,
-          minHeight: 38,
-          cursor: isDisabled ? 'not-allowed' : 'pointer',
-          opacity: isDisabled ? 0.5 : 1,
-          padding: '5px 10px',
-        }}
+        className={`select-trigger dropdown-trigger-custom ${isDisabled ? 'disabled' : 'enabled'}`}
       >
         {value.length === 0 ? (
-          <span style={{ color: 'var(--fg-3)', fontSize: 13, flex: 1 }}>
+          <span className="dropdown-placeholder-text">
             {isDisabled ? 'Pilih kategori dulu…' : 'Pilih skill…'}
           </span>
         ) : (
           value.map(s => (
             <span
               key={s}
-              className="skill-tag"
-              style={{ fontSize: 11, padding: '2px 7px' }}
+              className="skill-tag skill-tag-sm"
             >
               {toLabel(s)}
               <button
@@ -115,43 +104,19 @@ const SkillDropdown = ({ category, value, onChange }) => {
         <ChevronDown
           size={12}
           color="var(--fg-3)"
-          style={{
-            marginLeft: 'auto',
-            flexShrink: 0,
-            transition: 'transform 0.2s',
-            transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
-          }}
+          className={`chevron-icon ${open ? 'open' : 'closed'}`}
         />
       </div>
 
       {open && !isDisabled && (
-        <div
-          className="select-content"
-          style={{
-            position: 'absolute',
-            top: 'calc(100% + 4px)',
-            left: 0,
-            right: 0,
-            zIndex: 100,
-            maxHeight: 220,
-            overflowY: 'auto',
-            padding: '4px 0',
-          }}
-        >
+        <div className="select-content select-content-custom">
           {skills.map(skill => {
             const isSelected = value.includes(skill);
             return (
               <div
                 key={skill}
                 onClick={() => toggle(skill)}
-                className="select-item"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  background: isSelected ? 'var(--bg-3)' : 'transparent',
-                  fontWeight: isSelected ? 600 : 400,
-                }}
+                className={`select-item select-item-custom ${isSelected ? 'selected' : 'unselected'}`}
               >
                 <span>{toLabel(skill)}</span>
                 {isSelected && <Check size={12} color="var(--accent)" />}

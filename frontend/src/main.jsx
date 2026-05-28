@@ -8,7 +8,7 @@ import App from './App';
 import './styles/index.css';
 import logoFpf from './assets/logo/logo-fpf.png';
 
-// CEGAH KILATAN TETAPKAN TEMA DATA SEBELUM RENDER REACT PERTAMA
+// CEGAH KILATAN TEMA SEBELUM RENDER PERTAMA
 try {
   const saved = localStorage.getItem('fpf-theme');
   if (saved) document.documentElement.setAttribute('data-theme', saved);

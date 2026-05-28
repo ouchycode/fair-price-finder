@@ -11,7 +11,7 @@ export const getCategories = () => API.get('/market/categories');
 export const getAllSkills = () => API.get('/skills');
 export const getPopularSkills = () => API.get('/skills/popular');
 
-// SKILLS PER KATEGORI — Untuk dropdown skill sesuai pekerjaan
+// SKILLS PER KATEGORI UNTUK DROPDOWN SKILL SESUAI PEKERJAAN
 export const getSkillsByCategory = (category) =>
   API.get('/market/skills-by-category', { params: { category } });
 export const getAllSkillsByCategory = () =>

@@ -39,7 +39,7 @@ const Estimator = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div className="page-wrap" style={{ minHeight: '85vh' }}>
+    <div className="page-wrap min-h-85vh">
       {/* HEADER */}
       <div className="estimator-header">
         <p data-aos="fade-down" className="label-mono mb-2.5">
@@ -53,9 +53,7 @@ const Estimator = () => {
         </p>
       </div>
 
-      {/* FORM */}
       <div data-aos="fade-up" data-aos-delay="180" className="estimator-grid">
-        {/* FORM */}
         <div className="flex flex-col gap-4">
           <div className="alert alert--info">
             <Info size={13} color="var(--indigo)" className="mt-[1px] shrink-0" />

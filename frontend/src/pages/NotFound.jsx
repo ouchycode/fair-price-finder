@@ -18,7 +18,7 @@ const NotFound = () => {
       </p>
 
       <div data-aos="fade-up" data-aos-delay="100" className="status-actions">
-        <Link to="/" className="btn-secondary" style={{ fontSize: 13.5, padding: "9px 18px" }}>
+        <Link to="/" className="btn-secondary btn-sm-wide">
           <ArrowLeft size={14} /> Kembali ke Beranda
         </Link>
       </div>

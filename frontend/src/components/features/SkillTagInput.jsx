@@ -44,8 +44,7 @@ const SkillTagInput = ({ value, onChange }) => {
   return (
     <div
       onClick={() => inputRef.current?.focus()}
-      className={`skill-tag-wrap ${focused ? 'skill-tag-wrap--focused' : ''}`}
-      style={{ border: `1px solid ${focused ? 'var(--indigo)' : 'var(--border-1)'}` }}
+      className={`skill-tag-input-container ${focused ? 'focused' : ''}`}
     >
       <div className="skill-tag-list">
         {value.map(s => (

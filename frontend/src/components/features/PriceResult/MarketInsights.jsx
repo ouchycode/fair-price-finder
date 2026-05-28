@@ -5,28 +5,11 @@ const MarketInsights = ({ skills }) => {
   if (!skills || skills.length === 0) return null;
 
   return (
-    <div
-      style={{
-        marginTop: 14,
-        display: "flex",
-        flexWrap: "wrap",
-        gap: 5,
-        padding: "0 24px 24px",
-      }}
-    >
+    <div className="market-insights">
       {skills.map((s) => (
         <span
           key={s}
-          style={{
-            fontSize: 10.5,
-            padding: "3px 9px",
-            borderRadius: 20,
-            background: "var(--bg-3)",
-            color: "var(--fg-2)",
-            border: "1px solid var(--border)",
-            fontWeight: 500,
-            textTransform: "capitalize",
-          }}
+          className="market-insights-tag"
         >
           {s}
         </span>
