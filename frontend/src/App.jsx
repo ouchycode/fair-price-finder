@@ -22,7 +22,9 @@ const NAV_H = 60;
 function App() {
   const { pathname } = useLocation();
   
-  const [betaVisible, setBetaVisible] = useState(true);
+  const [betaVisible, setBetaVisible] = useState(() => {
+    return localStorage.getItem('fpf_beta_dismissed') !== 'true';
+  });
 
   useEffect(() => {
     if (betaVisible) {
@@ -45,7 +47,10 @@ function App() {
     };
   }, [pathname]);
 
-  const handleBetaDismiss = () => setBetaVisible(false);
+  const handleBetaDismiss = () => {
+    setBetaVisible(false);
+    localStorage.setItem('fpf_beta_dismissed', 'true');
+  };
 
   const spacerH = betaVisible ? BAR_H + NAV_H : NAV_H;
 
@@ -53,7 +58,7 @@ function App() {
     <ErrorBoundary>
       <div className="app-layout">
         <Toaster
-          position="bottom-right"
+          position="top-center"
           toastOptions={{
             style: {
               background: 'var(--bg-1)',
@@ -61,6 +66,8 @@ function App() {
               border: '1px solid var(--border)',
               fontSize: '13.5px',
               borderRadius: 'var(--r-lg)',
+              padding: '12px 16px',
+              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
             },
             success: { iconTheme: { primary: 'var(--green)', secondary: 'var(--bg)' } },
             error:   { iconTheme: { primary: 'var(--red)',   secondary: 'var(--bg)' } },

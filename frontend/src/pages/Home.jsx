@@ -45,24 +45,24 @@ const stats = [
 const steps = [
   {
     n: "1",
-    title: "Pilih Kategori",
-    desc: "Tentukan kategori jasa yang sesuai dengan pekerjaan kamu.",
+    title: "Pilih Kategori Jasa",
+    desc: "Pilih kategori profesi utama yang sesuai dengan bidang Anda, lalu tambahkan detail jenis proyek secara opsional.",
     delay: 0,
     imgLight: step1Light,
     imgDark: step1Dark,
   },
   {
     n: "2",
-    title: "Skill & Durasi",
-    desc: "Input skill yang dikuasai, serta jumlah hari dan jam kerja per hari agar estimasi lebih presisi.",
+    title: "Tentukan Skill & Durasi",
+    desc: "Masukkan keahlian spesifik, tentukan peran sebagai freelancer atau klien, serta berikan estimasi total durasi penyelesaian proyek.",
     delay: 100,
     imgLight: step2Light,
     imgDark: step2Dark,
   },
   {
     n: "3",
-    title: "Dapatkan Estimasi",
-    desc: "Lihat range harga min, median, dan maksimum secara instan.",
+    title: "Dapatkan Fair Price",
+    desc: "Sistem akan langsung menampilkan estimasi harga wajar yang mencakup batas bawah, median, dan batas atas negosiasi.",
     delay: 200,
     imgLight: step3Light,
     imgDark: step3Dark,
@@ -72,7 +72,7 @@ const steps = [
 const faqs = [
   {
     q: "Dari mana data harga berasal?",
-    a: "Data harga berasal dari pengumpulan data mentah pasar freelance di Indonesia. Pengumpulan data ini dilakukan melalui metode web scraping pada proyek-proyek freelance dari platform-platform yang menjadi sumber data relevan.",
+    a: "Data harga berasal dari pengumpulan data mentah pasar freelance di Indonesia. Pengumpulan data ini dilakukan pada penawaran jasa atau profil freelancer dari platform-platform yang menjadi sumber data relevan.",
   },
   {
     q: "Apakah estimasi ini akurat 100%?",
@@ -256,9 +256,9 @@ const Home = () => (
       <div data-aos="fade-up" data-aos-duration="600" className="cta-inner">
         <p className="label-mono mb-3.5">Mulai sekarang - gratis</p>
         <h2 className="cta-title">
-          Sudah tahu skill-mu,
+          Sudah tahu skill yang dituju,
           <br />
-          sekarang ketahui nilainya.
+          sekarang temukan harga wajarnya.
         </h2>
         <p className="cta-desc">
           Isi kategori, skill, dan durasi - estimasi harga dalam hitungan detik.

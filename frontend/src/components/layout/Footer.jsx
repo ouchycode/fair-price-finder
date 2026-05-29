@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Github, Mail, ExternalLink, Sun, Moon } from "lucide-react";
+import { Github, Mail, ExternalLink } from "lucide-react";
 import * as Separator from "@radix-ui/react-separator";
-import { useTheme } from "../../hooks/useTheme";
 import logoFpf from "../../assets/logo/logo-fpf.png";
 
 const footerLinks = [
@@ -35,7 +34,6 @@ const footerLinks = [
 ];
 
 const Footer = () => {
-  const { theme, toggle } = useTheme();
 
   const handleLinkClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -108,26 +106,6 @@ const Footer = () => {
               Capstone Project · Dicoding × Dbs Foundation
             </p>
 
-            <button
-              className="theme-toggle"
-              onClick={toggle}
-              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-              title={
-                theme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-            >
-              {theme === "dark" ? (
-                <>
-                  <Sun size={13} className="theme-toggle__icon" /> Light
-                </>
-              ) : (
-                <>
-                  <Moon size={13} className="theme-toggle__icon" /> Dark
-                </>
-              )}
-            </button>
           </div>
         </div>
       </div>

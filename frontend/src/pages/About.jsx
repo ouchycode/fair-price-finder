@@ -99,7 +99,7 @@ const missions = [
   {
     icon: Target,
     title: "Harga yang Adil",
-    desc: "Memastikan freelancer mendapat kompensasi yang setara dengan nilai dan kualitas kerja mereka.",
+    desc: "Membantu freelancer dan klien menyepakati kompensasi yang wajar dan sepadan dengan nilai kerja.",
     color: "var(--amber)",
   },
   {
@@ -111,7 +111,7 @@ const missions = [
   {
     icon: Users,
     title: "Untuk Semua",
-    desc: "Platform gratis dan terbuka untuk seluruh freelancer Indonesia tanpa terkecuali.",
+    desc: "Platform gratis dan terbuka untuk seluruh freelancer maupun pencari jasa di Indonesia tanpa terkecuali.",
     color: "var(--green)",
   },
 ];
@@ -138,19 +138,18 @@ const About = () => (
   <div>
     {/* HERO */}
     <section className="hero-section">
-      <div
-        className="container-inner relative-z1"
-      >
+      <div className="container-inner relative-z1">
         <h1 data-aos="fade-up" data-aos-delay="50" className="hero-title">
           Tentang{" "}
           <span className="text-[var(--fg-2)] font-normal">
-            FairPrice Finder
+            Fair Price Finder
           </span>
         </h1>
 
         <p data-aos="fade-up" data-aos-delay="150" className="hero-subtitle">
-          Platform AI untuk membantu freelancer Indonesia menemukan harga jasa
-          yang adil, transparan, dan berbasis data pasar nyata.
+          Platform AI untuk membantu ekosistem freelance Indonesia (klien &
+          freelancer) menemukan standar harga jasa yang adil, transparan, dan
+          berbasis data pasar nyata.
         </p>
 
         <div data-aos="fade-up" data-aos-delay="200" className="hero-actions">
@@ -200,11 +199,11 @@ const About = () => (
       </div>
 
       <p data-aos="fade-up" className="page-desc max-w-[800px] pt-48">
-        Freelancer Indonesia sering tidak tahu harga yang layak untuk jasa
-        mereka - membuat mereka <em>undersell</em> atau kehilangan klien karena
-        quote terlalu tinggi. FairPrice Finder hadir untuk menjawab:{" "}
+        Freelancer sering kebingungan menentukan harga yang layak, dan di sisi
+        lain klien ragu apakah tawaran harga tersebut wajar. FairPrice Finder
+        hadir untuk memberikan panduan objektif, menjawab:{" "}
         <strong className="text-[var(--fg-1)]">
-          "Berapa sebenarnya nilai jasa saya?"
+          "Berapa standar harga yang adil di pasar saat ini?"
         </strong>
       </p>
     </section>
@@ -258,10 +257,7 @@ const About = () => (
         <div className="tech-marquee">
           {[...techStack, ...techStack, ...techStack].map(
             ({ icon: Icon, name, desc, color }, i) => (
-              <div
-                key={`${name}-${i}`}
-                className="tech-badge tech-badge-item"
-              >
+              <div key={`${name}-${i}`} className="tech-badge tech-badge-item">
                 <Icon size={14} color={color} />
                 <div>
                   <p className="tech-badge__name">{name}</p>
@@ -307,11 +303,7 @@ const About = () => (
               style={{ background: color }}
             >
               {photo ? (
-                <img
-                  src={photo}
-                  alt={name}
-                  className="team-avatar-img"
-                />
+                <img src={photo} alt={name} className="team-avatar-img" />
               ) : (
                 initials
               )}

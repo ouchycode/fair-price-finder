@@ -9,6 +9,7 @@ import {
   BarChart2,
   ChevronLeft,
   ChevronRight,
+  Info,
 } from "lucide-react";
 import * as Separator from "@radix-ui/react-separator";
 import * as Tooltip from "@radix-ui/react-tooltip";
@@ -166,7 +167,7 @@ const Dashboard = () => {
         <div className="kpi-grid" data-aos="fade-up" data-aos-delay="50">
           <div className="kpi-card">
             <div className="kpi-card__header">
-              <span className="kpi-card__title">Total Proyek</span>
+              <span className="kpi-card__title">Total Referensi Data</span>
               <Activity size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">
@@ -174,31 +175,33 @@ const Dashboard = () => {
                 .reduce((acc, curr) => acc + curr.demand, 0)
                 .toLocaleString("id-ID")}
             </div>
-            <div className="kpi-card__trend trend-fg3">Data Keseluruhan</div>
+            <div className="kpi-card__trend trend-fg3">
+              Sampel layanan dianalisis
+            </div>
           </div>
           <div className="kpi-card">
             <div className="kpi-card__header">
-              <span className="kpi-card__title">Rata-Rata Nilai Proyek</span>
+              <span className="kpi-card__title">Rata-Rata Fair Price</span>
               <BarChart2 size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">
               {formatKpiCurrency(globalAvgPrice)}
             </div>
             <div className="kpi-card__trend trend-fg2">
-              Rata-rata dari semua{" "}
-              {filterType === "job" ? "pekerjaan" : "skill"}
+              Dari semua{" "}
+              {filterType === "job" ? "kategori pekerjaan" : "spesifik skill"}
             </div>
           </div>
           <div className="kpi-card">
             <div className="kpi-card__header">
               <span className="kpi-card__title">
-                Top {filterType === "job" ? "Pekerjaan" : "Skill"}
+                {filterType === "job" ? "Kategori" : "Skill"} Terpopuler
               </span>
               <Users size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">{leaderboardData[0]?.name}</div>
             <div className="kpi-card__trend trend-indigo">
-              Paling banyak dicari
+              Volume penawaran terbanyak
             </div>
           </div>
         </div>
@@ -220,13 +223,47 @@ const Dashboard = () => {
         </div>
 
         <div className="panel" data-aos="fade-up" data-aos-delay="80">
+          <div className="dashboard-panel-header dashboard-panel-header--large">
+            <h3 className="section-title-sm mb-4">
+              Rekomendasi Fair Price Berdasarkan{" "}
+              {filterType === "job" ? "Kategori" : "Skill"}
+            </h3>
+            <div className="dashboard-info-card page-desc text-13">
+              <Info size={16} className="dashboard-info-card-icon" />
+              <span className="dashboard-info-card-text">
+                <strong>Cara membaca tabel:</strong>
+                <br />
+                <strong>Estimasi Fair Price</strong> adalah harga wajar yang
+                dihitung secara otomatis berdasarkan analisis data harga di
+                pasaran. Angka{" "}
+                <strong>
+                  {filterType === "job"
+                    ? "Volume Data Pasar"
+                    : "Frekuensi Skill"}
+                </strong>{" "}
+                menunjukkan seberapa banyak freelancer atau layanan yang kami
+                jadikan sampel untuk menghitung harga wajar tersebut. Semakin
+                tinggi volumenya, semakin akurat estimasi harganya.
+              </span>
+            </div>
+          </div>
           <div className="leaderboard">
             {/* HEADER */}
             <div className="leaderboard-header">
               <div className="table-col-center">#</div>
-              <div>{filterType === "job" ? "Pekerjaan" : "Skill"}</div>
-              <div>Pendapatan (per Proyek)</div>
-              <div>Jumlah Proyek</div>
+              <div>
+                {filterType === "job" ? "Kategori Pekerjaan" : "Spesifik Skill"}
+              </div>
+              <div>
+                {filterType === "job"
+                  ? "Estimasi Fair Price"
+                  : "Fair Price (dgn Skill)"}
+              </div>
+              <div>
+                {filterType === "job"
+                  ? "Volume Data Pasar"
+                  : "Frekuensi Skill di Pasar"}
+              </div>
             </div>
 
             {leaderboardData.map((item, i) => {
@@ -248,7 +285,7 @@ const Dashboard = () => {
                   <div className="leaderboard-rate">{item.rate}</div>
                   <div
                     className="leaderboard-bar-wrap"
-                    title={`${item.demand.toLocaleString("id-ID")} proyek`}
+                    title={`${item.demand.toLocaleString("id-ID")} ${filterType === "job" ? "data layanan" : "referensi pasar"}`}
                   >
                     <div
                       className={`leaderboard-bar-fill ${i < 3 ? "bg-indigo" : "bg-border-2"}`}

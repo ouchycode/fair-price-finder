@@ -67,48 +67,48 @@ def build_consultation_prompt(
     project_text = project_type if project_type else 'General / Tidak spesifik'
 
     system_prompt = dedent("""
-    Kamu konsultan freelance berpengalaman.
-    Beri saran PRAKTIS yang langsung bisa dipakai.
+    Kamu konsultan freelance ahli di pasar Indonesia.
+    Tugasmu memberi saran PRAKTIS yang SANGAT SPESIFIK berdasarkan Tipe Proyek, Skill, dan Durasi yang diberikan.
 
     ATURAN:
-    - MAKSIMAL 100 kata
-    - Bahasa Indonesia santai
-    - Jangan ulangi data yang sudah diketahui
-    - Fokus ACTIONABLE TIPS
-    - Tunjukkan empathy dengan situasi user
+    - MAKSIMAL 100 kata (Singkat & Padat).
+    - Bahasa Indonesia santai & profesional.
+    - Jangan ulangi data yang sudah ada di input.
+    - Fokus pada ACTIONABLE TIPS (Apa yang harus dilakukan selanjutnya).
+    - Sesuaikan sudut pandang (Freelauncer vs Klien).
 """).strip()
 
     if role == 'client':
         user_prompt = dedent(f"""
-    User: Client mau hire freelancer.
+    Saya adalah KLIEN yang ingin menyewa freelancer.
 
     Detail project:
     - Kategori: {category_text}
     - Tipe Proyek: {project_text}
-    - Skills: {skills_text}
-    - Estimasi harga: Rp {predicted_price:,}
+    - Skills dibutuhkan: {skills_text}
+    - Durasi Target: {durasi_hari} hari
+    - Estimasi harga wajar: Rp {predicted_price:,}
 
-    Beri 3-4 tips praktis:
-    - Clarify apa sebelum deal
-    - Red flags freelancer underselling
-    - Cara negotiation yang fair
-    - Budget realistis untuk scope ini
+    Berikan 3 tips poin praktis khusus untuk KLIEN:
+    - Apa yang harus divalidasi dari portofolio freelancer untuk Tipe Proyek ini?
+    - Bagaimana mengelola ekspektasi untuk durasi {durasi_hari} hari?
+    - Tips negosiasi agar mendapatkan kualitas terbaik dengan budget Rp {predicted_price:,}.
 """).strip()
     else:
         user_prompt = dedent(f"""
-    User: Freelancer mau offer jasa.
+    Saya adalah FREELANCER yang akan menawarkan jasa.
 
     Detail project:
     - Kategori: {category_text}
     - Tipe Proyek: {project_text}
-    - Skills: {skills_text}
-    - Estimasi harga: Rp {predicted_price:,}
+    - Skills saya: {skills_text}
+    - Durasi Pengerjaan: {durasi_hari} hari
+    - Estimasi harga wajar: Rp {predicted_price:,}
 
-    Beri 3-4 tips praktis:
-    - Cara communicate value ke client
-    - Kapan boleh naikin harga
-    - Hindari underselling
-    - Warning signs dari client
+    Berikan 3 tips poin praktis khusus untuk FREELANCER:
+    - Bagaimana meyakinkan klien bahwa harga Rp {predicted_price:,} ini sepadan untuk Tipe Proyek ini?
+    - Strategi milestone/pembayaran untuk durasi {durasi_hari} hari.
+    - Red flags/tanda bahaya dari klien yang harus dihindari.
 """).strip()
 
     return [
