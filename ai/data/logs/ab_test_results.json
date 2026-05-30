@@ -1,0 +1,11 @@
+{
+  "model_a_mae": 465894.3734,
+  "model_b_mae": 345356.4592,
+  "t_statistic": 15.5833,
+  "p_value": 0.0,
+  "significant": true,
+  "winner": "B",
+  "model_a_name": "Baseline (median per kategori)",
+  "model_b_name": "freelance_pricer_savedmodel",
+  "n_test_samples": 683
+}
