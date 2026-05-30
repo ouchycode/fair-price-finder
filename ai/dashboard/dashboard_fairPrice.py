@@ -14,10 +14,10 @@ import numpy as np
 import plotly.express as px
 
 
-#CONFIG
+# CONFIG
 st.set_page_config(
     page_title="Fair Price Finder",
-    page_icon="frontend/src/assets/logo/logo-fpf.png",
+    page_icon="../../frontend/src/assets/logo/logo-fpf.png",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -80,11 +80,39 @@ section[data-testid="stSidebar"] *{
     font-weight:700;
 }
 
+.skill-legend{
+    display:flex;
+    gap:20px;
+    margin-top:8px;
+    font-size:13px;
+    color:#9CA3AF;
+}
+
+.legend-dot{
+    display:inline-block;
+    width:12px;
+    height:12px;
+    border-radius:3px;
+    margin-right:5px;
+    vertical-align:middle;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
+LEGEND_HTML = """
+<div class="skill-legend">
+    <span><span class="legend-dot" style="background:#7B61FF;"></span>Tech Skill</span>
+    <span><span class="legend-dot" style="background:#EC4899;"></span>Marketing Skill</span>
+    <span><span class="legend-dot" style="background:#F59E0B;"></span>Desain & Kreatif</span>
+    <span><span class="legend-dot" style="background:#10B981;"></span>Video & Animasi</span>
+    <span><span class="legend-dot" style="background:#38BDF8;"></span>Data & Analitik</span>
+    <span><span class="legend-dot" style="background:#9CA3AF;"></span>Lainnya</span>
+</div>
+"""
+
 # DATA
-CSV_PATH = "ai/data/output/dataset_v2_finalmodel.csv"
+CSV_PATH = "../data/output/dataset_v2_finalmodel.csv"
 
 CAT_MAP = {
     "Grafis & Desain": "kategori_Grafis & Desain",
@@ -118,9 +146,7 @@ def load_data():
     df = pd.read_csv(CSV_PATH)
 
     df["platform"] = "Fastwork"
-
     df.loc[df["platform_sribu"] == 1, "platform"] = "Sribu"
-
     df.loc[df["platform_projects"] == 1, "platform"] = "Projects"
 
     df["dur_bucket"] = pd.cut(
@@ -132,11 +158,8 @@ def load_data():
     return df
 
 try:
-
     df = load_data()
-
 except:
-
     st.error("Dataset tidak ditemukan.")
     st.stop()
 
@@ -156,69 +179,91 @@ for s in skill_cols:
         continue
 
     all_skill_rows.append({
-
         "Skill":
         s.replace("skill_", "")
          .replace("_", " ")
          .title(),
-
-        "Median":
-        sub.median()/1000,
-
-        "Jumlah":
-        len(sub),
-
+        "Median": sub.median() / 1000,
+        "Jumlah": len(sub),
         "col": s
     })
 
 all_skill_df = pd.DataFrame(all_skill_rows)
-
-all_skill_df = all_skill_df.sort_values(
-    "Median",
-    ascending=False
-)
+all_skill_df = all_skill_df.sort_values("Median", ascending=False)
 
 def fmt_rp(x):
-
     if x >= 1_000_000:
         return f"Rp {x/1e6:.1f} jt"
-
     return f"Rp {x/1e3:.0f} rb"
 
 # SIDEBAR
 with st.sidebar:
 
     st.image(
-        "frontend/src/assets/logo/logo-fpf.png",
+        "../../frontend/src/assets/logo/logo-fpf.png",
         width=85
     )
 
     st.markdown("# Fair Price Finder")
-
-    st.caption(
-        "CC26-PSU164 | Coding Camp 2026"
-    )
-
+    st.caption("CC26-PSU164 | Coding Camp 2026")
     st.markdown("---")
 
     menu = st.radio(
-    "Menu",
-    [
-        "Dashboard",
-        "Skill Analysis"
-    ],
-    label_visibility="collapsed"
-)
-
-# DASHBOARD PAGE
-if menu == "Dashboard":
-    # HEADER
-    st.title("Fair Price Finder Dashboard")
-
-    st.caption(
-        "Modern Analytics Dashboard for Freelance Pricing"
+        "Menu",
+        ["Dashboard", "Skill Analysis"],
+        label_visibility="collapsed"
     )
 
+# COLOR HELPERS
+dm_skills = [
+    'skill_seo', 'skill_tiktok_ads', 'skill_instagram',
+    'skill_google_ads', 'skill_meta_ads', 'skill_facebook_ads',
+    'skill_copywriting', 'skill_content_writing'
+]
+
+tech_skills = [
+    'skill_machine_learning', 'skill_python', 'skill_data_analysis',
+    'skill_data_science', 'skill_deep_learning', 'skill_react',
+    'skill_flutter', 'skill_javascript', 'skill_nextjs', 'skill_kotlin',
+    'skill_laravel', 'skill_react_native', 'skill_wordpress',
+    'skill_ui_ux_design', 'skill_figma', 'skill_php', 'skill_java',
+    'skill_html_css', 'skill_mobile_programming', 'skill_swift',
+    'skill_website', 'skill_website_building', 'skill_laravel_framework'
+]
+
+design_skills = [
+    'skill_logo_design', 'skill_branding', 'skill_canva', 'skill_adobe_xd'
+]
+
+video_skills = [
+    'skill_video_editing', 'skill_animation', 'skill_after_effects',
+    'skill_video_production', 'skill_3d_modeling'
+]
+
+data_skills = [
+    'skill_excel', 'skill_tableau', 'skill_power_bi'
+]
+
+def get_color(col):
+    if col in dm_skills:
+        return "#EC4899"
+    if col in tech_skills:
+        return "#7B61FF"
+    if col in design_skills:
+        return "#F59E0B"
+    if col in video_skills:
+        return "#10B981"
+    if col in data_skills:
+        return "#38BDF8"
+    return "#9CA3AF"
+
+# ══════════════════════════════════════════════
+# DASHBOARD PAGE
+# ══════════════════════════════════════════════
+if menu == "Dashboard":
+
+    st.title("Fair Price Finder Dashboard")
+    st.caption("Modern Analytics Dashboard for Freelance Pricing")
     st.markdown("<br>", unsafe_allow_html=True)
 
     # KPI CARDS
@@ -258,57 +303,40 @@ if menu == "Dashboard":
 
     st.markdown("<br>", unsafe_allow_html=True)
 
+    # DROPDOWN FILTER KATEGORI SKILL
+    SKILL_CATEGORY_MAP = {
+        "Overall": None,
+        "Tech Skill": tech_skills,
+        "Marketing Skill": dm_skills,
+        "Desain & Kreatif": design_skills,
+        "Video & Animasi": video_skills,
+        "Data & Analitik": data_skills,
+    }
+
+    filter_col, _ = st.columns([2, 8])
+    with filter_col:
+        selected_cat = st.selectbox(
+            "Filter Kategori Skill",
+            list(SKILL_CATEGORY_MAP.keys()),
+            index=0
+        )
+
+    if SKILL_CATEGORY_MAP[selected_cat] is None:
+        filtered_skill_df = all_skill_df.copy()
+    else:
+        filtered_skill_df = all_skill_df[
+            all_skill_df["col"].isin(SKILL_CATEGORY_MAP[selected_cat])
+        ].copy()
+
     # TOP & BOTTOM SKILL
     left, right = st.columns(2)
-
-    dm_skills = [
-        'skill_seo',
-        'skill_tiktok_ads',
-        'skill_instagram',
-        'skill_google_ads',
-        'skill_meta_ads',
-        'skill_facebook_ads',
-        'skill_copywriting',
-        'skill_content_writing'
-    ]
-
-    tech_skills = [
-        'skill_machine_learning',
-        'skill_python',
-        'skill_data_analysis',
-        'skill_data_science',
-        'skill_deep_learning',
-        'skill_react',
-        'skill_flutter',
-        'skill_javascript',
-        'skill_nextjs',
-        'skill_kotlin',
-        'skill_laravel',
-        'skill_react_native',
-        'skill_wordpress',
-        'skill_ui_ux_design',
-        'skill_figma',
-        'skill_php',
-        'skill_java'
-    ]
-
-    def get_color(col):
-
-        if col in dm_skills:
-            return "#EC4899"
-
-        if col in tech_skills:
-            return "#7B61FF"
-
-        return "#9CA3AF"
 
     # TOP 10
     with left:
 
         st.subheader("Top 10 Skill Harga Tertinggi")
 
-        top10 = all_skill_df.head(10).copy()
-
+        top10 = filtered_skill_df.head(10).copy()
         top10["Color"] = top10["col"].apply(get_color)
 
         fig = px.bar(
@@ -337,10 +365,8 @@ if menu == "Dashboard":
             yaxis_title=""
         )
 
-        st.plotly_chart(
-            fig,
-            width="stretch"
-        )
+        st.plotly_chart(fig, width="stretch")
+        st.markdown(LEGEND_HTML, unsafe_allow_html=True)
 
     # BOTTOM 10
     with right:
@@ -348,11 +374,13 @@ if menu == "Dashboard":
         st.subheader("Top 10 Skill Harga Terendah")
 
         bottom10 = (
-            all_skill_df.tail(10)
-            .sort_values("Median", ascending=True)
+            filtered_skill_df.sort_values("Median", ascending=True)
+            .head(10)
+            .sort_values("Median", ascending=False)
             .copy()
         )
 
+        skill_order = bottom10["Skill"].tolist()
         bottom10["Color"] = bottom10["col"].apply(get_color)
 
         fig = px.bar(
@@ -378,27 +406,27 @@ if menu == "Dashboard":
             height=500,
             showlegend=False,
             xaxis_title="Median Harga (Rp ribu)",
-            yaxis_title=""
+            yaxis_title="",
+            yaxis=dict(
+                categoryorder="array",
+                categoryarray=skill_order
+            )
         )
 
-        st.plotly_chart(
-            fig,
-            width="stretch"
-        )
+        st.plotly_chart(fig, width="stretch")
+        st.markdown(LEGEND_HTML, unsafe_allow_html=True)
 
     # ROW 2
-    col1, col2, col3 = st.columns([1.3,1,1])
+    col1, col2, col3 = st.columns([1.3, 1, 1])
+
     # BAR CHART KATEGORI
     with col1:
 
         st.subheader("Median Harga per Kategori")
 
         kategori_rows = []
-
         for nama, col in CAT_MAP.items():
-
             sub = df[df[col] == 1]["price_single"]
-
             kategori_rows.append({
                 "Kategori": nama,
                 "MedianHarga": sub.median() / 1000
@@ -412,13 +440,7 @@ if menu == "Dashboard":
             y="MedianHarga",
             color="Kategori",
             text="MedianHarga",
-            color_discrete_sequence=[
-                PURPLE,
-                BLUE,
-                GREEN,
-                ORANGE,
-                PINK
-            ]
+            color_discrete_sequence=[PURPLE, BLUE, GREEN, ORANGE, PINK]
         )
 
         fig.update_traces(
@@ -431,43 +453,25 @@ if menu == "Dashboard":
             paper_bgcolor=BG_CARD,
             plot_bgcolor=BG_CARD,
             font_color="white",
-
             showlegend=False,
             height=470,
-
             xaxis_title="Kategori",
             yaxis_title="Median Harga (Rp ribu)",
-
-            margin=dict(
-                l=10,
-                r=10,
-                t=30,
-                b=20
-            )
+            margin=dict(l=10, r=10, t=30, b=20)
         )
 
-        st.plotly_chart(
-            fig,
-            width="stretch"
-        )
+        st.plotly_chart(fig, width="stretch")
 
-    # PLATFORM 
+    # PLATFORM PIE
     with col2:
 
         st.subheader("Median Harga Platform")
 
         rows = []
-
         for p in ["Fastwork", "Sribu", "Projects"]:
-
             rows.append({
-
                 "Platform": p,
-
-                "Median":
-                df[
-                    df["platform"] == p
-                ]["price_single"].median()/1000
+                "Median": df[df["platform"] == p]["price_single"].median() / 1000
             })
 
         med_df = pd.DataFrame(rows)
@@ -483,9 +487,7 @@ if menu == "Dashboard":
 
         fig.update_traces(
             textinfo="percent+label",
-            hovertemplate=
-            "<b>%{label}</b><br>" +
-            "Median Harga: Rp %{value:.0f}K<extra></extra>"
+            hovertemplate="<b>%{label}</b><br>Median Harga: Rp %{value:.0f}K<extra></extra>"
         )
 
         fig.update_layout(
@@ -495,20 +497,12 @@ if menu == "Dashboard":
             font_color="white",
             height=470,
             showlegend=False,
-            margin=dict(
-                l=10,
-                r=10,
-                t=30,
-                b=10
-            )
+            margin=dict(l=10, r=10, t=30, b=10)
         )
 
-        st.plotly_chart(
-            fig,
-            width="stretch"
-        )
+        st.plotly_chart(fig, width="stretch")
 
-    # RATING
+    # RATING PIE
     with col3:
 
         st.subheader("Freelancer Rating")
@@ -519,10 +513,7 @@ if menu == "Dashboard":
             values=rating_counts.values,
             names=["Has Rating", "No Rating"],
             hole=0.72,
-            color_discrete_sequence=[
-                PURPLE,
-                GREY
-            ]
+            color_discrete_sequence=[PURPLE, GREY]
         )
 
         fig.update_layout(
@@ -533,34 +524,25 @@ if menu == "Dashboard":
             height=470
         )
 
-        st.plotly_chart(
-            fig,
-            width="stretch"
-        )
-    
-    # ROW 3
+        st.plotly_chart(fig, width="stretch")
+
+    # ROW 3 — DURASI
     st.subheader("Harga berdasarkan Durasi dan Kategori")
 
-    # PREPARE DATA
     durasi_rows = []
-
     for nama, col in CAT_MAP.items():
-
         temp = (
             df[df[col] == 1]
             .groupby("dur_bucket", observed=True)["price_single"]
             .median()
             .reset_index()
         )
-
         temp["Kategori"] = nama
         temp["MedianHarga"] = temp["price_single"] / 1000
-
         durasi_rows.append(temp)
 
     dur_df = pd.concat(durasi_rows)
 
-    # GROUPED BAR CHART
     fig = px.bar(
         dur_df,
         x="dur_bucket",
@@ -568,13 +550,7 @@ if menu == "Dashboard":
         color="Kategori",
         barmode="group",
         text="MedianHarga",
-        color_discrete_sequence=[
-            PURPLE,
-            BLUE,
-            GREEN,
-            ORANGE,
-            PINK
-        ]
+        color_discrete_sequence=[PURPLE, BLUE, GREEN, ORANGE, PINK]
     )
 
     fig.update_traces(
@@ -587,29 +563,23 @@ if menu == "Dashboard":
         paper_bgcolor=BG_CARD,
         plot_bgcolor=BG_CARD,
         font_color="white",
-
         height=550,
-
         xaxis_title="Durasi Project",
         yaxis_title="Median Harga (Rp ribu)",
-
         legend_title="Kategori",
-
         bargap=0.25,
         bargroupgap=0.08
     )
 
-    st.plotly_chart(
-        fig,
-        width="stretch"
-    )
+    st.plotly_chart(fig, width="stretch")
 
-# ALL SKILL PAGE
+# ══════════════════════════════════════════════
+# SKILL ANALYSIS PAGE
+# ══════════════════════════════════════════════
 elif menu == "Skill Analysis":
 
     st.title("All Skill Analysis")
 
-    # DROPDOWN FILTER
     col1, col2 = st.columns([1, 8])
 
     with col1:
@@ -618,9 +588,9 @@ elif menu == "Skill Analysis":
             [5, 10, 15, 20, 30],
             index=1
         )
+
     show_df = all_skill_df.head(jumlah_skill)
 
-    # BAR CHART
     fig = px.bar(
         show_df[::-1],
         x="Median",
@@ -628,11 +598,7 @@ elif menu == "Skill Analysis":
         orientation="h",
         text="Median",
         color="Median",
-        color_continuous_scale=[
-            "#4F46E5",
-            "#7C3AED",
-            "#A855F7"
-        ]
+        color_continuous_scale=["#4F46E5", "#7C3AED", "#A855F7"]
     )
 
     fig.update_traces(
@@ -642,38 +608,18 @@ elif menu == "Skill Analysis":
 
     fig.update_layout(
         template="plotly_dark",
-
         paper_bgcolor=BG_CARD,
         plot_bgcolor=BG_CARD,
-
         font_color="white",
-
-        height=max(
-            450,
-            len(show_df) * 45
-        ),
-
+        height=max(450, len(show_df) * 45),
         coloraxis_showscale=False,
-
-        margin=dict(
-            l=20,
-            r=60,
-            t=30,
-            b=20
-        ),
-
+        margin=dict(l=20, r=60, t=30, b=20),
         xaxis_title="Median Harga (Rp ribu)",
         yaxis_title=""
     )
 
-    st.plotly_chart(
-        fig,
-        width="stretch"
-    )
+    st.plotly_chart(fig, width="stretch")
 
 # FOOTER
 st.markdown("<br><br>", unsafe_allow_html=True)
-
-st.caption(
-    "Fair Price Finder Dashboard • CC26-PSU164"
-)
+st.caption("Fair Price Finder Dashboard • CC26-PSU164")
