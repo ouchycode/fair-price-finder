@@ -304,29 +304,44 @@ if menu == "Dashboard":
     st.markdown("<br>", unsafe_allow_html=True)
 
     # DROPDOWN FILTER KATEGORI SKILL
-    SKILL_CATEGORY_MAP = {
+    JASA_MAP_DB = {
         "Overall": None,
-        "Tech Skill": tech_skills,
-        "Marketing Skill": dm_skills,
-        "Desain & Kreatif": design_skills,
-        "Video & Animasi": video_skills,
-        "Data & Analitik": data_skills,
+        "Grafis & Desain": "kategori_Grafis & Desain",
+        "Pemasaran & Periklanan": "kategori_Pemasaran & Periklanan",
+        "Penulisan & Terjemahan": "kategori_Penulisan & Penerjemahan",
+        "Visual & Audio": "kategori_Visual & Audio",
+        "Web & Pemrograman": "kategori_Web dan Pemrograman",
     }
 
     filter_col, _ = st.columns([2, 8])
     with filter_col:
-        selected_cat = st.selectbox(
-            "Filter Kategori Skill",
-            list(SKILL_CATEGORY_MAP.keys()),
-            index=0
+        selected_jasa_db = st.selectbox(
+            "Filter Kategori Jasa",
+            list(JASA_MAP_DB.keys()),
+            index=0,
+            key="db_jasa"
         )
 
-    if SKILL_CATEGORY_MAP[selected_cat] is None:
-        filtered_skill_df = all_skill_df.copy()
+    if JASA_MAP_DB[selected_jasa_db] is None:
+        df_skill_filter = df.copy()
     else:
-        filtered_skill_df = all_skill_df[
-            all_skill_df["col"].isin(SKILL_CATEGORY_MAP[selected_cat])
-        ].copy()
+        df_skill_filter = df[df[JASA_MAP_DB[selected_jasa_db]] == 1].copy()
+
+    # Hitung ulang skill stats dari data terfilter
+    filtered_skill_rows = []
+    for s in skill_cols:
+        sub = df_skill_filter[df_skill_filter[s] == 1]["price_single"]
+        if len(sub) < 5:
+            continue
+        filtered_skill_rows.append({
+            "Skill": s.replace("skill_","").replace("_"," ").title(),
+            "Median": sub.median()/1000,
+            "Jumlah": len(sub),
+            "col": s
+        })
+    filtered_skill_df = pd.DataFrame(filtered_skill_rows)
+    if not filtered_skill_df.empty:
+        filtered_skill_df = filtered_skill_df.sort_values("Median", ascending=False)
 
     # TOP & BOTTOM SKILL
     left, right = st.columns(2)
@@ -335,12 +350,15 @@ if menu == "Dashboard":
     with left:
 
         st.subheader("Top 10 Skill Harga Tertinggi")
+        st.caption(f"Kategori: {selected_jasa_db} · Warna menunjukkan jenis skill")
 
         top10 = filtered_skill_df.head(10).copy()
         top10["Color"] = top10["col"].apply(get_color)
 
+        top10_sorted = top10.sort_values("Median", ascending=True)
+
         fig = px.bar(
-            top10[::-1],
+            top10_sorted,
             x="Median",
             y="Skill",
             orientation="h",
@@ -362,7 +380,8 @@ if menu == "Dashboard":
             height=500,
             showlegend=False,
             xaxis_title="Median Harga (Rp ribu)",
-            yaxis_title=""
+            yaxis_title="",
+            yaxis=dict(categoryorder="total ascending")
         )
 
         st.plotly_chart(fig, width="stretch")
@@ -371,7 +390,8 @@ if menu == "Dashboard":
     # BOTTOM 10
     with right:
 
-        st.subheader("Top 10 Skill Harga Terendah")
+        st.subheader("Bottom 10 Skill Harga Terendah")
+        st.caption(f"Kategori: {selected_jasa_db} · Warna menunjukkan jenis skill")
 
         bottom10 = (
             filtered_skill_df.sort_values("Median", ascending=True)
@@ -580,16 +600,57 @@ elif menu == "Skill Analysis":
 
     st.title("All Skill Analysis")
 
-    col1, col2 = st.columns([1, 8])
+    JASA_MAP_SA = {
+        "Overall": None,
+        "Grafis & Desain": "kategori_Grafis & Desain",
+        "Pemasaran & Periklanan": "kategori_Pemasaran & Periklanan",
+        "Penulisan & Terjemahan": "kategori_Penulisan & Penerjemahan",
+        "Visual & Audio": "kategori_Visual & Audio",
+        "Web & Pemrograman": "kategori_Web dan Pemrograman",
+    }
+
+    col1, col2, _ = st.columns([2, 2, 6])
 
     with col1:
+        selected_jasa_sa = st.selectbox(
+            "Kategori Jasa",
+            list(JASA_MAP_SA.keys()),
+            index=0,
+            key="sa_jasa"
+        )
+
+    with col2:
         jumlah_skill = st.selectbox(
             "Top Skill",
             [5, 10, 15, 20, 30],
-            index=1
+            index=1,
+            key="sa_n"
         )
 
-    show_df = all_skill_df.head(jumlah_skill)
+    # Filter data berdasarkan kategori jasa
+    if JASA_MAP_SA[selected_jasa_sa] is None:
+        df_sa = df.copy()
+    else:
+        df_sa = df[df[JASA_MAP_SA[selected_jasa_sa]] == 1].copy()
+
+    # Hitung skill stats dari data terfilter
+    sa_skill_rows = []
+    for s in skill_cols:
+        sub = df_sa[df_sa[s] == 1]["price_single"]
+        if len(sub) < 5:
+            continue
+        sa_skill_rows.append({
+            "Skill": s.replace("skill_","").replace("_"," ").title(),
+            "Median": sub.median()/1000,
+            "Jumlah": len(sub),
+            "col": s
+        })
+
+    sa_skill_df = pd.DataFrame(sa_skill_rows)
+    if not sa_skill_df.empty:
+        sa_skill_df = sa_skill_df.sort_values("Median", ascending=False)
+
+    show_df = sa_skill_df.head(jumlah_skill)
 
     fig = px.bar(
         show_df[::-1],
