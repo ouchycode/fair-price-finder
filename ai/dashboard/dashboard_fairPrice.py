@@ -266,44 +266,6 @@ if menu == "Dashboard":
     st.caption("Modern Analytics Dashboard for Freelance Pricing")
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # KPI CARDS
-    c1, c2, c3, c4 = st.columns(4)
-
-    with c1:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">Total Jasa Freelance</div>
-            <div class="kpi-value">{len(df):,}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with c2:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">Median Harga</div>
-            <div class="kpi-value">{fmt_rp(df["price_single"].median())}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with c3:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">Platform</div>
-            <div class="kpi-value">{df["platform"].nunique()}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    with c4:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-title">Skill</div>
-            <div class="kpi-value">{len(skill_cols)}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # DROPDOWN FILTER KATEGORI SKILL
     JASA_MAP_DB = {
         "Overall": None,
         "Grafis & Desain": "kategori_Grafis & Desain",
@@ -327,7 +289,8 @@ if menu == "Dashboard":
     else:
         df_skill_filter = df[df[JASA_MAP_DB[selected_jasa_db]] == 1].copy()
 
-    # Hitung ulang skill stats dari data terfilter
+    st.markdown("<br>", unsafe_allow_html=True)
+
     filtered_skill_rows = []
     for s in skill_cols:
         sub = df_skill_filter[df_skill_filter[s] == 1]["price_single"]
@@ -342,6 +305,50 @@ if menu == "Dashboard":
     filtered_skill_df = pd.DataFrame(filtered_skill_rows)
     if not filtered_skill_df.empty:
         filtered_skill_df = filtered_skill_df.sort_values("Median", ascending=False)
+
+    # KPI CARDS
+    c1, c2, c3, c4 = st.columns(4)
+
+    with c1:
+        st.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">Total Jasa Freelance</div>
+            <div class="kpi-value">{len(df_skill_filter):,}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c2:
+        st.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">Median Harga</div>
+            <div class="kpi-value">{fmt_rp(df_skill_filter["price_single"].median())}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c3:
+        st.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">Platform</div>
+            <div class="kpi-value">{df_skill_filter["platform"].nunique()}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with c4:
+        st.markdown(f"""
+        <div class="kpi-card">
+            <div class="kpi-title">Skill Tersedia</div>
+            <div class="kpi-value">{len(filtered_skill_df)}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+
+    if JASA_MAP_DB[selected_jasa_db] is None:
+        df_skill_filter = df.copy()
+    else:
+        df_skill_filter = df[df[JASA_MAP_DB[selected_jasa_db]] == 1].copy()
+
 
     # TOP & BOTTOM SKILL
     left, right = st.columns(2)
@@ -434,7 +441,7 @@ if menu == "Dashboard":
         )
 
         st.plotly_chart(fig, width="stretch")
-        st.markdown(LEGEND_HTML, unsafe_allow_html=True)
+        # st.markdown(LEGEND_HTML, unsafe_allow_html=True)
 
     # ROW 2
     col1, col2, col3 = st.columns([1.3, 1, 1])
@@ -516,7 +523,14 @@ if menu == "Dashboard":
             plot_bgcolor=BG_CARD,
             font_color="white",
             height=470,
-            showlegend=False,
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.2,
+                xanchor="center",
+                x=0.5
+            ),
             margin=dict(l=10, r=10, t=30, b=10)
         )
 
@@ -541,7 +555,15 @@ if menu == "Dashboard":
             paper_bgcolor=BG_CARD,
             plot_bgcolor=BG_CARD,
             font_color="white",
-            height=470
+            height=470,
+            showlegend=True,
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.2,
+                xanchor="center",
+                x=0.5
+            )
         )
 
         st.plotly_chart(fig, width="stretch")
