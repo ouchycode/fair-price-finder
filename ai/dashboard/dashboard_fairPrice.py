@@ -8,6 +8,8 @@ streamlit run dashboard_fairPrice.py
 """
 
 
+import os
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -17,7 +19,7 @@ import plotly.express as px
 # CONFIG
 st.set_page_config(
     page_title="Fair Price Finder",
-    page_icon="../../frontend/src/assets/logo/logo-fpf.png",
+    page_icon=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../frontend/src/assets/logo/logo-fpf.png"),
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -112,7 +114,7 @@ LEGEND_HTML = """
 """
 
 # DATA
-CSV_PATH = "../data/output/dataset_v2_finalmodel.csv"
+CSV_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../data/output/dataset_v2_finalmodel.csv")
 
 CAT_MAP = {
     "Grafis & Desain": "kategori_Grafis & Desain",
@@ -200,7 +202,7 @@ def fmt_rp(x):
 with st.sidebar:
 
     st.image(
-        "../../frontend/src/assets/logo/logo-fpf.png",
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../frontend/src/assets/logo/logo-fpf.png"),
         width=85
     )
 
