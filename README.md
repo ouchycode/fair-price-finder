@@ -59,8 +59,7 @@ fair-price-finder/
 ├── frontend/                 ← Antarmuka Web (React + Vite)
 ├── backend/                  ← REST API Server (Express.js)
 ├── ai/                       ← AI Inference (FastAPI) & Data Pipeline
-├── data/                     ← Dataset mentah, bersih, & output
-└── docs/                     ← Dokumentasi API & arsitektur
+├── ai/data/                  ← Dataset, model, dan artefak pipeline yang aktif
 ```
 
 ---
@@ -124,6 +123,7 @@ Jika Anda ingin melihat proses pengolahan data atau menjalankan visualisasi anal
 
 1. **Jalankan Notebook ML:**  
    Buka VS Code / Jupyter, lalu jalankan notebook di folder `ai/models/` (01, 02, 03) secara berurutan.
+   Dataset, model, dan output pipeline yang dipakai saat ini ada di `ai/data/`.
 2. **Dashboard Streamlit:**
    ```bash
    cd ai/dashboard
