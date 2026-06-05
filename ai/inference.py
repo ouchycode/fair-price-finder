@@ -67,8 +67,6 @@ class InferenceService:
     def get_model_status(self) -> dict:
         return get_model_status()
 
-
-# DATA_DIR mengarah ke ai/data/ — lokasi model dan scaler baru
 DATA_DIR    = Path(__file__).parent / "data"
 MODELS_DIR  = DATA_DIR / "models"
 PREPARED_DIR = DATA_DIR / "prepared"
@@ -179,7 +177,6 @@ def predict_price(user_input: dict, range_margin: float = 0.20) -> dict:
 
     pred_idr_clipped = np.clip(pred_idr, IDR_MIN, IDR_MAX)
 
-    # Terapkan Fair Price Multiplier agar konsisten dengan Dashboard
     FAIR_PRICE_MULTIPLIER = 4.0
     adjusted_price = pred_idr_clipped * FAIR_PRICE_MULTIPLIER
 
