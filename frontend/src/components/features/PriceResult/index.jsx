@@ -5,10 +5,8 @@ import PriceHeader from "./PriceHeader";
 import PriceDisplay from "./PriceDisplay";
 import MarketInsights from "./MarketInsights";
 import AiConsultation from "./AiConsultation";
-import { useLanguage } from "../../../hooks/useI18n";
 
 const PriceResult = ({ result }) => {
-  const { t } = useLanguage();
   const [consultation, setConsultation] = useState("");
   const [consultLoading, setConsultLoading] = useState(false);
 
@@ -22,11 +20,13 @@ const PriceResult = ({ result }) => {
           setConsultation(
             data.consultation ||
               data.text ||
-              t("resultSection.aiFallback"),
+              "Saran negosiasi berhasil dibuat.",
           );
         })
         .catch(() => {
-          setConsultation(t("resultSection.aiFallback"));
+          setConsultation(
+            "Gagal memuat saran dari AI. Gunakan rentang harga di atas sebagai patokan negosiasi.",
+          );
         })
         .finally(() => setConsultLoading(false));
     }
@@ -52,9 +52,6 @@ const PriceResult = ({ result }) => {
           min_price={min_price}
           median_price={median_price}
           max_price={max_price}
-          detected_category={detected_category}
-          skills={requestParams?.skills}
-          duration={requestParams?.duration}
         />
         <PriceDisplay
           min_price={min_price}

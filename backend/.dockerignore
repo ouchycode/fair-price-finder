@@ -1,0 +1,19 @@
+# Dependencies - diinstall ulang di dalam image via npm ci
+node_modules/
+
+# Secrets - jangan pernah masuk image
+.env
+.env.*
+!.env.example
+
+# Testing
+tests/
+coverage/
+
+# Lainnya
+*.log
+.DS_Store
+.git/
+.gitignore
+README.md
+Dockerfile

@@ -1,0 +1,17 @@
+# Runtime dependencies for Docker image (AI Inference API)
+# Intentionally excludes scraper/dashboard/jupyter tools (selenium, scrapy, streamlit, jupyter, ...)
+# to keep the image small and the build fast.
+
+# API serving (AI Engineer)
+fastapi==0.104.1
+uvicorn==0.24.0
+groq==0.13.0
+python-dotenv
+
+# Data processing (used by inference & /stats endpoint)
+pandas==2.1.4
+numpy==1.26.2
+scikit-learn==1.3.2
+
+# Machine Learning (model inference)
+tensorflow==2.15.0

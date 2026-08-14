@@ -1,0 +1,42 @@
+name: fair-price-finder
+
+services:
+  ai:
+    build: ./ai
+    container_name: fair-price-ai
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build: ./backend
+    container_name: fair-price-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      ML_API_URL: http://ai:8000
+    ports:
+      - "5000:5000"
+    depends_on:
+      ai:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/health', r => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s

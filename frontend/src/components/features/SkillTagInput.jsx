@@ -2,14 +2,12 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useLanguage } from '../../hooks/useI18n';
 
 const MAX_SKILLS = 10;
 const MIN_SKILL_LENGTH = 2;
 const MAX_SKILL_LENGTH = 50;
 
 const SkillTagInput = ({ value, onChange }) => {
-  const { t } = useLanguage();
   const [input,   setInput]   = useState('');
   const [focused, setFocused] = useState(false);
   const inputRef = useRef(null);
@@ -21,17 +19,17 @@ const SkillTagInput = ({ value, onChange }) => {
 
       // VALIDASI
       if (s.length < MIN_SKILL_LENGTH || s.length > MAX_SKILL_LENGTH) {
-        toast.error(t('skillsSection.tagErrLength', [MIN_SKILL_LENGTH, MAX_SKILL_LENGTH]));
+        toast.error(`Skill harus ${MIN_SKILL_LENGTH}-${MAX_SKILL_LENGTH} karakter`);
         return;
       }
 
       if (value.includes(s)) {
-        toast.error(t('skillsSection.tagErrDuplicate'));
+        toast.error('Skill sudah ditambahkan');
         return;
       }
 
       if (value.length >= MAX_SKILLS) {
-        toast.error(t('skillsSection.tagErrMax', MAX_SKILLS));
+        toast.error(`Maksimal ${MAX_SKILLS} skill`);
         return;
       }
 
@@ -68,7 +66,7 @@ const SkillTagInput = ({ value, onChange }) => {
           onKeyDown={add}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          placeholder={value.length === 0 ? t('skillsSection.tagPlaceholder') : t('skillsSection.tagAdd')}
+          placeholder={value.length === 0 ? 'React, Figma, Node.js...' : '+ tambah'}
           className="skill-tag-input"
         />
       </div>

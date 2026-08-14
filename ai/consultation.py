@@ -20,7 +20,7 @@ except ImportError:
     print("Groq library not installed")
 
 
-GROQ_MODEL = os.getenv('GROQ_MODEL', 'llama-3.1-8b-instant')
+GROQ_MODEL = os.getenv('GROQ_MODEL', 'openai/gpt-oss-20b')
 
 
 class ConsultationService:

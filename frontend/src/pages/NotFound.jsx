@@ -1,11 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, SearchX } from 'lucide-react';
-import { useLanguage } from '../hooks/useI18n';
 
 const NotFound = () => {
-  const { t } = useLanguage();
-
   return (
     <div className="status-wrap">
       
@@ -17,12 +14,12 @@ const NotFound = () => {
         404
       </h1>
       <p data-aos="fade-up" data-aos-delay="50" className="status-desc">
-        {t("notFoundSection.desc")}
+        Halaman yang kamu cari tidak ditemukan atau telah dipindahkan.
       </p>
 
       <div data-aos="fade-up" data-aos-delay="100" className="status-actions">
         <Link to="/" className="btn-secondary btn-sm-wide">
-          <ArrowLeft size={14} /> {t("notFoundSection.back")}
+          <ArrowLeft size={14} /> Kembali ke Beranda
         </Link>
       </div>
     </div>

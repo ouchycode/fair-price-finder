@@ -1,0 +1,37 @@
+# Secrets - jangan pernah masuk image
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Data tidak dipakai saat runtime
+# Wajib ada di image: data/models, data/prepared, data/final (dibaca inference.py & /stats)
+data/raw/
+data/output/
+data/cleaned/
+data/logs/
+data/prepared/X_*.npy
+data/prepared/y_*.npy
+data/prepared/info.json
+
+# Tooling / dev yang tidak diperlukan runtime
+# (pakai / di depan agar hanya top-level yang dikecualikan, bukan data/models)
+/notebooks/
+/models/
+/scripts/
+/scraper/
+/dashboard/
+/tests/
+
+# Lainnya
+*.log
+.DS_Store
+.git/
+.gitignore
+README.md

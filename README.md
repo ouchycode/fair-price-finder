@@ -71,6 +71,7 @@ fair-price-finder/
 - **Node.js** (v18+) & **npm**
 - **Python** (v3.10 sangat disarankan untuk stabilitas dependensi ML/AI)
 - **Git**
+- **Docker** & **Docker Compose** (untuk menjalankan via Docker)
 
 ### 1. Menjalankan AI Engine (FastAPI)
 
@@ -114,6 +115,60 @@ _(Opsional)_ Jika backend berjalan di port berbeda, buat file `.env` di folder `
 ```env
 VITE_API_BASE_URL=http://localhost:5000/api
 ```
+
+---
+
+## 🐳 Menjalankan dengan Docker (Backend + AI)
+
+Cara termudah menjalankan **Backend** dan **AI Engine** sekaligus (tanpa install Python/Node di mesin):
+
+### 1. Siapkan environment
+
+```bash
+cp .env.example .env
+# lalu isi GROQ_API_KEY (dan FRONTEND_URL jika ingin membatasi CORS)
+```
+
+### 2. Build & jalankan
+
+```bash
+docker compose up -d --build
+```
+
+- **AI Engine:** `http://localhost:8000` (docs: `/docs`, health: `/health`)
+- **Backend:** `http://localhost:5000` (health: `/health`)
+
+Cek status:
+
+```bash
+docker compose ps
+curl http://localhost:5000/health
+curl http://localhost:8000/health
+```
+
+Test prediksi lewat backend:
+
+```bash
+curl -X POST http://localhost:5000/api/estimates \
+  -H "Content-Type: application/json" \
+  -d '{"skills":["figma","ui ux design"],"category":"Grafis & Desain","duration":14}'
+```
+
+Menghentikan layanan:
+
+```bash
+docker compose down
+```
+
+### 3. Akses via IP Publik / Domain
+
+Kedua service sudah di-publish ke host (`5000` dan `8000`). Untuk diakses dari luar:
+
+- **Langsung:** buka port `5000` (backend) dan `8000` (AI) di firewall VPS, lalu akses `http://IP_PUBLIK:5000`.
+- **Pakai reverse proxy (contoh: Nginx Proxy Manager / Nginx):** arahkan domain/subdomain ke `http://localhost:5000` untuk backend. Service AI (`8000`) cukup diakses internal oleh backend, tapi boleh juga di-proxy bila perlu.
+- **Frontend di Vercel:** set `VITE_API_BASE_URL` di Vercel ke URL publik backend (contoh `https://api.domainmu.com/api`), lalu set `FRONTEND_URL` di root `.env` ke domain Vercel agar CORS diizinkan.
+
+> **Catatan:** Port & variabel lain bisa disesuaikan di `docker-compose.yml` dan root `.env`. Image AI memakai `requirements-runtime.txt` (deps runtime saja) agar build cepat dan image kecil.
 
 ---
 

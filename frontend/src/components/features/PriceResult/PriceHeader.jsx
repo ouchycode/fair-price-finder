@@ -3,31 +3,29 @@ import PropTypes from "prop-types";
 import { CheckCircle2, Copy, Check } from "lucide-react";
 import toast from "react-hot-toast";
 import { fmt } from "./utils";
-import { useLanguage } from "../../../hooks/useI18n";
 
 const PriceBadge = ({ median }) => {
-  const { t } = useLanguage();
   if (median < 300_000)
     return (
       <span className="price-badge entry">
-        {t("resultSection.badgeEntry")}
+        Entry Level
       </span>
     );
   if (median < 1_000_000)
     return (
       <span className="price-badge mid">
-        {t("resultSection.badgeMid")}
+        Mid Range
       </span>
     );
   if (median < 3_000_000)
     return (
       <span className="price-badge premium">
-        {t("resultSection.badgePremium")}
+        Premium
       </span>
     );
   return (
     <span className="price-badge enterprise">
-      {t("resultSection.badgeEnterprise")}
+      Enterprise
     </span>
   );
 };
@@ -36,34 +34,24 @@ PriceBadge.propTypes = {
   median: PropTypes.number.isRequired,
 };
 
-const PriceHeader = ({ min_price, median_price, max_price, detected_category, skills, duration }) => {
-  const { t } = useLanguage();
+const PriceHeader = ({ min_price, median_price, max_price }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
-    const lines = [
-      `💰 ${t("resultSection.headerTitle")} — ${t("resultSection.copyPrefix")}`,
-    ];
-    if (detected_category) {
-      lines.push(`${t("resultSection.copyCategory")}: ${detected_category}`);
-    }
-    if (skills && skills.length > 0) {
-      lines.push(`${t("resultSection.copySkills")}: ${skills.join(", ")}`);
-    }
-    if (duration) {
-      lines.push(`${t("resultSection.durationFor", duration)}`);
-    }
-    lines.push(`${t("resultSection.copyMin")} : ${fmt(min_price)}`);
-    lines.push(`${t("common.avg")} : ${fmt(median_price)}`);
-    lines.push(`${t("resultSection.copyMax")} : ${fmt(max_price)}`);
+    const text = [
+      `💰 Estimasi Harga Jasa — FairPrice Finder`,
+      `Min    : ${fmt(min_price)}`,
+      `Median : ${fmt(median_price)}`,
+      `Maks   : ${fmt(max_price)}`,
+    ].join("\n");
     navigator.clipboard
-      .writeText(lines.join("\n"))
+      .writeText(text)
       .then(() => {
         setCopied(true);
-        toast.success(t("common.copied"));
+        toast.success("Berhasil disalin!");
         setTimeout(() => setCopied(false), 2200);
       })
-      .catch(() => toast.error(t("common.copyFail")));
+      .catch(() => toast.error("Gagal menyalin"));
   };
 
   return (
@@ -71,7 +59,7 @@ const PriceHeader = ({ min_price, median_price, max_price, detected_category, sk
       <div className="flex-center-gap8">
         <CheckCircle2 size={15} color="rgba(255,255,255,0.9)" />
         <span className="price-header-title">
-          {t("resultSection.headerTitle")}
+          Estimasi Harga Adil
         </span>
       </div>
       <div className="flex-center-gap8">
@@ -82,11 +70,11 @@ const PriceHeader = ({ min_price, median_price, max_price, detected_category, sk
         >
           {copied ? (
             <>
-              <Check size={11} /> {t("common.copied")}
+              <Check size={11} /> Tersalin!
             </>
           ) : (
             <>
-              <Copy size={11} /> {t("common.copy")}
+              <Copy size={11} /> Salin
             </>
           )}
         </button>
@@ -99,9 +87,6 @@ PriceHeader.propTypes = {
   min_price: PropTypes.number.isRequired,
   median_price: PropTypes.number.isRequired,
   max_price: PropTypes.number.isRequired,
-  detected_category: PropTypes.string,
-  skills: PropTypes.arrayOf(PropTypes.string),
-  duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 export default PriceHeader;
