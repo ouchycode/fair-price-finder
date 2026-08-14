@@ -23,7 +23,16 @@ const partnersLogos = [
 const PartnersSection = () => {
   const { t } = useLanguage();
 
-  const items = [...partnersLogos, ...partnersLogos, ...partnersLogos, ...partnersLogos];
+  const items = [
+    ...partnersLogos,
+    ...partnersLogos,
+    ...partnersLogos,
+    ...partnersLogos,
+    ...partnersLogos,
+    ...partnersLogos,
+    ...partnersLogos,
+    ...partnersLogos,
+  ];
 
   return (
     <section className="partners-section">

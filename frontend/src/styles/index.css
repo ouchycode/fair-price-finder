@@ -1982,10 +1982,6 @@ textarea:focus-visible {
   animation: partners-scroll 28s linear infinite;
 }
 
-.partners-marquee-wrap:hover .partners-marquee {
-  animation-play-state: paused;
-}
-
 @keyframes partners-scroll {
   0% {
     transform: translateX(0);

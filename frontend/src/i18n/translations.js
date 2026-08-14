@@ -166,7 +166,6 @@ export const translations = {
         { name: "TensorFlow", desc: "ML Model" },
         { name: "FastAPI", desc: "AI Service" },
         { name: "Vite", desc: "Build Tool" },
-        { name: "Dicoding", desc: "Platform" },
       ],
     },
     estimatorSection: {
@@ -452,7 +451,6 @@ export const translations = {
         { name: "TensorFlow", desc: "ML Model" },
         { name: "FastAPI", desc: "AI Service" },
         { name: "Vite", desc: "Build Tool" },
-        { name: "Dicoding", desc: "Platform" },
       ],
     },
     estimatorSection: {
