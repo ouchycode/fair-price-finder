@@ -14,9 +14,12 @@ import {
 import * as Separator from "@radix-ui/react-separator";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import DumbbellChart from "../components/features/DumbbellChart";
+import PageHeader from "../components/common/PageHeader";
 import { getMarketTrends } from "../services/api";
+import { useLanguage } from "../hooks/useI18n";
 
 const Dashboard = () => {
+  const { t } = useLanguage();
   const [filterType, setFilterType] = useState("job");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
@@ -64,7 +67,7 @@ const Dashboard = () => {
 
   const DashboardSkeleton = () => (
     <div className="animate-pulse">
-      <div className="kpi-grid mt-32-mb-24">
+      <div className="kpi-grid mb-6">
         {[1, 2, 3].map((i) => (
           <div key={i} className="kpi-card kpi-card-skeleton" />
         ))}
@@ -74,20 +77,46 @@ const Dashboard = () => {
     </div>
   );
 
-  if (loading || rawData.length === 0) {
+  if (loading) {
     return (
       <div className="page-wrap">
         {/* HEADER */}
-        <div data-aos="fade-down" className="page-header">
-          <div>
-            <p className="label-mono mb-10">Market Intelligence</p>
-            <h1 className="page-title">
-              Analisis Data{" "}
-              <span className="page-title__muted">Freelancer di Indonesia</span>
-            </h1>
-          </div>
+        <div data-aos="fade-down">
+          <PageHeader
+            eyebrow={t("dashboardSection.label")}
+            title={t("dashboardSection.title")}
+            muted={t("dashboardSection.titleMuted")}
+          />
         </div>
         <DashboardSkeleton />
+      </div>
+    );
+  }
+
+  // STATE KOSONG: data tersedia dari API tapi kosong (bukan loading abadi)
+  if (rawData.length === 0) {
+    return (
+      <div className="page-wrap">
+        <div data-aos="fade-down">
+          <PageHeader
+            eyebrow={t("dashboardSection.label")}
+            title={t("dashboardSection.title")}
+            muted={t("dashboardSection.titleMuted")}
+          />
+        </div>
+        <div data-aos="zoom-in" className="empty-result">
+          <div className="empty-result__icon">
+            <AlertTriangle size={22} color="var(--amber)" strokeWidth={1.7} />
+          </div>
+          <div>
+            <p className="empty-result__title">
+              {t("dashboardSection.title")}
+            </p>
+            <p className="empty-result__desc">
+              {t("dashboardSection.emptyState")}
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -139,19 +168,19 @@ const Dashboard = () => {
     <Tooltip.Provider delayDuration={200}>
       <div className="page-wrap relative-wrap">
         {/* STAT CARDS */}
-        <div data-aos="fade-down" className="page-header">
-          <div>
-            <p className="label-mono mb-10">Market Intelligence</p>
-            <h1 className="page-title">
-              Analisis Data{" "}
-              <span className="page-title__muted">Freelancer di Indonesia</span>
-            </h1>
-          </div>
-          <div className="live-badge live-badge-custom">
-            <span className="live-badge__text">
-              Sumber: Upwork, Sribu, Fastwork, dll.
-            </span>
-          </div>
+        <div data-aos="fade-down">
+          <PageHeader
+            eyebrow={t("dashboardSection.label")}
+            title={t("dashboardSection.title")}
+            muted={t("dashboardSection.titleMuted")}
+            actions={
+              <div className="live-badge live-badge-custom">
+                <span className="live-badge__text">
+                  {t("dashboardSection.source")}
+                </span>
+              </div>
+            }
+          />
         </div>
 
         <div className="chart-filters" data-aos="fade-up" data-aos-delay="40">
@@ -159,15 +188,17 @@ const Dashboard = () => {
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
           >
-            <option value="job">Kategori Pekerjaan</option>
-            <option value="skill">Spesifik Skill</option>
+            <option value="job">{t("dashboardSection.filterJob")}</option>
+            <option value="skill">{t("dashboardSection.filterSkill")}</option>
           </select>
         </div>
 
         <div className="kpi-grid" data-aos="fade-up" data-aos-delay="50">
           <div className="kpi-card">
             <div className="kpi-card__header">
-              <span className="kpi-card__title">Total Referensi Data</span>
+              <span className="kpi-card__title">
+                {t("dashboardSection.kpi.refsTitle")}
+              </span>
               <Activity size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">
@@ -176,32 +207,33 @@ const Dashboard = () => {
                 .toLocaleString("id-ID")}
             </div>
             <div className="kpi-card__trend trend-fg3">
-              Sampel layanan dianalisis
+              {t("dashboardSection.kpi.refsTrend")}
             </div>
           </div>
           <div className="kpi-card">
             <div className="kpi-card__header">
-              <span className="kpi-card__title">Rata-Rata Fair Price</span>
+              <span className="kpi-card__title">
+                {t("dashboardSection.kpi.priceTitle")}
+              </span>
               <BarChart2 size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">
               {formatKpiCurrency(globalAvgPrice)}
             </div>
             <div className="kpi-card__trend trend-fg2">
-              Dari semua{" "}
-              {filterType === "job" ? "kategori pekerjaan" : "spesifik skill"}
+              {t("dashboardSection.kpi.priceTrend", filterType)}
             </div>
           </div>
           <div className="kpi-card">
             <div className="kpi-card__header">
               <span className="kpi-card__title">
-                {filterType === "job" ? "Kategori" : "Skill"} Terpopuler
+                {t("dashboardSection.kpi.topTitle", filterType)}
               </span>
               <Users size={14} color="var(--fg-3)" />
             </div>
             <div className="kpi-card__value">{leaderboardData[0]?.name}</div>
             <div className="kpi-card__trend trend-indigo">
-              Volume penawaran terbanyak
+              {t("dashboardSection.kpi.topTrend")}
             </div>
           </div>
         </div>
@@ -212,9 +244,11 @@ const Dashboard = () => {
           data-aos-delay="60"
         >
           <div className="dashboard-panel-header">
-            <h3 className="section-title-sm mb-4">Distribusi Harga</h3>
+            <h3 className="section-title-sm mb-4">
+              {t("dashboardSection.distTitle")}
+            </h3>
             <p className="page-desc text-13">
-              Rentang Harga (Terendah vs Tertinggi) Top 5
+              {t("dashboardSection.distDesc")}
             </p>
           </div>
           <div className="dashboard-table-wrapper">
@@ -225,45 +259,32 @@ const Dashboard = () => {
         <div className="panel" data-aos="fade-up" data-aos-delay="80">
           <div className="dashboard-panel-header dashboard-panel-header--large">
             <h3 className="section-title-sm mb-4">
-              Rekomendasi Fair Price Berdasarkan{" "}
-              {filterType === "job" ? "Kategori" : "Skill"}
+              {t("dashboardSection.recoTitle", filterType)}
             </h3>
             <div className="dashboard-info-card page-desc text-13">
               <Info size={16} className="dashboard-info-card-icon" />
               <span className="dashboard-info-card-text">
-                <strong>Cara membaca tabel:</strong>
+                <strong>{t("dashboardSection.infoTitle")}</strong>
                 <br />
-                <strong>Estimasi Fair Price</strong> adalah harga wajar yang
-                dihitung secara otomatis berdasarkan analisis data harga di
-                pasaran. Angka{" "}
+                {t("dashboardSection.infoBodyPre")}
                 <strong>
                   {filterType === "job"
-                    ? "Volume Data Pasar"
-                    : "Frekuensi Skill"}
-                </strong>{" "}
-                menunjukkan seberapa banyak freelancer atau layanan yang kami
-                jadikan sampel untuk menghitung harga wajar tersebut. Semakin
-                tinggi volumenya, semakin akurat estimasi harganya.
+                    ? t("dashboardSection.infoStrong1")
+                    : t("dashboardSection.infoStrong2")}
+                </strong>
+                {t("dashboardSection.infoBodyPost")}
               </span>
             </div>
           </div>
           <div className="leaderboard">
             {/* HEADER */}
             <div className="leaderboard-header">
-              <div className="table-col-center">#</div>
-              <div>
-                {filterType === "job" ? "Kategori Pekerjaan" : "Spesifik Skill"}
+              <div className="table-col-center">
+                {t("dashboardSection.thRank")}
               </div>
-              <div>
-                {filterType === "job"
-                  ? "Estimasi Fair Price"
-                  : "Fair Price (dgn Skill)"}
-              </div>
-              <div>
-                {filterType === "job"
-                  ? "Volume Data Pasar"
-                  : "Frekuensi Skill di Pasar"}
-              </div>
+              <div>{t("dashboardSection.thName", filterType)}</div>
+              <div>{t("dashboardSection.thPrice", filterType)}</div>
+              <div>{t("dashboardSection.thVolume", filterType)}</div>
             </div>
 
             {leaderboardData.map((item, i) => {
@@ -285,7 +306,7 @@ const Dashboard = () => {
                   <div className="leaderboard-rate">{item.rate}</div>
                   <div
                     className="leaderboard-bar-wrap"
-                    title={`${item.demand.toLocaleString("id-ID")} ${filterType === "job" ? "data layanan" : "referensi pasar"}`}
+                    title={`${item.demand.toLocaleString("id-ID")} ${t("dashboardSection.ttlData", filterType)}`}
                   >
                     <div
                       className={`leaderboard-bar-fill ${i < 3 ? "bg-indigo" : "bg-border-2"}`}
@@ -318,7 +339,7 @@ const Dashboard = () => {
                   <div className="pagination-btn-placeholder" />
                 )}
                 <span className="pagination-info">
-                  Hal {currentPage} dari {totalPages}
+                  {t("dashboardSection.paging", [currentPage, totalPages])}
                 </span>
                 {currentPage < totalPages ? (
                   <button

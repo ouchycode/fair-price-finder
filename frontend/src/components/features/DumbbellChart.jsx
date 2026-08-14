@@ -1,5 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { useLanguage } from "../../hooks/useI18n";
+
 const formatShortCurrency = (value) => {
   if (!value) return "Rp 0";
   if (value >= 1_000_000) {
@@ -14,6 +16,8 @@ const formatShortCurrency = (value) => {
 };
 
 const DumbbellChart = ({ data }) => {
+  const { t } = useLanguage();
+
   if (!data || data.length === 0) return null;
 
   const globalMax = Math.max(...data.map(d => d.maxPrice || 0));
@@ -43,11 +47,11 @@ const DumbbellChart = ({ data }) => {
                   {item.name}
                 </span>
                 <div className="db-stats">
-                  <span>Min: <strong>{formatShortCurrency(min)}</strong></span>
+                  <span>{t("common.min")}: <strong>{formatShortCurrency(min)}</strong></span>
                   <span className="db-opacity-50">—</span>
-                  <span className="db-text-indigo">Rata-rata (per Proyek): <strong>{formatShortCurrency(median)}</strong></span>
+                  <span className="db-text-indigo">{t("chartSection.avgProject")}: <strong>{formatShortCurrency(median)}</strong></span>
                   <span className="db-opacity-50">—</span>
-                  <span>Max: <strong>{formatShortCurrency(max)}</strong></span>
+                  <span>{t("common.max")}: <strong>{formatShortCurrency(max)}</strong></span>
                 </div>
               </div>
 
@@ -65,21 +69,21 @@ const DumbbellChart = ({ data }) => {
                 <div 
                   className="dumbbell-dot-minmax" 
                   style={{ left: `${minLeft}%` }}
-                  title={`Min: ${formatShortCurrency(min)}`}
+                  title={`${t("common.min")}: ${formatShortCurrency(min)}`}
                 />
                 
 
                 <div 
                   className="dumbbell-dot-median" 
                   style={{ left: `${medianLeft}%` }}
-                  title={`Avg: ${formatShortCurrency(median)}`}
+                  title={`${t("common.avg")}: ${formatShortCurrency(median)}`}
                 />
                 
 
                 <div 
                   className="dumbbell-dot-minmax" 
                   style={{ left: `${maxLeft}%` }}
-                  title={`Max: ${formatShortCurrency(max)}`}
+                  title={`${t("common.max")}: ${formatShortCurrency(max)}`}
                 />
               </div>
             </div>
@@ -91,11 +95,11 @@ const DumbbellChart = ({ data }) => {
       <div className="db-legend-wrapper">
         <div className="db-legend-item">
           <div className="db-legend-dot-border" />
-          <span>Batas Harga Bawah & Atas</span>
+          <span>{t("chartSection.legendLow")}</span>
         </div>
         <div className="db-legend-item">
           <div className="db-legend-dot-indigo" />
-          <span>Harga Rata-rata (per Proyek)</span>
+          <span>{t("chartSection.legendAvg")}</span>
         </div>
       </div>
     </div>

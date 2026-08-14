@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { ChevronDown, X, Check } from 'lucide-react';
+import { useLanguage } from '../../hooks/useI18n';
 
 const SKILL_MAP_FALLBACK = {
   'Grafis & Desain': [
@@ -34,18 +35,25 @@ const toLabel = (s) =>
   s.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
 const SkillDropdown = ({ category, value, onChange }) => {
+  const { t } = useLanguage();
   const [open, setOpen]       = useState(false);
   const [skills, setSkills]   = useState([]);
   const dropdownRef           = useRef(null);
+  const dropdownTriggerRef    = useRef(null);
+  const prevCategoryRef       = useRef(category);
 
   useEffect(() => {
     const mapped = category
       ? (SKILL_MAP_FALLBACK[category] || SKILL_MAP_FALLBACK['Lainnya'] || [])
       : [];
     setSkills(mapped);
-    
-    onChange([]);
-  
+
+    // RESET PARENT HANYA SAAT KATEGORI BENAR-BENAR BERUBAH,
+    // BUKAN SAAT MOUNT (supaya draft/riwayat yang dipulihkan tidak hilang).
+    if (prevCategoryRef.current !== category) {
+      onChange([]);
+      prevCategoryRef.current = category;
+    }
   }, [category]);
 
   useEffect(() => {
@@ -77,12 +85,27 @@ const SkillDropdown = ({ category, value, onChange }) => {
     <div ref={dropdownRef} className="dropdown-relative">
       
       <div
+        ref={(el) => { dropdownTriggerRef.current = el; }}
         onClick={() => !isDisabled && setOpen(o => !o)}
-        className={`select-trigger dropdown-trigger-custom ${isDisabled ? 'disabled' : 'enabled'}`}
+        onKeyDown={(e) => {
+          if (isDisabled) return;
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setOpen(o => !o);
+          } else if (e.key === 'Escape') {
+            setOpen(false);
+          }
+        }}
+        role="button"
+        tabIndex={isDisabled ? -1 : 0}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={t('formSection.skills')}
+        className={`select-trigger dropdown-trigger-custom ${isDisabled ? 'disabled' : 'enabled'} ${open ? 'select-trigger-open' : ''}`}
       >
         {value.length === 0 ? (
           <span className="dropdown-placeholder-text">
-            {isDisabled ? 'Pilih kategori dulu…' : 'Pilih skill…'}
+            {isDisabled ? t('formSection.skillsPlaceholderCat') : t('formSection.skillsPlaceholder')}
           </span>
         ) : (
           value.map(s => (

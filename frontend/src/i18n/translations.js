@@ -1,0 +1,572 @@
+export const translations = {
+  id: {
+    common: {
+      estimator: "Estimator",
+      dashboard: "Analisis Data",
+      about: "Tentang",
+      home: "Beranda",
+      min: "Min",
+      max: "Maks",
+      avg: "Rata-rata",
+      share: "Bagikan",
+      copy: "Salin",
+      copied: "Tersalin!",
+      copyFail: "Gagal menyalin",
+    },
+    nav: {
+      cta: "Coba Estimator",
+      themeAria: (theme) =>
+        `Beralih ke mode ${theme === "dark" ? "terang" : "gelap"}`,
+      themeTitle: (theme) =>
+        theme === "dark" ? "Beralih ke mode terang" : "Beralih ke mode gelap",
+      menuAria: "Menu",
+      closeAria: "Tutup menu",
+      openAria: "Buka menu",
+      brandSubtitle: "AI-POWERED PRICE ESTIMATION",
+    },
+    footer: {
+      tagline:
+        "Estimasi harga jasa freelance Indonesia yang adil dan berbasis data.",
+      colPlatform: "Platform",
+      colResources: "Resources",
+      contact: "Kontak",
+      github: "GitHub",
+      copyright: "Capstone Project",
+      right: "Dicoding × Dbs Foundation",
+    },
+    beta: {
+      badge: "BETA",
+      desktopPre:
+        "Data estimasi harga belum mencerminkan harga pasar aktual - ",
+      desktopEm: "gunakan sebagai referensi awal, bukan acuan final.",
+      mobile: "Estimasi harga hanya untuk referensi awal.",
+      closeAria: "Tutup pemberitahuan beta",
+    },
+    hero: {
+      title1: "Harga jasa yang adil",
+      title2: "berbasis data nyata",
+      subtitle:
+        "Platform AI untuk freelancer dan klien Indonesia menemukan standar harga yang objektif - bukan spekulasi.",
+      ctaPrimary: "Coba Estimator",
+      ctaSecondary: "Lihat Analisis Data Pasar",
+      socialProof: "Dirancang untuk freelancer Indonesia",
+    },
+    stats: [
+      { val: "59.4%", label: "pekerja sektor informal", src: "BPS 2025" },
+      { val: "36.3%", label: "proporsi freelancer aktif", src: "Agustus 2025" },
+      { val: "SDG 8", label: "decent work & growth", src: "target kami" },
+    ],
+    featuresSection: {
+      label: "Platform",
+      title: "Dirancang untuk ekosistem freelance yang lebih sehat",
+      items: [
+        {
+          label: "Estimasi Akurat",
+          desc: "Model deep learning dilatih dari data pasar freelance Indonesia yang terus diperbarui.",
+        },
+        {
+          label: "Insight Pasar",
+          desc: "Tren harga per kategori jasa dan skill paling dicari di ekosistem freelance lokal.",
+        },
+        {
+          label: "Posisi Tawar",
+          desc: "Data-driven pricing - bukan tebak-tebakan saat negosiasi dengan klien.",
+        },
+      ],
+    },
+    stepsSection: {
+      label: "Cara Kerja",
+      title: "Tiga langkah, estimasi instan",
+      items: [
+        {
+          title: "Pilih Kategori Jasa",
+          desc: "Pilih kategori profesi utama yang sesuai dengan bidang Anda, lalu tambahkan detail jenis proyek secara opsional.",
+        },
+        {
+          title: "Tentukan Skill & Durasi",
+          desc: "Masukkan keahlian spesifik, tentukan peran sebagai freelancer atau klien, serta berikan estimasi total durasi penyelesaian proyek.",
+        },
+        {
+          title: "Dapatkan Fair Price",
+          desc: "Sistem akan langsung menampilkan estimasi harga wajar yang mencakup batas bawah, median, dan batas atas negosiasi.",
+        },
+      ],
+    },
+    faqSection: {
+      label: "FAQ",
+      title: "Pertanyaan yang sering ditanyakan",
+      items: [
+        {
+          q: "Dari mana data harga berasal?",
+          a: "Data harga berasal dari pengumpulan data mentah pasar freelance di Indonesia. Pengumpulan data ini dilakukan pada penawaran jasa atau profil freelancer dari platform-platform yang menjadi sumber data relevan.",
+        },
+        {
+          q: "Apakah estimasi ini akurat 100%?",
+          a: "Tidak, estimasi ini tidak dijamin 100% akurat. Sistem ini dirancang hanya untuk memberikan rentang estimasi (harga adil), bukan harga pasti. Karena ada risiko akurasi prediksi yang rendah, tim akan terus mengoptimalkan model AI tersebut dan memvalidasi hasilnya dengan data harga aktual di lapangan untuk meminimalisir kesalahan.",
+        },
+        {
+          q: "Apakah platform ini gratis?",
+          a: "Ya, Fair Price Finder adalah proyek open-source capstone yang dirancang gratis untuk seluruh freelancer Indonesia tanpa biaya apapun.",
+        },
+        {
+          q: "Apa itu SDG 8 dan apa hubungannya?",
+          a: "SDG 8 adalah tujuan pembangunan berkelanjutan nomor 8 - Decent Work and Economic Growth. Platform ini berkontribusi dengan membantu freelancer mendapatkan harga yang adil dan transparan.",
+        },
+      ],
+    },
+    partnersSection: {
+      label: "Mitra & Partnership",
+      title: "Didukung oleh",
+      desc: "Bekerja sama dengan institusi terpercaya dalam mewujudkan ekosistem freelance yang lebih sehat di Indonesia.",
+      logos: [
+        { name: "Dicoding", desc: "Platform edukasi" },
+        { name: "DBS Bank", desc: "Mitra Foundation" },
+      ],
+    },
+    aboutSection: {
+      heroTitle1: "Tentang",
+      heroTitle2: "Fair Price Finder",
+      subtitle:
+        "Platform AI untuk membantu ekosistem freelance Indonesia (klien & freelancer) menemukan standar harga jasa yang adil, transparan, dan berbasis data pasar nyata.",
+      github: "GitHub",
+      problemLabel: "Konteks Masalah",
+      problemTitle: "Mengapa platform ini penting?",
+      problemDesc:
+        "Freelancer sering kebingungan menentukan harga yang layak, dan di sisi lain klien ragu apakah tawaran harga tersebut wajar. Fair Price Finder hadir untuk memberikan panduan objektif, menjawab: ",
+      problemQuestion: '"Berapa standar harga yang adil di pasar saat ini?"',
+      missionLabel: "Misi",
+      missionTitle: "Berkontribusi pada SDG 8",
+      missions: [
+        {
+          title: "Harga yang Adil",
+          desc: "Membantu freelancer dan klien menyepakati kompensasi yang wajar dan sepadan dengan nilai kerja.",
+        },
+        {
+          title: "Berbasis Data",
+          desc: "Model AI dilatih dari data nyata pasar freelance Indonesia yang terus diperbarui secara berkala.",
+        },
+        {
+          title: "Untuk Semua",
+          desc: "Platform gratis dan terbuka untuk seluruh freelancer maupun pencari jasa di Indonesia tanpa terkecuali.",
+        },
+      ],
+      techLabel: "Teknologi",
+      techTitle: "Dibangun dengan stack modern",
+      teamLabel: "Tim",
+      teamTitle: "Dibangun oleh tim CC26-PSU164",
+      teamDesc:
+        "Cohort Coding Camp 2026 powered by DBS Foundation, track Future-Ready Work & Economy.",
+      ctaLabel: "Open Source",
+      ctaTitle: "Tertarik berkontribusi?",
+      ctaDesc: "Proyek ini open source. Lihat kode sumber, buka issue, atau fork di GitHub.",
+      ctaBtn: "Lihat di GitHub",
+      techStack: [
+        { name: "React.js", desc: "Frontend UI" },
+        { name: "Express.js", desc: "Backend API" },
+        { name: "TensorFlow", desc: "ML Model" },
+        { name: "FastAPI", desc: "AI Service" },
+        { name: "Vite", desc: "Build Tool" },
+        { name: "Dicoding", desc: "Platform" },
+      ],
+    },
+    estimatorSection: {
+      label: "Price Estimator",
+      title: "Hitung Estimasi Fair Price",
+      desc: "Isi detail kategori, skill terkait, dan estimasi durasi pengerjaan untuk mendapatkan rekomendasi harga pasar yang adil.",
+      alert: "Semakin spesifik skill yang Anda isi, semakin akurat estimasi harganya.",
+      emptyTitle: "Hasil estimasi muncul di sini",
+      emptyDesc1: "Isi form, lalu klik",
+      emptyDesc2: "untuk melihat hasilnya.",
+      emptySteps: ["Kategori", "Skill", "Durasi"],
+      updating: "Memperbarui estimasi...",
+      errorTitle: "Estimasi Gagal",
+      errorDesc:
+        "Tidak dapat menghitung estimasi saat ini. Periksa koneksi internet lalu coba lagi.",
+      errorRetry: "Coba Lagi",
+    },
+    dashboardSection: {
+      label: "Market Intelligence",
+      title: "Analisis Data",
+      titleMuted: "Freelancer di Indonesia",
+      source: "Sumber: Upwork, Sribu, Fastwork, dll.",
+      filterJob: "Kategori Pekerjaan",
+      filterSkill: "Spesifik Skill",
+      emptyState: "Belum ada data untuk tampilan ini. Coba pilih filter lain atau muat ulang halaman.",
+      kpi: {
+        refsTitle: "Total Referensi Data",
+        refsTrend: "Sampel layanan dianalisis",
+        priceTitle: "Rata-Rata Fair Price",
+        priceTrend: (type) =>
+          `Dari semua ${type === "job" ? "kategori pekerjaan" : "spesifik skill"}`,
+        topTitle: (type) => (type === "job" ? "Kategori" : "Skill") + " Terpopuler",
+        topTrend: "Volume penawaran terbanyak",
+      },
+      distTitle: "Distribusi Harga",
+      distDesc: "Rentang Harga (Terendah vs Tertinggi) Top 5",
+      recoTitle: (type) =>
+        `Rekomendasi Fair Price Berdasarkan ${type === "job" ? "Kategori" : "Skill"}`,
+      infoTitle: "Cara membaca tabel:",
+      infoBodyPre:
+        "Estimasi Fair Price adalah harga wajar yang dihitung secara otomatis berdasarkan analisis data harga di pasaran. Angka ",
+      infoBodyPost:
+        " menunjukkan seberapa banyak freelancer atau layanan yang kami jadikan sampel untuk menghitung harga wajar tersebut. Semakin tinggi volumenya, semakin akurat estimasi harganya.",
+      infoStrong1: "Volume Data Pasar",
+      infoStrong2: "Frekuensi Skill",
+      thRank: "#",
+      thName: (type) => (type === "job" ? "Kategori Pekerjaan" : "Spesifik Skill"),
+      thPrice: (type) =>
+        type === "job" ? "Estimasi Fair Price" : "Fair Price (dgn Skill)",
+      thVolume: (type) =>
+        type === "job" ? "Volume Data Pasar" : "Frekuensi Skill di Pasar",
+      ttlData: (type) =>
+        type === "job" ? "data layanan" : "referensi pasar",
+      paging: (cur, total) => `Hal ${cur} dari ${total}`,
+    },
+    formSection: {
+      category: "Kategori Jasa",
+      categoryPlaceholder: "Pilih kategori...",
+      projectType: "Tipe Proyek",
+      projectTypeOptional: "(Opsional)",
+      projectTypePlaceholder: "Pilih contoh proyek...",
+      notSpecific: "Tidak Spesifik",
+      skills: "Skills",
+      skillsHint: "pilih dari daftar skill",
+      skillsPlaceholder: "Pilih skill…",
+      skillsPlaceholderCat: "Pilih kategori dulu…",
+      role: "Posisi Anda",
+      roleFreelancer: "Freelancer",
+      roleClient: "Klien",
+      duration: "Durasi Pengerjaan",
+      durationHint: "(Asumsi: 1 hari = 8 jam kerja)",
+      daysLabel: "Jumlah Hari",
+      daysUnit: "hari",
+      submit: "Estimasi Harga",
+      submitting: "Menghitung estimasi...",
+      toastCategory: "Pilih kategori jasa terlebih dahulu.",
+      toastSkill: "Pilih minimal satu skill.",
+      toastSuccess: "Estimasi berhasil didapatkan!",
+      errDefault: "Gagal mengambil estimasi. Coba lagi.",
+    },
+    skillsSection: {
+      tagPlaceholder: "React, Figma, Node.js...",
+      tagAdd: "+ tambah",
+      tagErrLength: (min, max) => `Skill harus ${min}-${max} karakter`,
+      tagErrDuplicate: "Skill sudah ditambahkan",
+      tagErrMax: (max) => `Maksimal ${max} skill`,
+    },
+    resultSection: {
+      headerTitle: "Estimasi Harga Adil",
+      badgeEntry: "Tier Pemula",
+      badgeMid: "Tier Standar",
+      badgePremium: "Tier Menengah",
+      badgeEnterprise: "Tier Tinggi",
+      copyPrefix: "Fair Price Finder",
+      copyMin: "Min",
+      copyMax: "Maks",
+      copyCategory: "Kategori",
+      copySkills: "Skills",
+      medianLabel: "Harga Tengah (Rekomendasi)",
+      durationFor: (n) => `untuk ${n} hari pengerjaan`,
+      aiTitle: "Analisis & Saran Negosiasi",
+      aiSubtitle: "Powered by AI",
+      aiLoading: "AI sedang menyusun saran untukmu…",
+      aiFallback:
+        "Gagal memuat saran dari AI. Gunakan rentang harga di atas sebagai patokan negosiasi.",
+    },
+    chartSection: {
+      avgProject: "Rata-rata (per Proyek)",
+      legendLow: "Batas Harga Bawah & Atas",
+      legendAvg: "Harga Rata-rata (per Proyek)",
+      empty: "Belum ada data",
+    },
+    notFoundSection: {
+      desc: "Halaman yang Anda cari tidak ditemukan atau telah dipindahkan.",
+      back: "Kembali ke Beranda",
+    },
+  },
+  en: {
+    common: {
+      estimator: "Estimator",
+      dashboard: "Data Analysis",
+      about: "About",
+      home: "Home",
+      min: "Min",
+      max: "Max",
+      avg: "Average",
+      share: "Share",
+      copy: "Copy",
+      copied: "Copied!",
+      copyFail: "Failed to copy",
+    },
+    nav: {
+      cta: "Try Estimator",
+      themeAria: (theme) =>
+        `Switch to ${theme === "dark" ? "light" : "dark"} mode`,
+      themeTitle: (theme) =>
+        theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
+      menuAria: "Menu",
+      closeAria: "Close menu",
+      openAria: "Open menu",
+      brandSubtitle: "AI-POWERED PRICE ESTIMATION",
+    },
+    footer: {
+      tagline:
+        "Fair, data-driven pricing for Indonesian freelance services.",
+      colPlatform: "Platform",
+      colResources: "Resources",
+      contact: "Contact",
+      github: "GitHub",
+      copyright: "Capstone Project",
+      right: "Dicoding × DBS Foundation",
+    },
+    beta: {
+      badge: "BETA",
+      desktopPre:
+        "Estimation data does not yet reflect actual market prices - ",
+      desktopEm: "use as an initial reference, not a final basis.",
+      mobile: "Estimates are for initial reference only.",
+      closeAria: "Close beta notice",
+    },
+    hero: {
+      title1: "Fair prices",
+      title2: "backed by real data",
+      subtitle:
+        "An AI platform helping Indonesian freelancers and clients find objective price standards - not guesswork.",
+      ctaPrimary: "Try Estimator",
+      ctaSecondary: "View Market Data Analysis",
+      socialProof: "Built for Indonesian freelancers",
+    },
+    stats: [
+      { val: "59.4%", label: "informal sector workers", src: "BPS 2025" },
+      { val: "36.3%", label: "share of active freelancers", src: "Aug 2025" },
+      { val: "SDG 8", label: "decent work & growth", src: "our goal" },
+    ],
+    featuresSection: {
+      label: "Platform",
+      title: "Designed for a healthier freelance ecosystem",
+      items: [
+        {
+          label: "Accurate Estimate",
+          desc: "Deep learning model trained on continuously updated Indonesian freelance market data.",
+        },
+        {
+          label: "Market Insight",
+          desc: "Price trends per service category and the most sought-after skills in the local freelance ecosystem.",
+        },
+        {
+          label: "Negotiation Power",
+          desc: "Data-driven pricing - no more guessing when negotiating with clients.",
+        },
+      ],
+    },
+    stepsSection: {
+      label: "How It Works",
+      title: "Three steps, instant estimate",
+      items: [
+        {
+          title: "Choose Service Category",
+          desc: "Pick the main profession that fits your field, then optionally add project type details.",
+        },
+        {
+          title: "Set Skills & Duration",
+          desc: "Enter specific skills, choose your role as freelancer or client, and give an estimated total project duration.",
+        },
+        {
+          title: "Get Fair Price",
+          desc: "The system immediately shows a fair price estimate covering lower bound, median, and upper negotiation bound.",
+        },
+      ],
+    },
+    faqSection: {
+      label: "FAQ",
+      title: "Frequently asked questions",
+      items: [
+        {
+          q: "Where does pricing data come from?",
+          a: "Pricing data comes from collecting raw Indonesian freelance market data. This is gathered from service listings or freelancer profiles on the relevant source platforms.",
+        },
+        {
+          q: "Is this estimate 100% accurate?",
+          a: "No, this estimate is not guaranteed to be 100% accurate. The system is designed only to provide an estimate range (fair price), not a fixed price. Given the risk of low prediction accuracy, the team will keep optimizing the AI model and validating results against actual market price data to minimize errors.",
+        },
+        {
+          q: "Is this platform free?",
+          a: "Yes, Fair Price Finder is an open-source capstone project designed to be completely free for all Indonesian freelancers with no cost.",
+        },
+        {
+          q: "What is SDG 8 and how does it relate?",
+          a: "SDG 8 is the 8th sustainable development goal - Decent Work and Economic Growth. This platform contributes by helping freelancers get fair and transparent prices.",
+        },
+      ],
+    },
+    partnersSection: {
+      label: "Partners & Partnership",
+      title: "Powered by",
+      desc: "Working with trusted institutions to create a healthier freelance ecosystem in Indonesia.",
+      logos: [
+        { name: "Dicoding", desc: "Education platform" },
+        { name: "DBS Bank", desc: "Foundation partner" },
+      ],
+    },
+    aboutSection: {
+      heroTitle1: "About",
+      heroTitle2: "Fair Price Finder",
+      subtitle:
+        "An AI platform helping Indonesia's freelance ecosystem (clients & freelancers) find fair, transparent, and real market-data-based price standards.",
+      github: "GitHub",
+      problemLabel: "Problem Context",
+      problemTitle: "Why is this platform important?",
+      problemDesc:
+        "Freelancers often struggle to set a fair price, while clients are unsure whether an offer is reasonable. Fair Price Finder provides objective guidance, answering: ",
+      problemQuestion: '"What is a fair market price today?"',
+      missionLabel: "Mission",
+      missionTitle: "Contribute to SDG 8",
+      missions: [
+        {
+          title: "Fair Price",
+          desc: "Help freelancers and clients agree on fair compensation that matches the value of the work.",
+        },
+        {
+          title: "Data-Driven",
+          desc: "AI model trained on real Indonesian freelance market data, refreshed periodically.",
+        },
+        {
+          title: "For Everyone",
+          desc: "A free and open platform for all freelancers and service seekers in Indonesia without exception.",
+        },
+      ],
+      techLabel: "Technology",
+      techTitle: "Built with a modern stack",
+      teamLabel: "Team",
+      teamTitle: "Built by team CC26-PSU164",
+      teamDesc:
+        "Coding Camp 2026 cohort powered by DBS Foundation, Future-Ready Work & Economy track.",
+      ctaLabel: "Open Source",
+      ctaTitle: "Want to contribute?",
+      ctaDesc:
+        "This project is open source. View the source, open issues, or fork it on GitHub.",
+      ctaBtn: "View on GitHub",
+      techStack: [
+        { name: "React.js", desc: "Frontend UI" },
+        { name: "Express.js", desc: "Backend API" },
+        { name: "TensorFlow", desc: "ML Model" },
+        { name: "FastAPI", desc: "AI Service" },
+        { name: "Vite", desc: "Build Tool" },
+        { name: "Dicoding", desc: "Platform" },
+      ],
+    },
+    estimatorSection: {
+      label: "Price Estimator",
+      title: "Calculate Fair Price Estimate",
+      desc: "Fill in category details, related skills, and estimated work duration to get a fair market price recommendation.",
+      alert: "The more specific your skills are, the more accurate your estimate.",
+      emptyTitle: "Your estimate will appear here",
+      emptyDesc1: "Fill in the form, then click",
+      emptyDesc2: "to see the result.",
+      emptySteps: ["Category", "Skill", "Duration"],
+      updating: "Updating estimate...",
+      errorTitle: "Estimate Failed",
+      errorDesc:
+        "Could not calculate an estimate right now. Check your internet connection and try again.",
+      errorRetry: "Try Again",
+    },
+    dashboardSection: {
+      label: "Market Intelligence",
+      title: "Data Analysis",
+      titleMuted: "Freelancers in Indonesia",
+      source: "Source: Upwork, Sribu, Fastwork, etc.",
+      filterJob: "Job Category",
+      filterSkill: "Specific Skill",
+      emptyState: "No data available for this view. Try another filter or reload the page.",
+      kpi: {
+        refsTitle: "Total Data References",
+        refsTrend: "Service samples analyzed",
+        priceTitle: "Average Fair Price",
+        priceTrend: (type) =>
+          `Across all ${type === "job" ? "job categories" : "specific skills"}`,
+        topTitle: (type) => "Most Popular " + (type === "job" ? "Category" : "Skill"),
+        topTrend: "Highest offer volume",
+      },
+      distTitle: "Price Distribution",
+      distDesc: "Price Range (Lowest vs Highest) Top 5",
+      recoTitle: (type) =>
+        `Fair Price Recommendation by ${type === "job" ? "Category" : "Skill"}`,
+      infoTitle: "How to read the table:",
+      infoBodyPre:
+        "Fair Price Estimate is a fair price calculated automatically based on market price data analysis. The ",
+      infoBodyPost:
+        " figure shows how many freelancers or services we sampled to calculate that fair price. The higher the volume, the more accurate the estimate.",
+      infoStrong1: "Market Data Volume",
+      infoStrong2: "Skill Frequency",
+      thRank: "#",
+      thName: (type) => (type === "job" ? "Job Category" : "Specific Skill"),
+      thPrice: (type) =>
+        type === "job" ? "Estimated Fair Price" : "Fair Price (w/ Skill)",
+      thVolume: (type) =>
+        type === "job" ? "Market Data Volume" : "Skill Frequency in Market",
+      ttlData: (type) => (type === "job" ? "service data" : "market references"),
+      paging: (cur, total) => `Page ${cur} of ${total}`,
+    },
+    formSection: {
+      category: "Service Category",
+      categoryPlaceholder: "Select category...",
+      projectType: "Project Type",
+      projectTypeOptional: "(Optional)",
+      projectTypePlaceholder: "Select a sample project...",
+      notSpecific: "Not Specific",
+      skills: "Skills",
+      skillsHint: "choose from the skill list",
+      skillsPlaceholder: "Choose skill…",
+      skillsPlaceholderCat: "Choose category first…",
+      role: "Your Role",
+      roleFreelancer: "Freelancer",
+      roleClient: "Client",
+      duration: "Job Duration",
+      durationHint: "(Assumption: 1 day = 8 working hours)",
+      daysLabel: "Number of Days",
+      daysUnit: "days",
+      submit: "Estimate Price",
+      submitting: "Calculating estimate...",
+      toastCategory: "Please select a service category first.",
+      toastSkill: "Please select at least one skill.",
+      toastSuccess: "Estimate generated successfully!",
+      errDefault: "Failed to get estimate. Please try again.",
+    },
+    skillsSection: {
+      tagPlaceholder: "React, Figma, Node.js...",
+      tagAdd: "+ add",
+      tagErrLength: (min, max) => `Skill must be ${min}-${max} characters`,
+      tagErrDuplicate: "Skill already added",
+      tagErrMax: (max) => `Maximum ${max} skills`,
+    },
+    resultSection: {
+      headerTitle: "Fair Price Estimate",
+      badgeEntry: "Entry Tier",
+      badgeMid: "Standard Tier",
+      badgePremium: "Mid Tier",
+      badgeEnterprise: "High Tier",
+      copyPrefix: "Fair Price Finder",
+      copyMin: "Min",
+      copyMax: "Max",
+      copyCategory: "Category",
+      copySkills: "Skills",
+      medianLabel: "Median Price (Recommended)",
+      durationFor: (n) => `for ${n} days of work`,
+      aiTitle: "Analysis & Negotiation Advice",
+      aiSubtitle: "Powered by AI",
+      aiLoading: "AI is drafting your advice…",
+      aiFallback:
+        "Failed to load AI advice. Use the price range above as your negotiation baseline.",
+    },
+    chartSection: {
+      avgProject: "Average (per Project)",
+      legendLow: "Lower & Upper Price Bound",
+      legendAvg: "Average Price (per Project)",
+      empty: "No data yet",
+    },
+    notFoundSection: {
+      desc: "The page you are looking for was not found or has been moved.",
+      back: "Back to Home",
+    },
+  },
+};

@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 import App from './App';
 import './styles/index.css';
 import logoFpf from './assets/logo/logo-fpf.png';
@@ -21,6 +22,7 @@ function Root() {
       easing: 'ease-out-cubic',
       once: true,
       offset: 50,
+      disable: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
     });
 
     try {
@@ -31,9 +33,11 @@ function Root() {
 
   return (
     <BrowserRouter>
-      <ThemeProvider>
-        <App />
-      </ThemeProvider>
+      <LanguageProvider>
+        <ThemeProvider>
+          <App />
+        </ThemeProvider>
+      </LanguageProvider>
     </BrowserRouter>
   );
 }

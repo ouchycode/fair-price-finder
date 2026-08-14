@@ -1,8 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Bot, Sparkles } from "lucide-react";
+import { useLanguage } from "../../../hooks/useI18n";
 
 const AiConsultation = ({ loading, consultation }) => {
+  const { t } = useLanguage();
+
   if (!loading && !consultation) return null;
 
   return (
@@ -17,10 +20,10 @@ const AiConsultation = ({ loading, consultation }) => {
         </div>
         <div>
           <p className="ai-consult-title">
-            Analisis & Saran Negosiasi
+            {t("resultSection.aiTitle")}
           </p>
           <p className="ai-consult-subtitle">
-            Powered by AI
+            {t("resultSection.aiSubtitle")}
           </p>
         </div>
       </div>
@@ -29,7 +32,7 @@ const AiConsultation = ({ loading, consultation }) => {
         {loading ? (
           <div className="ai-consult-loading">
             <Bot size={16} className="spin-slow" />
-            <span>AI sedang menyusun saran untukmu…</span>
+            <span>{t("resultSection.aiLoading")}</span>
           </div>
         ) : (
           <div
