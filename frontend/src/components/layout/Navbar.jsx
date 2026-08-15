@@ -4,18 +4,21 @@ import * as NavigationMenu from "@radix-ui/react-navigation-menu";
 import { Menu, Sun, Moon, X } from "lucide-react";
 import logoFpf from "../../assets/logo/logo-fpf.png";
 import { useTheme } from "../../hooks/useTheme";
-
-const NAV_LINKS = [
-  { to: "/", label: "Home" },
-  { to: "/estimator", label: "Estimator" },
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/about", label: "About" },
-];
+import { useLanguage } from "../../hooks/useI18n";
+import LanguageSwitcher from "../common/LanguageSwitcher";
 
 const Navbar = () => {
   const { pathname } = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { theme, toggle } = useTheme();
+  const { t } = useLanguage();
+
+  const NAV_LINKS = [
+    { to: "/", label: t("common.home") },
+    { to: "/estimator", label: t("common.estimator") },
+    { to: "/dashboard", label: t("common.dashboard") },
+    { to: "/about", label: t("common.about") },
+  ];
 
   useEffect(() => {
     setMobileOpen(false);
@@ -38,15 +41,15 @@ const Navbar = () => {
           >
             <img
               src={logoFpf}
-              alt="FairPrice Finder"
+              alt="Fair Price Finder"
               className="navbar-brand-logo"
             />
             <div className="navbar-brand-text">
               <span className="navbar-brand-title">
-                FairPriceFinder
+                Fair Price Finder
               </span>
               <span className="navbar-brand-subtitle">
-                AI-POWERED PRICE ESTIMATION
+                {t("nav.brandSubtitle")}
               </span>
             </div>
           </Link>
@@ -71,11 +74,13 @@ const Navbar = () => {
 
           {/* ACTIONS & CTA */}
           <div className="navbar-actions">
+            <LanguageSwitcher />
+
             <button
               onClick={toggle}
-              className="navbar-theme-btn"
-              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              className="icon-btn"
+              aria-label={t("nav.themeAria", theme)}
+              title={t("nav.themeTitle", theme)}
             >
               {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </button>
@@ -86,14 +91,14 @@ const Navbar = () => {
                 onClick={handleLinkClick}
                 className="btn-primary btn-sm"
               >
-                Cek Harga
+                {t("nav.cta")}
               </Link>
             </div>
 
             <button
-              className="hide-desktop mobile-menu-btn"
+              className="hide-desktop mobile-menu-btn icon-btn"
               onClick={() => setMobileOpen((v) => !v)}
-              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              aria-label={mobileOpen ? t("nav.closeAria") : t("nav.openAria")}
             >
               {mobileOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -127,7 +132,7 @@ const Navbar = () => {
             onClick={handleLinkClick}
             className="btn-primary w-full justify-center"
           >
-            Cek Harga
+            {t("nav.cta")}
           </Link>
         </div>
       </div>

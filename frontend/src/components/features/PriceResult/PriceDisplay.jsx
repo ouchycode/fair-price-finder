@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { fmt, fmtShort } from "./utils";
+import { useLanguage } from "../../../hooks/useI18n";
 
 const PriceDisplay = ({
   min_price,
@@ -10,6 +11,7 @@ const PriceDisplay = ({
   detected_category,
   duration,
 }) => {
+  const { t } = useLanguage();
   const spread = max_price - min_price;
   const spreadPct = Math.round((spread / median_price) * 100);
 
@@ -17,7 +19,7 @@ const PriceDisplay = ({
     <>
       <div className="price-display-wrapper">
         <p className="price-display-label">
-          Harga Tengah (Rekomendasi)
+          {t("resultSection.medianLabel")}
         </p>
         <div
           data-aos="zoom-in"
@@ -33,7 +35,7 @@ const PriceDisplay = ({
         )}
         {duration && (
           <p className="price-display-duration">
-            untuk {duration} hari pengerjaan
+            {t("resultSection.durationFor", duration)}
           </p>
         )}
       </div>
@@ -55,7 +57,7 @@ const PriceDisplay = ({
             <div className="price-range-header">
               <TrendingDown size={11} color="var(--green)" />
               <span className="price-range-label">
-                Min
+                {t("common.min")}
               </span>
             </div>
             <div className="price-range-val">
@@ -76,7 +78,7 @@ const PriceDisplay = ({
           <div className="price-range-box text-right">
             <div className="price-range-header right">
               <span className="price-range-label">
-                Maks
+                {t("common.max")}
               </span>
               <TrendingUp size={11} color="var(--accent)" />
             </div>

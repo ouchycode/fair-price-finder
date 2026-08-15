@@ -3,37 +3,28 @@ import { Link } from "react-router-dom";
 import { Github, Mail, ExternalLink } from "lucide-react";
 import * as Separator from "@radix-ui/react-separator";
 import logoFpf from "../../assets/logo/logo-fpf.png";
-
-const footerLinks = [
-  {
-    title: "Platform",
-    links: [
-      { label: "Estimator", to: "/estimator" },
-      { label: "Dashboard", to: "/dashboard" },
-      { label: "About", to: "/about" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Dokumentasi", href: "#" },
-      { label: "API Reference", href: "#" },
-    ],
-  },
-  {
-    title: "Project",
-    links: [
-      {
-        label: "GitHub",
-        href: "https://github.com/ouchycode/fair-price-finder",
-        icon: Github,
-      },
-      { label: "Kontak", href: "#", icon: Mail },
-    ],
-  },
-];
+import { useLanguage } from "../../hooks/useI18n";
 
 const Footer = () => {
+  const { t } = useLanguage();
+
+  const footerLinks = [
+    {
+      title: t("footer.colPlatform"),
+      links: [
+        { label: t("common.estimator"), to: "/estimator" },
+        { label: t("common.dashboard"), to: "/dashboard" },
+        { label: t("common.about"), to: "/about" },
+      ],
+    },
+    {
+      title: t("footer.colResources"),
+      links: [
+        { label: t("footer.contact"), href: "https://github.com/ouchycode/fair-price-finder", icon: Mail },
+        { label: t("footer.github"), href: "https://github.com/ouchycode/fair-price-finder", icon: Github },
+      ],
+    },
+  ];
 
   const handleLinkClick = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -55,8 +46,7 @@ const Footer = () => {
               <span className="footer-brand-title">Fair Price Finder</span>
             </Link>
             <p className="footer-brand-desc">
-              Estimasi harga jasa freelance Indonesia yang adil dan berbasis
-              data.
+              {t("footer.tagline")}
             </p>
           </div>
 
@@ -103,7 +93,7 @@ const Footer = () => {
 
           <div className="footer-bottom-right">
             <p className="footer-copyright">
-              Capstone Project · Dicoding × Dbs Foundation
+              {t("footer.copyright")} · {t("footer.right")}
             </p>
 
           </div>

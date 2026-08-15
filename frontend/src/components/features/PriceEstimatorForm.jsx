@@ -6,6 +6,7 @@ import * as Label from '@radix-ui/react-label';
 import toast from 'react-hot-toast';
 import SkillDropdown from './SkillDropdown';
 import { estimatePrice, getCategories } from '../../services/api';
+import { useLanguage } from '../../hooks/useI18n';
 
 const DEFAULT_CATEGORIES = [
   'Grafis & Desain',
@@ -57,6 +58,25 @@ const PROJECT_TYPES_BY_CAT = {
   ]
 };
 
+const SESSION_KEY = 'fpf_estimator_draft';
+
+const loadDraft = () => {
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const saveDraft = (draft) => {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(draft));
+  } catch {
+    /* ABAIKAN */
+  }
+};
+
 const FieldLabel = ({ htmlFor, children, hint }) => (
   <div className="form-label-wrap">
     <Label.Root htmlFor={htmlFor} className="label-mono form-label-text">
@@ -94,14 +114,21 @@ const Stepper = ({ id, value, min, max, onChange, label, unit }) => (
   </div>
 );
 
-const PriceEstimatorForm = ({ onResult, onLoading }) => {
+const PriceEstimatorForm = ({ onResult, onLoading, onError }) => {
+  const { t } = useLanguage();
+  const [draft] = useState(loadDraft);
   const [categoriesList, setCategoriesList] = useState(DEFAULT_CATEGORIES);
-  const [category,  setCategory]  = useState('');
-  const [projectType, setProjectType] = useState('');
-  const [skills,    setSkills]    = useState([]);
-  const [days,      setDays]      = useState(7);
-  const [role,      setRole]      = useState('freelancer');
+  const [category,  setCategory]  = useState(draft?.category ?? '');
+  const [projectType, setProjectType] = useState(draft?.projectType ?? '');
+  const [skills,    setSkills]    = useState(draft?.skills ?? []);
+  const [days,      setDays]      = useState(draft?.days ?? 7);
+  const [role,      setRole]      = useState(draft?.role ?? 'freelancer');
   const [loading,   setLoading]   = useState(false);
+
+  // SIMPAN DRAFT FORM KE SESSIONSTORAGE (bertahan saat refresh/halaman pindah)
+  useEffect(() => {
+    saveDraft({ category, projectType, skills, days, role });
+  }, [category, projectType, skills, days, role]);
 
   // RESET PROJECT TYPE SAAT KATEGORI BERUBAH
   useEffect(() => {
@@ -110,8 +137,8 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
 
   // GENERATE TIPE PROYEK BERDASARKAN KATEGORI
   const availableProjectTypes = category && PROJECT_TYPES_BY_CAT[category] 
-    ? ["Tidak Spesifik", ...PROJECT_TYPES_BY_CAT[category]] 
-    : ["Tidak Spesifik"];
+    ? [t('formSection.notSpecific'), ...PROJECT_TYPES_BY_CAT[category]] 
+    : [t('formSection.notSpecific')];
 
   useEffect(() => {
     getCategories()
@@ -131,11 +158,11 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
     if (loading) return; 
 
     if (!category) {
-      toast.error('Pilih kategori jasa terlebih dahulu.');
+      toast.error(t('formSection.toastCategory'));
       return;
     }
     if (skills.length === 0) {
-      toast.error('Pilih minimal satu skill.');
+      toast.error(t('formSection.toastSkill'));
       return;
     }
 
@@ -145,7 +172,7 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
     try {
       const { data } = await estimatePrice({
         category,
-        project_type: projectType !== "Tidak Spesifik" ? projectType : "",
+        project_type: projectType !== t('formSection.notSpecific') ? projectType : "",
         skills,
         duration: days,
       });
@@ -155,14 +182,11 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
         requestParams: { category, project_type: projectType, skills, duration: days, role },
       });
       
-      setCategory('');
-      setProjectType('');
-      setSkills([]);
-      setDays(7);
-      toast.success('Estimasi berhasil didapatkan!');
+      toast.success(t('formSection.toastSuccess'));
     } catch (error) {
-      const message = error.response?.data?.message || error.message || 'Gagal mengambil estimasi. Coba lagi.';
+      const message = error.response?.data?.message || error.message || t('formSection.errDefault');
       toast.error(message);
+      if (onError) onError(message);
       console.error('Estimation error:', error);
     } finally {
       setLoading(false);
@@ -184,10 +208,10 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
       </div>
 
       <div>
-        <FieldLabel>Kategori Jasa</FieldLabel>
+        <FieldLabel>{t('formSection.category')}</FieldLabel>
         <Select.Root value={category} onValueChange={setCategory}>
           <Select.Trigger className={`select-trigger ${category ? 'text-fg' : 'text-fg-3'}`}>
-            <Select.Value placeholder="Pilih kategori..." />
+            <Select.Value placeholder={t('formSection.categoryPlaceholder')} />
             <Select.Icon><ChevronDown size={12} color="var(--fg-3)" /></Select.Icon>
           </Select.Trigger>
 
@@ -208,11 +232,11 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
         </Select.Root>
       </div>
 
-      <div className="mt-20">
-        <FieldLabel hint="(Opsional)">Tipe Proyek</FieldLabel>
+      <div>
+        <FieldLabel hint={t('formSection.projectTypeOptional')}>{t('formSection.projectType')}</FieldLabel>
         <Select.Root value={projectType} onValueChange={setProjectType}>
           <Select.Trigger className={`select-trigger ${projectType ? 'text-fg' : 'text-fg-3'}`}>
-            <Select.Value placeholder="Pilih contoh proyek..." />
+            <Select.Value placeholder={t('formSection.projectTypePlaceholder')} />
             <Select.Icon><ChevronDown size={12} color="var(--fg-3)" /></Select.Icon>
           </Select.Trigger>
 
@@ -233,7 +257,8 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
         </Select.Root>
       </div>
 
-      <div className="mt-20">     <FieldLabel hint="pilih dari daftar skill">Skills</FieldLabel>
+      <div>
+        <FieldLabel hint={t('formSection.skillsHint')}>{t('formSection.skills')}</FieldLabel>
         <SkillDropdown
           category={category}
           value={skills}
@@ -242,25 +267,25 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
       </div>
 
       <div>
-        <FieldLabel>Posisi Anda</FieldLabel>
+        <FieldLabel>{t('formSection.role')}</FieldLabel>
         <div className="form-role-group">
           <button
             type="button"
             onClick={() => setRole('freelancer')}
             className={`form-role-btn ${role === 'freelancer' ? 'active' : ''}`}
           >
-            Freelancer
+            {t('formSection.roleFreelancer')}
           </button>
           <button
             type="button"
             onClick={() => setRole('client')}
             className={`form-role-btn ${role === 'client' ? 'active' : ''}`}
           >
-            Klien
+            {t('formSection.roleClient')}
           </button>
         </div>
 
-        <FieldLabel hint="(Asumsi: 1 hari = 8 jam kerja)">Durasi Pengerjaan</FieldLabel>
+        <FieldLabel hint={t('formSection.durationHint')}>{t('formSection.duration')}</FieldLabel>
         <div className="flex-gap-10">
           <Stepper
             id="days-input"
@@ -268,8 +293,8 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
             min={1}
             max={90}
             onChange={setDays}
-            label="Jumlah Hari"
-            unit="hari"
+            label={t('formSection.daysLabel')}
+            unit={t('formSection.daysUnit')}
           />
         </div>
       </div>
@@ -282,8 +307,8 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
         className="btn-primary btn-w-full-center"
       >
         {loading
-          ? <span className="opacity-70">Menghitung estimasi...</span>
-          : <><Send size={13} /> Estimasi Harga</>
+          ? <span className="opacity-70">{t('formSection.submitting')}</span>
+          : <><Send size={13} /> {t('formSection.submit')}</>
         }
       </button>
     </form>
@@ -293,6 +318,7 @@ const PriceEstimatorForm = ({ onResult, onLoading }) => {
 PriceEstimatorForm.propTypes = {
   onResult: PropTypes.func.isRequired,
   onLoading: PropTypes.func,
+  onError: PropTypes.func,
 };
 
 export default PriceEstimatorForm;
