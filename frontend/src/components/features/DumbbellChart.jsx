@@ -15,35 +15,35 @@ const formatShortCurrency = (value) => {
   return `Rp ${value}`;
 };
 
+const AXIS_STEPS = [0, 0.25, 0.5, 0.75, 1];
+
 const DumbbellChart = ({ data }) => {
   const { t } = useLanguage();
 
   if (!data || data.length === 0) return null;
 
-  const globalMax = Math.max(...data.map(d => d.maxPrice || 0));
+  const globalMax = Math.max(...data.map((d) => d.maxPrice || 0));
+  const scaleMax = globalMax > 0 ? globalMax : 1;
 
   return (
     <div className="dumbbell-wrapper">
-
-
       <div className="db-wrapper">
         {data.map((item, idx) => {
           const min = item.minPrice || 0;
           const max = item.maxPrice || 0;
           const median = item.avgPrice || 0;
 
-          const scaleMax = globalMax > 0 ? globalMax : 1;
           const minLeft = (min / scaleMax) * 100;
           const maxLeft = (max / scaleMax) * 100;
           const medianLeft = (median / scaleMax) * 100;
-          
+
           const lineWidth = maxLeft - minLeft;
 
           return (
             <div key={item.name || idx} className="db-item-wrapper">
               {/* LABEL */}
               <div className="db-header">
-                <span className="db-title">
+                <span className="db-title" title={item.name}>
                   {item.name}
                 </span>
                 <div className="db-stats">
@@ -58,30 +58,26 @@ const DumbbellChart = ({ data }) => {
               {/* VISUALISASI */}
               <div className="dumbbell-track-wrapper db-track-margin">
                 <div className="dumbbell-track" />
-                
 
-                <div 
-                  className="dumbbell-line" 
-                  style={{ left: `${minLeft}%`, width: `${lineWidth}%` }} 
+                <div
+                  className="dumbbell-line"
+                  style={{ left: `${minLeft}%`, width: `${lineWidth}%` }}
                 />
-                
 
-                <div 
-                  className="dumbbell-dot-minmax" 
+                <div
+                  className="dumbbell-dot-minmax"
                   style={{ left: `${minLeft}%` }}
                   title={`${t("common.min")}: ${formatShortCurrency(min)}`}
                 />
-                
 
-                <div 
-                  className="dumbbell-dot-median" 
+                <div
+                  className="dumbbell-dot-median"
                   style={{ left: `${medianLeft}%` }}
-                  title={`${t("common.avg")}: ${formatShortCurrency(median)}`}
+                  title={`${t("chartSection.avgProject")}: ${formatShortCurrency(median)}`}
                 />
-                
 
-                <div 
-                  className="dumbbell-dot-minmax" 
+                <div
+                  className="dumbbell-dot-minmax"
                   style={{ left: `${maxLeft}%` }}
                   title={`${t("common.max")}: ${formatShortCurrency(max)}`}
                 />
@@ -89,6 +85,26 @@ const DumbbellChart = ({ data }) => {
             </div>
           );
         })}
+
+        {/* SKALA HARGA */}
+        <div className="db-axis" aria-hidden="true">
+          {AXIS_STEPS.map((step) => {
+            const left = step * 100;
+            return (
+              <span
+                key={step}
+                className="db-axis-tick"
+                style={{ left: `${left}%` }}
+              >
+                {formatShortCurrency(scaleMax * step)}
+              </span>
+            );
+          })}
+          <div className="db-axis-hints">
+            <span className="db-axis-hint">{t("chartSection.axisCheap")}</span>
+            <span className="db-axis-hint">{t("chartSection.axisExpensive")}</span>
+          </div>
+        </div>
       </div>
 
       {/* LEGEND */}

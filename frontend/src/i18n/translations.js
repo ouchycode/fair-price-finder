@@ -273,9 +273,11 @@ export const translations = {
         "Gagal memuat saran dari AI. Gunakan rentang harga di atas sebagai patokan negosiasi.",
     },
     chartSection: {
-      avgProject: "Rata-rata (per Proyek)",
-      legendLow: "Batas Harga Bawah & Atas",
-      legendAvg: "Harga Rata-rata (per Proyek)",
+      avgProject: "Harga Rata-rata",
+      legendLow: "Harga Terendah",
+      legendAvg: "Harga Rata-rata (Titik tengah)",
+      axisCheap: "◀ Murah",
+      axisExpensive: "Mahal ▶",
       empty: "Belum ada data",
     },
     notFoundSection: {
@@ -557,9 +559,11 @@ export const translations = {
         "Failed to load AI advice. Use the price range above as your negotiation baseline.",
     },
     chartSection: {
-      avgProject: "Average (per Project)",
-      legendLow: "Lower & Upper Price Bound",
-      legendAvg: "Average Price (per Project)",
+      avgProject: "Average Price",
+      legendLow: "Lowest Price",
+      legendAvg: "Average Price (Middle Point)",
+      axisCheap: "◀ Cheap",
+      axisExpensive: "Expensive ▶",
       empty: "No data yet",
     },
     notFoundSection: {
