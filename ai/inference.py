@@ -169,6 +169,35 @@ def round_to_nearest_100k(price: float) -> int:
     import math
     return int(math.floor(price / 100000.0 + 0.5) * 100000)
 
+
+# Bucket durasi (urutan menaik) dipakai untuk fair window lookup.
+_DURATION_BINS = [(1, 2), (3, 5), (6, 10), (11, 20), (21, 240)]
+
+
+def _fair_window(cat_cfg: dict, durasi_hari: int):
+    """Ambil p05-p95 market window untuk kategori x durasi, None jika tak ada."""
+    windows = cat_cfg.get('fair_windows')
+    if not windows:
+        return None
+    for lo, hi in _DURATION_BINS:
+        if lo <= durasi_hari <= hi or (durasi_hari < 1 and lo == 1) or (durasi_hari > 240 and hi == 240):
+            w = windows.get(f"{lo}-{hi}")
+            if w:
+                return (float(w['p05']), float(w['p95']))
+    # Durasi di luar rentang -> pakai window terdekat (pertama/terakhir).
+    if durasi_hari < 1:
+        for lo, hi in _DURATION_BINS:
+            w = windows.get(f"{lo}-{hi}")
+            if w:
+                return (float(w['p05']), float(w['p95']))
+            return None
+    w = None
+    for lo, hi in _DURATION_BINS:
+        w = windows.get(f"{lo}-{hi}") or w
+    if w:
+        return (float(w['p05']), float(w['p95']))
+    return None
+
 def predict_price(user_input: dict, range_margin: float = 0.20) -> dict:
     """Predict harga freelance project."""
     if not MODEL_LOADED:
@@ -226,18 +255,31 @@ def predict_price(user_input: dict, range_margin: float = 0.20) -> dict:
             cat_cfg.get('range_margin', RANGE_MARGIN))))
         margin_high = float(cat_cfg.get(
             'range_margin_high', cat_cfg.get('margin_high', margin_low)))
+        fair_window = _fair_window(cat_cfg, durasi_hari)
     else:
         mult = MULTIPLIER
         clip_min = IDR_MIN
         clip_max = IDR_MAX
         margin_low = margin_high = RANGE_MARGIN
+        fair_window = None
 
     pred_idr_clipped = float(np.clip(pred_price, clip_min, clip_max))
 
     adjusted_price = pred_idr_clipped * mult
 
+    # Fair window: jaga prediksi di dalam rentang pasar wajar (p05-p95)
+    # untuk kombinasi kategori x bucket durasi dari data aktual.
+    if fair_window:
+        adjusted_price = float(np.clip(adjusted_price,
+                                       fair_window[0], fair_window[1]))
+
     price_min = adjusted_price * (1 - margin_low)
     price_max = adjusted_price * (1 + margin_high)
+
+    # Rentang min/max juga dibatasi fair window agar tetap masuk akal.
+    if fair_window:
+        price_min = max(price_min, fair_window[0])
+        price_max = min(price_max, fair_window[1])
 
     # Pembulatan ke 100.000 terdekat (0.5 ke atas, < 0.5 ke bawah)
     adjusted_price_rounded = round_to_nearest_100k(adjusted_price)

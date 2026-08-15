@@ -29,6 +29,9 @@ PREMIUM_SKILLS = [
     "java", "swift", "laravel",
 ]
 
+# Bucket durasi untuk fair windows (p05-p95 data pasar per kategori x durasi).
+DURATION_BINS = [(1, 2), (3, 5), (6, 10), (11, 20), (21, 240)]
+
 
 def build_features(df, add_derived=True):
     EXCLUDE_COLS = [
@@ -158,6 +161,19 @@ def main():
         clip_p01 = float(np.percentile(fc_price, 1))
         clip_p99 = float(np.percentile(fc_price, 99))
 
+        # Fair windows: p05-p95 dari data pasar per (kategori, bucket durasi).
+        fair_windows = {}
+        full_mask = df[col].values.astype(bool)
+        for lo, hi in DURATION_BINS:
+            wmask = full_mask & (df["durasi_hari"].values >= lo) & (df["durasi_hari"].values <= hi)
+            wprice = y_full_price[wmask]
+            if len(wprice) >= 5:
+                fair_windows[f"{lo}-{hi}"] = {
+                    "p05": round(float(np.percentile(wprice, 5)), 0),
+                    "p95": round(float(np.percentile(wprice, 95)), 0),
+                    "n": int(wprice.shape[0]),
+                }
+
         per_category[cat] = {
             "multiplier": mult_c,
             "clip_p01": clip_p01,
@@ -165,9 +181,10 @@ def main():
             "margin_low": margin_low,
             "margin_high": margin_high,
             "median_actual": med,
+            "fair_windows": fair_windows,
             "n_val": n,
         }
-        print(f"{cat:<30} mult={mult_c:<6} margin=[{margin_low:.2f},{margin_high:.2f}] clip=[{clip_p01:>8,.0f},{clip_p99:>11,.0f}] med={med:>9,.0f}")
+        print(f"{cat:<30} mult={mult_c:<6} margin=[{margin_low:.2f},{margin_high:.2f}] clip=[{clip_p01:>8,.0f},{clip_p99:>11,.0f}] med={med:>9,.0f} windows={len(fair_windows)}")
 
     metadata = {
         "target": "log1p(price_single)",
@@ -180,6 +197,7 @@ def main():
         },
         "range_margin": 0.20,
         "per_category": per_category,
+        "fair_windows": None,
         "test_metrics": None,
     }
     METADATA_PATH.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
