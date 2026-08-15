@@ -1,15 +1,69 @@
 {
   "target": "log1p(price_single)",
   "model_kind": "gradient_boosting_log1p",
-  "multiplier": 0.887,
+  "multiplier": 0.984,
   "n_features": 53,
-  "test_metrics": {
-    "mae_idr": 342574.9839785188,
-    "mape": 61.95643366973172,
-    "r2": 0.1943344273967328
-  },
   "clipping_bounds": {
-    "idr_p01": 50000.0,
-    "idr_p99": 4500000.0
+    "idr_p01": 50000.000000000015,
+    "idr_p99": 3589999.999999975
+  },
+  "range_margin": 0.2,
+  "per_category": {
+    "Grafis & Desain": {
+      "multiplier": 1.003,
+      "clip_p01": 50000.000000000015,
+      "clip_p99": 2499999.9999999995,
+      "margin_low": 0.23333333333333334,
+      "margin_high": 0.6,
+      "median_actual": 150000.00000000006,
+      "n_val": 133
+    },
+    "Pemasaran & Periklanan": {
+      "multiplier": 0.851,
+      "clip_p01": 99000.00000000004,
+      "clip_p99": 4999999.999999999,
+      "margin_low": 0.30800000000000016,
+      "margin_high": 0.3150000000000008,
+      "median_actual": 499999.99999999977,
+      "n_val": 159
+    },
+    "Penulisan & Penerjemahan": {
+      "multiplier": 1.154,
+      "clip_p01": 50000.000000000015,
+      "clip_p99": 961999.9999999889,
+      "margin_low": 0.20867924528301873,
+      "margin_high": 0.35660377358490525,
+      "median_actual": 132500.00000000003,
+      "n_val": 108
+    },
+    "Visual & Audio": {
+      "multiplier": 0.984,
+      "clip_p01": 100000.00000000003,
+      "clip_p99": 3000000.000000001,
+      "margin_low": 0.15,
+      "margin_high": 0.27999999999999997,
+      "median_actual": 249999.9999999998,
+      "n_val": 82
+    },
+    "Web dan Pemrograman": {
+      "multiplier": 1.003,
+      "clip_p01": 99000.00000000004,
+      "clip_p99": 4999999.999999999,
+      "margin_low": 0.35000000000000014,
+      "margin_high": 0.6,
+      "median_actual": 499999.99999999977,
+      "n_val": 201
+    }
+  },
+  "test_metrics": {
+    "global": {
+      "mae_idr": 338484.18233053805,
+      "mape": 67.8305857051649,
+      "r2": 0.23067249391553302
+    },
+    "per_category": {
+      "mae_idr": 339289.8835380411,
+      "mape": 67.22226093768636
+    }
   }
 }

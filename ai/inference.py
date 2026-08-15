@@ -92,6 +92,8 @@ feature_names = None
 IDR_MIN = None
 IDR_MAX = None
 MULTIPLIER = 1.0
+RANGE_MARGIN = 0.20
+PER_CATEGORY = {}
 MODEL_KIND = None
 
 try:
@@ -100,8 +102,10 @@ try:
 
     MODEL_KIND = metadata.get('model_kind', 'keras_nn_log1p')
     MULTIPLIER = float(metadata.get('multiplier', 1.0))
+    RANGE_MARGIN = float(metadata.get('range_margin', 0.20))
     IDR_MIN = metadata['clipping_bounds']['idr_p01']
     IDR_MAX = metadata['clipping_bounds']['idr_p99']
+    PER_CATEGORY = metadata.get('per_category', {})
 
     if MODEL_KIND == 'gradient_boosting_log1p':
         with open(GB_MODEL_PATH, 'rb') as f:
@@ -211,13 +215,30 @@ def predict_price(user_input: dict, range_margin: float = 0.20) -> dict:
     # Model dilatih pada log1p(price) -> decode balik ke IDR
     pred_price = float(np.expm1(pred_log))
 
-    pred_idr_clipped = float(np.clip(pred_price, IDR_MIN, IDR_MAX))
+    # Kalibrasi per-kategori jika kategori dikenal, else fallback ke global.
+    cat_cfg = PER_CATEGORY.get(kategori) if kategori else None
+    if cat_cfg:
+        mult = float(cat_cfg.get('multiplier', MULTIPLIER))
+        clip_min = float(cat_cfg.get('clip_p01', IDR_MIN))
+        clip_max = float(cat_cfg.get('clip_p99', IDR_MAX))
+        margin_low = float(cat_cfg.get(
+            'range_margin_low', cat_cfg.get('margin_low',
+            cat_cfg.get('range_margin', RANGE_MARGIN))))
+        margin_high = float(cat_cfg.get(
+            'range_margin_high', cat_cfg.get('margin_high', margin_low)))
+    else:
+        mult = MULTIPLIER
+        clip_min = IDR_MIN
+        clip_max = IDR_MAX
+        margin_low = margin_high = RANGE_MARGIN
 
-    adjusted_price = pred_idr_clipped * MULTIPLIER
+    pred_idr_clipped = float(np.clip(pred_price, clip_min, clip_max))
 
-    price_min = adjusted_price * (1 - range_margin)
-    price_max = adjusted_price * (1 + range_margin)
-    
+    adjusted_price = pred_idr_clipped * mult
+
+    price_min = adjusted_price * (1 - margin_low)
+    price_max = adjusted_price * (1 + margin_high)
+
     # Pembulatan ke 100.000 terdekat (0.5 ke atas, < 0.5 ke bawah)
     adjusted_price_rounded = round_to_nearest_100k(adjusted_price)
     price_min_rounded = round_to_nearest_100k(price_min)
