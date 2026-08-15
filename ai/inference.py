@@ -73,30 +73,60 @@ PREPARED_DIR = DATA_DIR / "prepared"
 
 MODEL_PATH          = MODELS_DIR / 'freelance_pricer_final.keras'
 SAVEDMODEL_PATH     = MODELS_DIR / 'freelance_pricer_savedmodel'
+GB_MODEL_PATH       = MODELS_DIR / 'freelance_pricer_gb_log1p.pkl'
 SCALER_PATH         = PREPARED_DIR / 'scaler.pkl'
 FEATURE_NAMES_PATH  = PREPARED_DIR / 'feature_names.pkl'
 METADATA_PATH       = MODELS_DIR / 'model_metadata.json'
 
+# Skills premium (digunakan untuk menghitung fitur has_premium_skill).
+PREMIUM_SKILLS = [
+    "machine learning", "flutter", "kotlin", "data science", "nextjs",
+    "react native", "react", "deep learning", "python", "html css",
+    "java", "swift", "laravel",
+]
+
+MODEL_LOADED = False
+model = None
+scaler = None
+feature_names = None
+IDR_MIN = None
+IDR_MAX = None
+MULTIPLIER = 1.0
+MODEL_KIND = None
+
 try:
-    try:
-        model = tf.keras.models.load_model(
-            MODEL_PATH,
-            custom_objects={'ResidualDenseBlock': ResidualDenseBlock}
-        )
-        print("Model format: .keras")
-    except Exception:
-        print("Fallback ke SavedModel format...")
-        model = tf.saved_model.load(str(SAVEDMODEL_PATH))
-        _infer = model.signatures['serving_default']
-        class _SavedModelWrapper:
-            name = 'freelance_pricer_savedmodel'
-            def predict(self, X, verbose=0):
-                input_tensor = tf.constant(X, dtype=tf.float32)
-                output = _infer(features=input_tensor)
-                key = list(output.keys())[0]
-                return output[key].numpy()
-        model = _SavedModelWrapper()
-        print("Model format: SavedModel")
+    with open(METADATA_PATH, 'r', encoding='utf-8') as f:
+        metadata = json.load(f)
+
+    MODEL_KIND = metadata.get('model_kind', 'keras_nn_log1p')
+    MULTIPLIER = float(metadata.get('multiplier', 1.0))
+    IDR_MIN = metadata['clipping_bounds']['idr_p01']
+    IDR_MAX = metadata['clipping_bounds']['idr_p99']
+
+    if MODEL_KIND == 'gradient_boosting_log1p':
+        with open(GB_MODEL_PATH, 'rb') as f:
+            model = pickle.load(f)
+        print("Model format: GradientBoosting (log1p)")
+    else:
+        try:
+            model = tf.keras.models.load_model(
+                MODEL_PATH,
+                custom_objects={'ResidualDenseBlock': ResidualDenseBlock}
+            )
+            print("Model format: .keras")
+        except Exception:
+            print("Fallback ke SavedModel format...")
+            model = tf.saved_model.load(str(SAVEDMODEL_PATH))
+            _infer = model.signatures['serving_default']
+            class _SavedModelWrapper:
+                name = 'freelance_pricer_savedmodel'
+                def predict(self, X, verbose=0):
+                    input_tensor = tf.constant(X, dtype=tf.float32)
+                    output = _infer(features=input_tensor)
+                    key = list(output.keys())[0]
+                    return output[key].numpy()
+            model = _SavedModelWrapper()
+            print("Model format: SavedModel")
 
     with open(SCALER_PATH, 'rb') as f:
         scaler = pickle.load(f)
@@ -104,29 +134,16 @@ try:
     with open(FEATURE_NAMES_PATH, 'rb') as f:
         feature_names = pickle.load(f)
 
-    if METADATA_PATH.exists():
-        with open(METADATA_PATH, 'r', encoding='utf-8') as f:
-            metadata = json.load(f)
-    else:
-        raise FileNotFoundError(f'Metadata tidak ditemukan: {METADATA_PATH}')
-
-    IDR_MIN = metadata['clipping_bounds']['idr_p01']
-    IDR_MAX = metadata['clipping_bounds']['idr_p99']
-
     MODEL_LOADED = True
     print("Model loaded successfully")
-    print(f"  Name: {model.name}")
+    print(f"  Kind: {MODEL_KIND}")
     print(f"  Features: {len(feature_names)}")
+    print(f"  Multiplier: {MULTIPLIER}")
     print(f"  IDR range: Rp {IDR_MIN:,} - Rp {IDR_MAX:,}")
 
 except Exception as e:
     print(f"Error loading model: {e}")
     MODEL_LOADED = False
-    model = None
-    scaler = None
-    feature_names = None
-    IDR_MIN = None
-    IDR_MAX = None
 
 
 def normalize_skills(skills: Optional[list]) -> list:
@@ -170,15 +187,33 @@ def predict_price(user_input: dict, range_margin: float = 0.20) -> dict:
         if skill_col in features:
             features[skill_col] = 1
 
+    # Fitur derivable yang dihitung dari skill yang dipilih user
+    if 'skill_count' in features:
+        features['skill_count'] = len(skills)
+    if 'has_premium_skill' in features:
+        premium_cols = {'skill_' + s.replace(' ', '_') for s in PREMIUM_SKILLS}
+        has_premium = False
+        for s in skills:
+            col = 'skill_' + s.strip().lower().replace(' ', '_').replace('.', '').replace('/', '_')
+            if col in premium_cols:
+                has_premium = True
+                break
+        features['has_premium_skill'] = 1 if has_premium else 0
+
     X = np.array([[features[col] for col in feature_names]])
 
     X_scaled = scaler.transform(X)
-    pred_idr = model.predict(X_scaled, verbose=0)[0][0]
+    try:
+        pred_log = model.predict(X_scaled, verbose=0)[0][0]
+    except TypeError:
+        pred_log = model.predict(X_scaled)[0]
 
-    pred_idr_clipped = np.clip(pred_idr, IDR_MIN, IDR_MAX)
+    # Model dilatih pada log1p(price) -> decode balik ke IDR
+    pred_price = float(np.expm1(pred_log))
 
-    FAIR_PRICE_MULTIPLIER = 4.0
-    adjusted_price = pred_idr_clipped * FAIR_PRICE_MULTIPLIER
+    pred_idr_clipped = float(np.clip(pred_price, IDR_MIN, IDR_MAX))
+
+    adjusted_price = pred_idr_clipped * MULTIPLIER
 
     price_min = adjusted_price * (1 - range_margin)
     price_max = adjusted_price * (1 + range_margin)
@@ -241,9 +276,12 @@ def get_valid_categories() -> list:
 
 def get_model_status() -> dict:
     """Ambil status model."""
+    model_name = None
+    if MODEL_LOADED and model is not None:
+        model_name = getattr(model, 'name', MODEL_KIND or 'gradient_boosting_log1p')
     return {
         'loaded': MODEL_LOADED,
-        'model_name': model.name if MODEL_LOADED and model is not None else None,
+        'model_name': model_name,
         'feature_count': len(feature_names) if feature_names is not None else 0,
         'idr_min': int(IDR_MIN) if IDR_MIN is not None else None,
         'idr_max': int(IDR_MAX) if IDR_MAX is not None else None,

@@ -1,10 +1,12 @@
 {
-  "target": "price_single",
-  "n_features": 51,
+  "target": "log1p(price_single)",
+  "model_kind": "gradient_boosting_log1p",
+  "multiplier": 0.887,
+  "n_features": 53,
   "test_metrics": {
-    "mae_idr": 342277.5625,
-    "mape": 59.918808937072754,
-    "r2": 0.13952793815415887
+    "mae_idr": 342574.9839785188,
+    "mape": 61.95643366973172,
+    "r2": 0.1943344273967328
   },
   "clipping_bounds": {
     "idr_p01": 50000.0,
