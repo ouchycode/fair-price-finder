@@ -186,7 +186,7 @@ export const translations = {
     dashboardSection: {
       label: "Harga Pasar Freelance",
       title: "Rekomendasi Harga Pasar",
-      titleMuted: "Berbasis data proyek freelance di Indonesia",
+      titleMuted: "Data freelance Indonesia",
       source: "Sumber: Upwork, Sribu, Fastwork, dll.",
       filterJob: "Lihat per Kategori",
       filterSkill: "Lihat per Skill",
@@ -472,7 +472,7 @@ export const translations = {
     dashboardSection: {
       label: "Freelance Market Prices",
       title: "Market Price Guide",
-      titleMuted: "Based on freelance project data in Indonesia",
+      titleMuted: "Indonesian freelance data",
       source: "Source: Upwork, Sribu, Fastwork, etc.",
       filterJob: "View by Category",
       filterSkill: "View by Skill",
