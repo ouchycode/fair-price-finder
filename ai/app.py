@@ -337,10 +337,37 @@ def get_categories():
 
 _cached_dashboard_stats = None
 
+def _load_dashboard_metadata():
+    """Muat per-kategori calibration (multiplier + clip) dari model_metadata.json."""
+    meta_path = Path(__file__).with_name('data') / 'models' / 'model_metadata.json'
+    if not meta_path.exists():
+        return {}, 1.0
+    try:
+        import json
+        with open(meta_path) as f:
+            meta = json.load(f)
+        global_mult = float(meta.get('multiplier', 1.0))
+        return (meta.get('per_category', {}) or {}), global_mult
+    except Exception:
+        return {}, 1.0
+
+_DASHBOARD_PER_CATEGORY = None
+_DASHBOARD_GLOBAL_MULT = 1.0
+
+def _dashboard_multiplier(name):
+    """Ambil multiplier (per-kategori untuk kategori, global untuk skill),
+    konsisten dengan estimator."""
+    global _DASHBOARD_PER_CATEGORY, _DASHBOARD_GLOBAL_MULT
+    if _DASHBOARD_PER_CATEGORY is None:
+        _DASHBOARD_PER_CATEGORY, _DASHBOARD_GLOBAL_MULT = _load_dashboard_metadata()
+    return float(_DASHBOARD_PER_CATEGORY.get(
+        name, {}).get('multiplier', _DASHBOARD_GLOBAL_MULT))
+
+
 @app.get('/stats')
 def get_dashboard_stats():
     """Mengambil real stats dari dataset_final.csv untuk Dashboard (Cached)"""
-    global _cached_dashboard_stats
+    global _cached_dashboard_stats, _DASHBOARD_PER_CATEGORY, _DASHBOARD_GLOBAL_MULT
     if _cached_dashboard_stats is not None:
         return _cached_dashboard_stats
 
@@ -353,7 +380,10 @@ def get_dashboard_stats():
     
     if not os.path.exists(csv_path):
         raise HTTPException(status_code=500, detail="Dataset not found")
-        
+    
+    if _DASHBOARD_PER_CATEGORY is None:
+        _DASHBOARD_PER_CATEGORY, _DASHBOARD_GLOBAL_MULT = _load_dashboard_metadata()
+    
     df = pd.read_csv(csv_path)
     
     # Extract categories and skills columns
@@ -375,13 +405,17 @@ def get_dashboard_stats():
         min_log_price = subset['log_harga'].quantile(0.1)
         max_log_price = subset['log_harga'].quantile(0.9)
         
-        # Penyesuaian Harga (Fair Price Multiplier)
-        # Karena platform freelance sering menampilkan "harga mulai dari" yang sangat rendah,
-        # kita menggunakan multiplier untuk menyesuaikan ke standar profesional.
-        FAIR_PRICE_MULTIPLIER = 4.0
-        avg_price = (np.exp(avg_log_price) * FAIR_PRICE_MULTIPLIER) if not pd.isna(avg_log_price) else 0
-        min_price = (np.exp(min_log_price) * FAIR_PRICE_MULTIPLIER) if not pd.isna(min_log_price) else 0
-        max_price = (np.exp(max_log_price) * FAIR_PRICE_MULTIPLIER) if not pd.isna(max_log_price) else 0
+        # Kalibrasi fair price: pakai multiplier per-kategori yang SAMA dengan
+        # estimator (dari model_metadata.json), agar angka dashboard konsisten
+        # dengan hasil estimasi harga.
+        mult = _dashboard_multiplier(name)
+        avg_price = (np.exp(avg_log_price) * mult) if not pd.isna(avg_log_price) else 0.0
+        min_price = (np.exp(min_log_price) * mult) if not pd.isna(min_log_price) else 0.0
+        max_price = (np.exp(max_log_price) * mult) if not pd.isna(max_log_price) else 0.0
+        
+        min_price = round(min_price / 100_000) * 100_000
+        max_price = round(max_price / 100_000) * 100_000
+        avg_price = round(avg_price / 100_000) * 100_000
         
         # Format rate to millions
         rate_str = f"Rp {(avg_price / 1_000_000):.1f}jt".replace('.0jt', 'jt')
@@ -407,10 +441,17 @@ def get_dashboard_stats():
         min_log_price = subset['log_harga'].quantile(0.1)
         max_log_price = subset['log_harga'].quantile(0.9)
         
-        FAIR_PRICE_MULTIPLIER = 4.0
-        avg_price = (np.exp(avg_log_price) * FAIR_PRICE_MULTIPLIER) if not pd.isna(avg_log_price) else 0
-        min_price = (np.exp(min_log_price) * FAIR_PRICE_MULTIPLIER) if not pd.isna(min_log_price) else 0
-        max_price = (np.exp(max_log_price) * FAIR_PRICE_MULTIPLIER) if not pd.isna(max_log_price) else 0
+        # Kalibrasi fair price: pakai multiplier per-kategori yang SAMA dengan
+        # estimator (dari model_metadata.json), agar angka dashboard konsisten
+        # dengan hasil estimasi harga.
+        mult = _dashboard_multiplier(name)
+        avg_price = (np.exp(avg_log_price) * mult) if not pd.isna(avg_log_price) else 0.0
+        min_price = (np.exp(min_log_price) * mult) if not pd.isna(min_log_price) else 0.0
+        max_price = (np.exp(max_log_price) * mult) if not pd.isna(max_log_price) else 0.0
+        
+        min_price = round(min_price / 100_000) * 100_000
+        max_price = round(max_price / 100_000) * 100_000
+        avg_price = round(avg_price / 100_000) * 100_000
         
         # Format rate to millions
         rate_str = f"Rp {(avg_price / 1_000_000):.1f}jt".replace('.0jt', 'jt')
